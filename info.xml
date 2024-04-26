@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<jtlshopplugin>
+    <Name>JTL Payrexx Payment</Name>
+    <Description>JTL Payrexx Payment - Accept payments using Payrexx Payment gateway!</Description>
+    <Author>payrexx</Author>
+    <URL>https://www.payrexx.com</URL>
+    <PluginID>jtl_payrexx</PluginID>
+    <XMLVersion>100</XMLVersion>
+    <ShopVersion>5.0.0</ShopVersion>
+    <Version>1.0.0</Version>
+    <CreateDate>2024-04-15</CreateDate>
+    <Install>
+        <Adminmenu>
+            <!-- Payrexx Global Settings -->
+            <Settingslink sort="1">
+                <Name>Payrexx Configuration</Name>
+                <Setting type="selectbox" initialValue="payrexx.com" sort="1" conf="Y">
+                    <Name>Choose Your Platform</Name>
+                    <ValueName>payrexx_platform</ValueName>
+                    <SelectboxOptions>
+                        <Option value="payrexx.com" sort="0">Payrexx</Option>
+                    </SelectboxOptions>
+                </Setting>
+                <Setting type="text" initialValue="" sort="2" conf="Y">
+                    <Name>Instance Name</Name>
+                    <Description><![CDATA[INSTANCE NAME is a part of the url where you access your payrexx installation. https://INSTANCE.payrexx.com]]></Description>
+                    <ValueName>payrexx_instance</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="" sort="3" conf="Y">
+                    <Name>API Secret</Name>
+                    <Description><![CDATA[Paste here your API key from the Integrations page of your Payrexx merchant backend.]]></Description>
+                    <ValueName>payrexx_api_key</ValueName>
+                </Setting>
+                <Setting type="text" initialValue="" sort="4" conf="Y">
+                    <Name>Look and Feel Profile Id</Name>
+                    <Description><![CDATA[Enter a profile ID if you wish to use a specific Look&Feel profile.]]></Description>
+                    <ValueName>payrexx_look_and_feel_id</ValueName>
+                </Setting>
+            </Settingslink>
+        </Adminmenu>
+        <PaymentMethod>
+            <Method>
+                <Name>Payrexx</Name>
+                <Sort>0</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Payrexx.php</ClassFile>
+                <ClassName>Payrexx</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Payrexx</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Payrexx</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Mastercard</Name>
+                <Sort>0</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Mastercard.php</ClassFile>
+                <ClassName>Mastercard</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Mastercard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Mastercard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+            </Method>
+        </PaymentMethod>
+    </Install>
+</jtlshopplugin>
