@@ -131,11 +131,6 @@ class Payrexx extends Method
 		}
         $orderHash = $this->generateHash($order);
 		\header('Location:' . $this->getNotificationURL($orderHash));
-        exit();
-        echo '<pre>';
-        print_r((array) $order);
-        echo '</pre>';
-        exit();
     }
     
     /**
