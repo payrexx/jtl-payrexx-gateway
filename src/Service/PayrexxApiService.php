@@ -93,6 +93,49 @@ class PayrexxApiService {
         return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
     }
 
+    public function deleteGatewayById($gatewayId):bool 
+    {
+        $payrexx = $this->getInterface();
+
+        $gateway = new \Payrexx\Models\Request\Gateway();
+        $gateway->setId($gatewayId);
+
+        try {
+            $payrexx->delete($gateway);
+        } catch (\Payrexx\PayrexxException $e) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getPayrexxTransaction(int $payrexxTransactionId): ?\Payrexx\Models\Response\Transaction
+    {
+        $payrexx = $this->getInterface();
+
+        $payrexxTransaction = new \Payrexx\Models\Request\Transaction();
+        $payrexxTransaction->setId($payrexxTransactionId);
+
+        try {
+            $response = $payrexx->getOne($payrexxTransaction);
+            return $response;
+        } catch (\Payrexx\PayrexxException $e) {
+            return null;
+        }
+    }
+
+    public function chargeTransaction($transactionId, $amount) {
+        $payrexx = $this->getInterface();
+        $transaction = new \Payrexx\Models\Request\Transaction();
+        $transaction->setId($transactionId);
+        $transaction->setAmount(floatval($amount) * 100);
+        try {
+            $payrexx->charge($transaction);
+            return true;
+        } catch (\Payrexx\PayrexxException $e) {
+        }
+        return false;
+    }
+
     /**
      * @param $gatewayId
      * @return \Payrexx\Models\Request\Gateway

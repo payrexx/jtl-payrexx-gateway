@@ -1,5 +1,4 @@
-<?php 
-// declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
@@ -19,7 +18,7 @@ use Plugin\jtl_payrexx\Service\PayrexxApiService;
  * Class Payrexx
  * @package Plugin\jtl_payrexx\paymentmethod
  */
-class Payrexx extends Method
+class Mastercard extends Method
 {     
     /**
      * @var PayrexxPaymentGateway
