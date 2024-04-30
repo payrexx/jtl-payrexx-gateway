@@ -126,7 +126,8 @@ class Payrexx extends Method
             $purpose
         );
 		if ($gateway) {
-			\header('Location:' . $gateway->getLink());
+            $this->updateNotificationID($order->kBestellung, $gateway->getId()); 
+            \header('Location:' . $gateway->getLink());
             exit();
 		}
         $orderHash = $this->generateHash($order);

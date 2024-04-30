@@ -88,5 +88,23 @@
                 </MethodLanguage>
             </Method>
         </PaymentMethod>
+        <FrontendLink>
+            <Link>
+                <Filename>payrexx_webhook.php</Filename>
+                <Name>Payrexx Webhook</Name>
+                <Template>empty.tpl</Template>
+                <VisibleAfterLogin>N</VisibleAfterLogin>
+                <PrintButton>N</PrintButton>
+                <SSL>2</SSL>
+                <LinkLanguage iso="GER">
+                    <Seo>payrexx-webhook</Seo>
+                    <Name>Payrexx</Name>
+                    <Title>Payrexx</Title>
+                    <MetaTitle>Payrexx</MetaTitle>
+                    <MetaKeywords>Payrexx</MetaKeywords>
+                    <MetaDescription>Payrexx</MetaDescription>
+                </LinkLanguage>
+            </Link>
+        </FrontendLink>
     </Install>
 </jtlshopplugin>
