@@ -5,6 +5,7 @@ namespace Plugin\jtl_payrexx\Webhook;
 use Exception;
 use JTL\Plugin\Plugin;
 use JTL\Shop;
+use Plugin\jtl_payrexx\Service\OrderService;
 
 class Dispatcher
 {
@@ -14,11 +15,17 @@ class Dispatcher
     private $payrexxApiService;
 
     /**
+     * @var orderService
+     */
+    private $orderService;
+
+    /**
      * @param $payrexxApiService
      */
     public function __construct($payrexxApiService)
     {
         $this->payrexxApiService = $payrexxApiService;
+        $this->orderService = new OrderService();
     }
 
     /**
@@ -29,15 +36,35 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
+            if (empty($resp)) {
+                $this->sendResponse('Webhook data incomplete');
+            }
+            $orderId = $resp['transaction']['invoice']['referenceId'] ?? '';
+            $gatewayId = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
 
-            print_r($resp);
-            exit();
-			$order_id = $resp['transaction']['invoice']['referenceId'] ?? '';
-			$gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
+            if (empty($orderId)) {
+                $this->sendResponse('Webhook data incomplete');
+            }
+            $verify = $this->orderService->getPaymentGatewayId($orderId, $gatewayId);
+            if (!$verify) {
+                $this->sendResponse('Verification failed');
+            }
 
-			if ( empty( $order_id ) ) {
-				$this->sendResponse( 'Webhook data incomplete' );
-			}
+            if (!isset($resp['transaction']['status'])) {
+                $this->sendResponse('Missing transaction status');
+            }
+            $transaction = $this->payrexxApiService->getPayrexxTransaction(
+                $resp['transaction']['id']
+            );
+
+            if ($transaction->getStatus() !== $resp['transaction']['status']) {
+                $this->sendResponse('Fraudulent transaction status');
+            }
+            $this->orderService->handleTransactionStatus(
+                $orderId,
+                $transaction->getStatus(),
+                $transaction->getUuid()
+            );
         } catch (Exception) {
 
         }

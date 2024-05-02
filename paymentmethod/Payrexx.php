@@ -13,6 +13,7 @@ use stdClass;
 use JTL\Plugin\PluginInterface;
 use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
+use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
 
 /**
@@ -126,7 +127,8 @@ class Payrexx extends Method
             $purpose
         );
 		if ($gateway) {
-            $this->updateNotificationID($order->kBestellung, $gateway->getId()); 
+            $orderService = new OrderService();
+            $orderService->setPaymentGatewayId($order->cBestellNr, $gateway->getId()); 
             \header('Location:' . $gateway->getLink());
             exit();
 		}
