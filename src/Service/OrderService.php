@@ -2,7 +2,10 @@
 
 namespace Plugin\jtl_payrexx\Service;
 
+use JTL\Checkout\Bestellung;
+use JTL\Checkout\Zahlungsart;
 use JTL\DB\ReturnType;
+use JTL\Plugin\Payment\Method;
 use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
 use stdClass;
@@ -36,6 +39,7 @@ class OrderService {
      * Get gateway id
      *
      * @param string $orderId
+     * @param string $gatewayId
      */
     public function getPaymentGatewayId(string $orderId, string $gatewayId)
     {
@@ -63,18 +67,21 @@ class OrderService {
     }
 
     /**
-     * TO DO:
      * Handle transaction status.
+     *
+     * @param string $orderId
+     * @param string $status
+     * @param string $transactionUuid
      */
     public function handleTransactionStatus($orderId, $status, $transactionUuid)
     {
         $orderStatus = 'test'; // Get current order status from order id.
         switch ($status) {
             case Transaction::WAITING:
-                $orderNewStatus = 'hold';
+                $orderNewStatus = \BESTELLUNG_STATUS_IN_BEARBEITUNG;
                 break;
             case Transaction::CONFIRMED:
-                // set as paid
+                $orderNewStatus = \BESTELLUNG_STATUS_BEZAHLT;
                 return;
             case Transaction::AUTHORIZED:
                 break;
@@ -87,10 +94,16 @@ class OrderService {
             case Transaction::CANCELLED:
             case Transaction::EXPIRED:
             case Transaction::DECLINED:
-                $orderNewStatus = 'cancelled';
-                break;
             case Transaction::ERROR:
-                $orderNewStatus = 'failed';
+                $orderNewStatus = \BESTELLUNG_STATUS_STORNO;
+                if ($orderId > 0) {
+                    $order = new Bestellung($orderId);
+                    $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
+                    $moduleId = $paymentMethodEntity->cModulId ?? '';
+                    $paymentMethod = new Method($moduleId);
+                    $paymentMethod->cancelOrder($orderId);
+                }
+                break;
         }
 
         if (!$orderNewStatus || !$this->transitionAllowed($orderNewStatus, $orderStatus)) {
@@ -109,6 +122,11 @@ class OrderService {
         return true;
     }
 
+    /**
+     * @param string $orderId
+     * @param string $currentStatus
+     * @param string $newStatus
+     */
     private function updateOrderStatus($orderId, $currentStatus, $newStatus)
     {
         return Shop::Container()
