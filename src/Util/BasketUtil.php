@@ -9,25 +9,25 @@ use JTL\Session\Frontend;
 class BasketUtil {
 
     public static function getBasketDetails($order)
-    {   
+    {
         $products = $order->Positionen;
         $lineItems = [];
         foreach ($products as $productData) {
             switch ($productData->nPosTyp) {
                 case \C_WARENKORBPOS_TYP_VERSANDPOS:
-  
+
                     $currencyFactor = Frontend::getCurrency()->getConversionFactor();
-                    $priceDecimal = Tax::getGross(
+                    $shippingPrice = Tax::getGross(
                         $productData->fPreis * $productData->nAnzahl,
                         CartItem::getTaxRate($productData)
                     );
-                    $priceDecimal *= $currencyFactor;
-                    $priceDecimal = (float)number_format($priceDecimal, 2, '.', '');
+                    $shippingPrice *= $currencyFactor;
+                    $shippingPrice = number_format($shippingPrice, 2, '.', '');
 
                     $lineItems[] = [
                         'name' => 'shipping',
                         'quantity' => 1,
-                        'amount' => $priceDecimal
+                        'amount' => $shippingPrice * 100,
                     ];
                     break;
 
@@ -52,35 +52,34 @@ class BasketUtil {
 
                     $currencyFactor = Frontend::getCurrency()->getConversionFactor();
 
-                    $includingTax = true;
+                    $includingTax = true; // To Do: Improve
                     if ($includingTax) {
                         // fPreis is price, nAnzahl is quantity
-                        $priceDecimal = Tax::getGross(
-                            $productData->fPreis * $productData->nAnzahl,
+                        $priceTotal = Tax::getGross(
+                            $productData->fPreis,
                             CartItem::getTaxRate($productData)
                         );
-                        $priceDecimal *= $currencyFactor;
-                        $priceDecimal = (float)number_format($priceDecimal, 2, '.', '');
+                        $priceTotal *= $currencyFactor;
+                        $priceTotal = (float)number_format($priceTotal, 2, '.', '');
                     } else {
-                        // For customer credit - do not apply taxes
-                        $priceDecimal = $productData->fPreis * $productData->nAnzahl;
-                        $priceDecimal = (float)number_format($priceDecimal, 2, '.', '');
+                        // Do not apply taxes
+                        $priceTotal = (float)number_format($productData->fPreis, 2, '.', '');
                     }
 
                     $type = 'product';
                     if ($isDiscount === true) {
                         $type = 'discount';
-                        if ($priceDecimal > 0) {
-                            $priceDecimal = -1 * $priceDecimal;
+                        if ($priceTotal > 0) {
+                            $priceTotal = -100 * $priceTotal;
                         }
                     }
 
                     if ($type === 'product') {
                         $lineItems[] = [
                             'name' => $name,
-                            'description' => $productData->cKurzBeschreibung,
+                            'description' => $productData->Artikel->cKurzBeschreibung,
                             'quantity' => $productData->nAnzahl,
-                            'amount' => $priceDecimal,
+                            'amount' => $priceTotal * 100,
                             'sku' => $productData->cArtNr,
                         ];
                     }
@@ -89,7 +88,7 @@ class BasketUtil {
                         $lineItems[] = [
                             'name' => 'Discount',
                             'quantity' => 1,
-                            'amount' => $priceDecimal,
+                            'amount' => $priceTotal * 100,
                         ];
                     }
 		    }
@@ -97,8 +96,40 @@ class BasketUtil {
         return $lineItems;
     }
 
+    /**
+     * Get Basket Amount
+     *
+     * @param array $basket
+     * @return float
+     */
     public static function getBasketAmount($basket)
     {
+        $basketAmount = 0;
 
+        foreach ($basket as $product) {
+            $amount = $product['amount'] / 100;
+            $basketAmount += $product['quantity'] * $amount;
+        }
+        return floatval($basketAmount);
+    }
+
+    /**
+     * Create purpose from basket
+     *
+     * @param array $basket
+     * @return string
+     */
+    public static function createPurposeByBasket($basket): string
+    {
+        $desc = [];
+        foreach ($basket as $product) {
+            $desc[] = implode(' ', [
+                $product['name'],
+                $product['quantity'],
+                'x',
+                number_format($product['amount'] / 100, 2, '.'),
+            ]);
+        }
+        return implode('; ', $desc);
     }
 }

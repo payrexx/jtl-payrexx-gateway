@@ -2,7 +2,7 @@
 <jtlshopplugin>
     <Name>JTL Payrexx Payment</Name>
     <Description>JTL Payrexx Payment - Accept payments using Payrexx Payment gateway!</Description>
-    <Author>payrexx</Author>
+    <Author>Payrexx</Author>
     <URL>https://www.payrexx.com</URL>
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
@@ -83,6 +83,30 @@
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Mastercard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>PostFinanceEFinance</Name>
+                <Sort>0</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>PostFinanceEFinance.php</ClassFile>
+                <ClassName>PostFinanceEFinance</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>PostFinanceEFinance</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText>Info Text</InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>PostFinanceEFinance</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText>Info Text</InfoText>
                 </MethodLanguage>

@@ -5,7 +5,7 @@ namespace Plugin\jtl_payrexx\Migrations;
 use JTL\Plugin\Migration;
 use JTL\Update\IMigration;
 
-class Migration20240502022934 extends Migration implements IMigration
+class Migration20240502022933 extends Migration implements IMigration
 {
     public function up()
     {
