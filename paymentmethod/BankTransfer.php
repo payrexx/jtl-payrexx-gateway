@@ -3,15 +3,15 @@
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 /**
- * Class Mastercard
+ * Class BankTransfer
  * @package Plugin\jtl_payrexx\paymentmethod
  */
-class Mastercard extends Base
+class BankTransfer extends Base
 {   
     /**
      * @var pm 
      */
-    private $pm = 'mastercard';
+    private $pm = 'bank-transfer';
 
     public function __construct(string $moduleID)
     {

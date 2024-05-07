@@ -138,7 +138,7 @@ class Base extends Method
         );
 		if ($gateway) {
             $orderService = new OrderService();
-            $orderService->setPaymentGatewayId($order->cBestellNr, $gateway->getId());
+            $orderService->setPaymentGatewayId($order->cBestellNr, (string) $gateway->getId());
             \header('Location:' . $gateway->getLink());
             exit();
 		}
