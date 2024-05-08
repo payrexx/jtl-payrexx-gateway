@@ -171,13 +171,13 @@ class Base extends Method
     {
         parent::handleNotification($order, $hash, $args);
 
-        if (isset($args['payed'])) {
-            $this->addIncomingPayment($order, (object)[
-                'fBetrag'           => $order->fGesamtsumme,
-                'fZahlungsgebuehr'  => 0,
-            ]);
-            $this->setOrderStatusToPaid($order);
-        }
+        // if (isset($args['payed'])) {
+        //     $this->addIncomingPayment($order, (object)[
+        //         'fBetrag'           => $order->fGesamtsumme,
+        //         'fZahlungsgebuehr'  => 0,
+        //     ]);
+        //     $this->setOrderStatusToPaid($order);
+        // }
     }
 
     /**

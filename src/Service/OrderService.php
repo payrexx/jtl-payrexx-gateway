@@ -2,7 +2,6 @@
 
 namespace Plugin\jtl_payrexx\Service;
 
-use JTL\Checkout\Bestellung;
 use JTL\Checkout\Zahlungsart;
 use JTL\DB\ReturnType;
 use JTL\Plugin\Payment\Method;
@@ -71,54 +70,75 @@ class OrderService {
      *
      * @param string $orderId
      * @param string $status
-     * @param string $transactionUuid
+     * @param string $uuid
+     * @param string $currency
+     * @param int    $amount
      */
-    public function handleTransactionStatus($orderId, $status, $transactionUuid)
-    {
-        $orderStatus = 'test'; // Get current order status from order id.
+    public function handleTransactionStatus(
+        string $orderId,
+        string $status,
+        string $uuid,
+        string $currency,
+        int $amount
+    ) {
+        $orderNewStatus = '';
         switch ($status) {
             case Transaction::WAITING:
                 $orderNewStatus = \BESTELLUNG_STATUS_IN_BEARBEITUNG;
+                $comment = 'Awaiting payment';
                 break;
             case Transaction::CONFIRMED:
                 $orderNewStatus = \BESTELLUNG_STATUS_BEZAHLT;
+                $this->addIncommingPayment($orderId, $uuid, $currency, $amount);
                 return;
-            case Transaction::AUTHORIZED:
-                break;
             case Transaction::REFUNDED:
                 // Refunded
+                $orderNewStatus = 'refunded';
+                $comment = 'Payment refunded (' . $uuid .')';
                 break;
             case Transaction::PARTIALLY_REFUNDED:
                 // partially refunded
-                return;
+                $orderNewStatus = 'partially-refunded';
+                $comment = 'Payment was partially refunded (' . $uuid .')';
+                break;
             case Transaction::CANCELLED:
             case Transaction::EXPIRED:
             case Transaction::DECLINED:
             case Transaction::ERROR:
                 $orderNewStatus = \BESTELLUNG_STATUS_STORNO;
-                if ($orderId > 0) {
-                    $order = new Bestellung($orderId);
-                    $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
-                    $moduleId = $paymentMethodEntity->cModulId ?? '';
-                    $paymentMethod = new Method($moduleId);
-                    $paymentMethod->cancelOrder($orderId);
-                }
+                $comment = 'Payment was failed or cancelled by the customer';
                 break;
         }
 
-        if (!$orderNewStatus || !$this->transitionAllowed($orderNewStatus, $orderStatus)) {
+        $orderCurrentStatus = self::getShopOrder($orderId)->cStatus;
+        if (empty($orderNewStatus) || !$this->transitionAllowed($orderCurrentStatus, $orderNewStatus)) {
 			return;
 		}
-        $this->updateOrderStatus($orderId, $orderStatus, $orderNewStatus);
+        if (in_array($orderNewStatus, ['refunded', 'partially-refunded'])) {
+            $this->updateOrderComment($orderId, $comment);
+            return;
+        }
+        $this->updateOrderStatus($orderId, $orderCurrentStatus, $orderNewStatus, $comment);
     }
 
     /**
+     * @param string $currentStatus
      * @param string $newStatus
-     * @param string $oldStatus
      * @return bool
      */
-    private function transitionAllowed($oldStatus, $newStatus)
+    private function transitionAllowed($currentStatus, $newStatus)
     {
+        if ($currentStatus == $newStatus) {
+            return false;
+        }
+        switch ($newStatus) {
+            case \BESTELLUNG_STATUS_STORNO:
+                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_BEZAHLT] );
+            case \BESTELLUNG_STATUS_BEZAHLT:
+                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_STORNO] );
+            case \BESTELLUNG_STATUS_IN_BEARBEITUNG:
+                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_BEZAHLT] );
+        }
         return true;
     }
 
@@ -126,15 +146,61 @@ class OrderService {
      * @param string $orderId
      * @param string $currentStatus
      * @param string $newStatus
+     * @param string $comment
      */
-    private function updateOrderStatus($orderId, $currentStatus, $newStatus)
+    private function updateOrderStatus($orderId, $currentStatus, $newStatus, $comment = '')
     {
-        return Shop::Container()
-        ->getDB()->update(
+        Shop::Container()->getDB()->update(
             'tbestellung',
             ['kBestellung', 'cStatus'],
             [$orderId, $currentStatus],
-            (object)['cStatus' => $newStatus]
+            (object)['cStatus' => $newStatus, 'cKommentar' => $comment]
         );
+    }
+
+    /**
+     * @param string $orderId
+     * @param string $comment
+     */
+    private function updateOrderComment($orderId, $comment)
+    {
+        Shop::Container()->getDB()->update(
+            'tbestellung',
+            ['kBestellung'],
+            [$orderId],
+            (object)['cKommentar' => $comment]
+        );
+    }
+
+    /**
+     * Add incoming payment
+     *
+     * @param string $orderId
+     * @param string $uuid
+     * @param string $currency
+     * @param int    $amount
+     */
+    private function addIncommingPayment(
+        $orderId,
+        $uuid,
+        $currency,
+        $amount
+    ) {
+        $order = $this->getShopOrder($orderId);
+        $incommingPayment = Shop::Container()->getDB()->selectSingleRow('tzahlungseingang', 'kBestellung', $orderId);
+        // We check if there's record for incomming payment for current order
+        if (!empty($incommingPayment->kZahlungseingang)) {
+            return;
+        }
+        $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
+        $moduleId = $paymentMethodEntity->cModulId ?? '';
+        $paymentMethod = new Method($moduleId);
+        $paymentMethod->setOrderStatusToPaid($order);
+        $incomingPayment = new stdClass();
+        $incomingPayment->fBetrag = $amount / 100;
+        $incomingPayment->cISO = $currency;
+        $incomingPayment->cZahlungsanbieter = $order->cZahlungsartName;
+        $incomingPayment->cHinweis = $uuid;
+        $paymentMethod->addIncomingPayment($order, $incomingPayment);
     }
 }

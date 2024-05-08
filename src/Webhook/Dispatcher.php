@@ -57,16 +57,22 @@ class Dispatcher
                 $resp['transaction']['id']
             );
 
+            if (!$transaction) {
+                $this->sendResponse('Transactions not found');
+            }
             if ($transaction->getStatus() !== $resp['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
             $this->orderService->handleTransactionStatus(
                 $orderId,
                 $transaction->getStatus(),
-                $transaction->getUuid()
+                $transaction->getUuid(),
+                $transaction->getInvoice()->getCurrencyAlpha3(),
+                (int) $transaction->getInvoice()->getTotalAmount(),
             );
-        } catch (Exception) {
-
+            $this->sendResponse('Webhook processed successfully!');
+        } catch (Exception $e) {
+            $this->sendResponse('Error: ' . $e->getMessage());
         }
     }
 
