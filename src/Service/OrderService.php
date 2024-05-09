@@ -9,41 +9,37 @@ use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
 use stdClass;
 
-class OrderService {
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-    }
-
+class OrderService
+{
     /**
      * Set payrexx gateway id
      *
-     * @param string $orderId
-     * @param string $gatewayId
+     * @param int $orderId
+     * @param int $gatewayId
      */
-    public function setPaymentGatewayId(string $orderId, string $gatewayId): void
+    public function setPaymentGatewayId(int $orderId, int $gatewayId): void
     {
         $payrexxPayment = new stdClass();
         $payrexxPayment->order_id = $orderId;
         $payrexxPayment->gateway_id = $gatewayId;
         $payrexxPayment->created_at =  date('Y-m-d H:i:s');
 
-        Shop::Container()->getDB()->insert('payrexx_payments', $payrexxPayment);
+        Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
     }
 
     /**
      * Get gateway id
      *
-     * @param string $orderId
-     * @param string $gatewayId
+     * @param int $orderId
+     * @param int $gatewayId
+     * @return object
      */
-    public function getPaymentGatewayId(string $orderId, string $gatewayId)
+    public function getOrderGatewayId(int $orderId, int $gatewayId)
     {
         $info = Shop::Container()->getDB()->queryPrepared(
-            'SELECT `gateway_id`, `order_id` FROM `payrexx_payments` WHERE `order_id`  = :shopOrderId and `gateway_id` = :gatewayId',
+            'SELECT `gateway_id`, `order_id`
+                FROM `plugin_jtl_payrexx_payments`
+                WHERE `order_id`  = :shopOrderId and `gateway_id` = :gatewayId',
             [
                 ':shopOrderId' => $orderId,
                 ':gatewayId' => $gatewayId
@@ -54,13 +50,14 @@ class OrderService {
     }
 
     /**
-     * @param string $orderId
+     * @param int $orderId
+     * @return object
      */
-    public function getShopOrder(string $orderId)
+    public function getShopOrder(int $orderId)
     {
         return Shop::Container()->getDB()->queryPrepared(
-            'SELECT * FROM `tbestellung` WHERE `cBestellNr`  = :cBestellNr',
-            [':cBestellNr' => $orderId],
+            'SELECT * FROM `tbestellung` WHERE `kBestellung`  = :kBestellung',
+            [':kBestellung' => $orderId],
             ReturnType::SINGLE_OBJECT
         );
     }
@@ -68,18 +65,18 @@ class OrderService {
     /**
      * Handle transaction status.
      *
-     * @param string $orderId
+     * @param int $orderId
      * @param string $status
      * @param string $uuid
      * @param string $currency
      * @param int    $amount
      */
     public function handleTransactionStatus(
-        string $orderId,
+        int $orderId,
         string $status,
-        string $uuid,
-        string $currency,
-        int $amount
+        string $uuid = '',
+        string $currency = '',
+        int $amount = 0
     ) {
         $orderNewStatus = '';
         switch ($status) {
@@ -94,31 +91,34 @@ class OrderService {
             case Transaction::REFUNDED:
                 // Refunded
                 $orderNewStatus = 'refunded';
-                $comment = 'Payment refunded (' . $uuid .')';
+                $comment = 'Payment refunded (' . $uuid . ')';
                 break;
             case Transaction::PARTIALLY_REFUNDED:
                 // partially refunded
                 $orderNewStatus = 'partially-refunded';
-                $comment = 'Payment was partially refunded (' . $uuid .')';
+                $comment = 'Payment was partially refunded (' . $uuid . ')';
                 break;
-            case Transaction::CANCELLED:
             case Transaction::EXPIRED:
             case Transaction::DECLINED:
             case Transaction::ERROR:
                 $orderNewStatus = \BESTELLUNG_STATUS_STORNO;
-                $comment = 'Payment was failed or cancelled by the customer';
+                $comment = 'Payment was failed.';
+                break;
+            case Transaction::CANCELLED:
+                $orderNewStatus = \BESTELLUNG_STATUS_STORNO;
+                $comment = 'Payment was cancelled';
                 break;
         }
 
-        $orderCurrentStatus = self::getShopOrder($orderId)->cStatus;
-        if (empty($orderNewStatus) || !$this->transitionAllowed($orderCurrentStatus, $orderNewStatus)) {
-			return;
-		}
-        if (in_array($orderNewStatus, ['refunded', 'partially-refunded'])) {
-            $this->updateOrderComment($orderId, $comment);
+        $order = self::getShopOrder($orderId);
+        if (empty($orderNewStatus) || !$this->transitionAllowed($order->cStatus, $orderNewStatus)) {
             return;
         }
-        $this->updateOrderStatus($orderId, $orderCurrentStatus, $orderNewStatus, $comment);
+        if (in_array($orderNewStatus, ['refunded', 'partially-refunded'])) {
+            $this->updateOrderComment($order->kBestellung, $comment);
+            return;
+        }
+        $this->updateOrderStatus($order->kBestellung, $order->cStatus, $orderNewStatus, $comment);
     }
 
     /**
@@ -133,11 +133,11 @@ class OrderService {
         }
         switch ($newStatus) {
             case \BESTELLUNG_STATUS_STORNO:
-                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_BEZAHLT] );
+                return !in_array($currentStatus, [\BESTELLUNG_STATUS_BEZAHLT]);
             case \BESTELLUNG_STATUS_BEZAHLT:
-                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_STORNO] );
+                return !in_array($currentStatus, [\BESTELLUNG_STATUS_STORNO]);
             case \BESTELLUNG_STATUS_IN_BEARBEITUNG:
-                return !in_array( $currentStatus, [\BESTELLUNG_STATUS_BEZAHLT] );
+                return !in_array($currentStatus, [\BESTELLUNG_STATUS_BEZAHLT]);
         }
         return true;
     }
@@ -188,7 +188,7 @@ class OrderService {
     ) {
         $order = $this->getShopOrder($orderId);
         $incommingPayment = Shop::Container()->getDB()->selectSingleRow('tzahlungseingang', 'kBestellung', $orderId);
-        // We check if there's record for incomming payment for current order
+        // check the record for incomming payment for current order
         if (!empty($incommingPayment->kZahlungseingang)) {
             return;
         }

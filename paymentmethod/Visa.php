@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
@@ -7,9 +9,9 @@ namespace Plugin\jtl_payrexx\paymentmethod;
  * @package Plugin\jtl_payrexx\paymentmethod
  */
 class Visa extends Base
-{   
+{
     /**
-     * @var pm 
+     * @var string $pm payrexx payment method Id
      */
     private $pm = 'visa';
 

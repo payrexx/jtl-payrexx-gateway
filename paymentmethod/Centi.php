@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 /**
- * Class Mastercard
+ * Class Centi
  * @package Plugin\jtl_payrexx\paymentmethod
  */
-class Mastercard extends Base
+class Centi extends Base
 {
     /**
      * @var string $pm payrexx payment method Id
      */
-    private $pm = 'mastercard';
+    private $pm = 'centi';
 
     public function __construct(string $moduleID)
     {

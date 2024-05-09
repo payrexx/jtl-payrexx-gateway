@@ -1,10 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\Webhook;
 
 use Exception;
-use JTL\Plugin\Plugin;
-use JTL\Shop;
 use Plugin\jtl_payrexx\Service\OrderService;
 
 class Dispatcher
@@ -45,7 +45,7 @@ class Dispatcher
             if (empty($orderId)) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            $verify = $this->orderService->getPaymentGatewayId($orderId, $gatewayId);
+            $verify = $this->orderService->getOrderGatewayId((int) $orderId, (int) $gatewayId);
             if (!$verify) {
                 $this->sendResponse('Verification failed');
             }

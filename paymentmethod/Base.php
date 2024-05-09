@@ -1,17 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 use JTL\Plugin\Payment\Method;
 use JTL\Plugin\Helper as PluginHelper;
 use JTL\Checkout\Bestellung;
-use JTL\Shop;
 use Plugin\jtl_payrexx\paymentmethod\PayrexxPaymentGateway;
-use JTL\Alert\Alert;
-use stdClass;
 use JTL\Plugin\PluginInterface;
 use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
+use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
 use Plugin\jtl_payrexx\Util\BasketUtil;
@@ -47,7 +47,7 @@ class Base extends Method
     private bool $payAgain;
 
     /**
-     * @var pm
+     * @var string
      */
     private $pm;
 
@@ -89,7 +89,6 @@ class Base extends Method
     public function isValidIntern(array $args_arr = []): bool
     {
         return true;
-        return ($this->payrexxPaymentGateway->canPaymentMethodProcessed());
     }
 
     /**
@@ -113,9 +112,9 @@ class Base extends Method
     {
         $currency  = Frontend::getCurrency()->getCode();
         $paymentHash = $this->generateHash($order);
-        $successUrl = $this->getNotificationURL($paymentHash) . '&payed';
-        $cancelUrl =  $this->getReturnURL($order);
-        $payrexxApiService = self::getPayrexxApiService();
+        $successUrl = $this->getNotificationURL($paymentHash);
+        $cancelUrl =  $this->getNotificationURL($paymentHash) . '&cancelled';
+        $payrexxApiService = new PayrexxApiService();
         $pm = $this->pm;
         $basket = [];
         $purpose = '';
@@ -136,14 +135,14 @@ class Base extends Method
             $basket,
             $purpose
         );
-		if ($gateway) {
+        if ($gateway) {
             $orderService = new OrderService();
-            $orderService->setPaymentGatewayId($order->cBestellNr, (string) $gateway->getId());
+            $orderService->setPaymentGatewayId($order->kBestellung, $gateway->getId());
             \header('Location:' . $gateway->getLink());
             exit();
-		}
+        }
         $orderHash = $this->generateHash($order);
-		\header('Location:' . $this->getNotificationURL($orderHash));
+        \header('Location:' . $this->getNotificationURL($orderHash));
     }
 
     /**
@@ -156,7 +155,7 @@ class Base extends Method
      */
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
-
+        return true;
     }
 
     /**
@@ -171,13 +170,13 @@ class Base extends Method
     {
         parent::handleNotification($order, $hash, $args);
 
-        // if (isset($args['payed'])) {
-        //     $this->addIncomingPayment($order, (object)[
-        //         'fBetrag'           => $order->fGesamtsumme,
-        //         'fZahlungsgebuehr'  => 0,
-        //     ]);
-        //     $this->setOrderStatusToPaid($order);
-        // }
+        if (isset($args['cancelled'])) {
+            $orderService = new OrderService();
+            $orderService->handleTransactionStatus(
+                $order->kBestellung,
+                Transaction::CANCELLED
+            );
+        }
     }
 
     /**
@@ -194,20 +193,5 @@ class Base extends Method
     public function redirectOnCancel(): bool
     {
         return true;
-    }
-
-
-    public static function getPayrexxApiService() {
-        $plugin = PluginHelper::getPluginById('jtl_payrexx');
-        $platform = trim($plugin->getConfig()->getValue('payrexx_platform'));
-        $instance = trim($plugin->getConfig()->getValue('payrexx_instance'));
-        $apiKey = trim($plugin->getConfig()->getValue('payrexx_api_key'));
-        $lookAndFeel = trim($plugin->getConfig()->getValue('payrexx_look_and_feel_id'));
-        return new PayrexxApiService(
-            $platform,
-            $instance,
-            $apiKey,
-            $lookAndFeel
-        );
     }
 }

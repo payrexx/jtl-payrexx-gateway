@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.0</Version>
+    <Version>1.0.4</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
@@ -55,17 +55,17 @@
                 <MethodLanguage iso="GER">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
                 <Name>Amex</Name>
-                <Sort>0</Sort>
+                <Sort>1</Sort>
                 <SendMail>1</SendMail>
                 <Provider>Payrexx</Provider>
                 <TSCode>OTHER</TSCode>
@@ -79,17 +79,17 @@
                 <MethodLanguage iso="GER">
                     <Name>Amex</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Amex</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
                 <Name>Bank Transfer</Name>
-                <Sort>0</Sort>
+                <Sort>2</Sort>
                 <SendMail>1</SendMail>
                 <Provider>Payrexx</Provider>
                 <TSCode>OTHER</TSCode>
@@ -103,17 +103,17 @@
                 <MethodLanguage iso="GER">
                     <Name>BankTransfer</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>BankTransfer</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
                 <Name>Mastercard</Name>
-                <Sort>0</Sort>
+                <Sort>3</Sort>
                 <SendMail>1</SendMail>
                 <Provider>Payrexx</Provider>
                 <TSCode>OTHER</TSCode>
@@ -127,12 +127,372 @@
                 <MethodLanguage iso="GER">
                     <Name>Mastercard</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Mastercard</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Visa</Name>
+                <Sort>4</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Visa.php</ClassFile>
+                <ClassName>Visa</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Visa</Name>
+                <Sort>4</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Visa.php</ClassFile>
+                <ClassName>Visa</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>ApplePay</Name>
+                <Sort>5</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>ApplePay.php</ClassFile>
+                <ClassName>ApplePay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>ApplePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>ApplePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Centi</Name>
+                <Sort>6</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Centi.php</ClassFile>
+                <ClassName>Centi</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Centi</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Centi</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>GooglePay</Name>
+                <Sort>7</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>GooglePay.php</ClassFile>
+                <ClassName>GooglePay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>GooglePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>GooglePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>HeidiPay</Name>
+                <Sort>8</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>HeidiPay.php</ClassFile>
+                <ClassName>HeidiPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>HeidiPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Heidipay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Invoice</Name>
+                <Sort>9</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Invoice.php</ClassFile>
+                <ClassName>Invoice</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Invoice</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Invoice</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Maestro</Name>
+                <Sort>10</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Maestro.php</ClassFile>
+                <ClassName>Maestro</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Maestro</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Maestro</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Masterpass</Name>
+                <Sort>11</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Masterpass.php</ClassFile>
+                <ClassName>Masterpass</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Masterpass</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Masterpass</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Paypal</Name>
+                <Sort>12</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Paypal.php</ClassFile>
+                <ClassName>Paypal</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Paypal</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Paypal</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>PostFinanceCard</Name>
+                <Sort>13</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>PostFinanceCard.php</ClassFile>
+                <ClassName>PostFinanceCard</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>PostFinanceCard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>PostFinanceCard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Reka</Name>
+                <Sort>14</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Reka.php</ClassFile>
+                <ClassName>Reka</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Reka</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Reka</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>SamsungPay</Name>
+                <Sort>15</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>SamsungPay.php</ClassFile>
+                <ClassName>SamsungPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>SamsungPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>SamsungPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Twint</Name>
+                <Sort>16</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Twint.php</ClassFile>
+                <ClassName>Twint</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Twint</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Twint</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>WirPay</Name>
+                <Sort>17</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>WirPay.php</ClassFile>
+                <ClassName>WirPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>WirPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>WirPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
@@ -151,36 +511,12 @@
                 <MethodLanguage iso="GER">
                     <Name>PostFinanceEFinance</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>PostFinanceEFinance</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
-                </MethodLanguage>
-            </Method>
-            <Method>
-                <Name>Visa</Name>
-                <Sort>0</Sort>
-                <SendMail>1</SendMail>
-                <Provider>Payrexx</Provider>
-                <TSCode>OTHER</TSCode>
-                <PreOrder>0</PreOrder>
-                <Soap>0</Soap>
-                <Curl>0</Curl>
-                <Sockets>0</Sockets>
-                <ClassFile>Visa.php</ClassFile>
-                <ClassName>Visa</ClassName>
-                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
-                <MethodLanguage iso="GER">
-                    <Name>Visa</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
-                </MethodLanguage>
-                <MethodLanguage iso="ENG">
-                    <Name>Visa</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
         </PaymentMethod>

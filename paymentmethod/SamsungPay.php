@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 /**
- * Class Mastercard
+ * Class SamsungPay
  * @package Plugin\jtl_payrexx\paymentmethod
  */
-class Mastercard extends Base
+class SamsungPay extends Base
 {
     /**
-     * @var string $pm payrexx payment method Id
+     * @var string $pm
      */
-    private $pm = 'mastercard';
+    private $pm = 'samsung-pay';
 
     public function __construct(string $moduleID)
     {

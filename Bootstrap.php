@@ -1,12 +1,12 @@
 <?php
+
 /**
  * This file refers to the initialization of a plugin for the subsequent use
  *
- * @author      Payrexx
- * @copyright   Copyright (c) Payrexx
+ * @author    Payrexx
+ * @copyright Copyright(c)Payrexx
  *
  * Script: Bootstrap.php
- *
  */
 
 namespace Plugin\jtl_payrexx;

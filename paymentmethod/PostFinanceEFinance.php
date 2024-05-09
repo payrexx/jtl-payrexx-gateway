@@ -1,15 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 /**
- * Class Payrexx
+ * Class PostFinanceEFinance
  * @package Plugin\jtl_payrexx\paymentmethod
  */
 class PostFinanceEFinance extends Base
-{     
+{
     /**
-     * @var pm 
+     * @var string $pm payrexx payment method Id
      */
     private $pm = 'post-finance-e-finance';
 

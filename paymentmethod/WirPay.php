@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Plugin\jtl_payrexx\paymentmethod;
 
 /**
- * Class Mastercard
+ * Class Wirpay
  * @package Plugin\jtl_payrexx\paymentmethod
  */
-class Mastercard extends Base
+class Wirpay extends Base
 {
     /**
      * @var string $pm payrexx payment method Id
      */
-    private $pm = 'mastercard';
+    private $pm = 'wirpay';
 
     public function __construct(string $moduleID)
     {

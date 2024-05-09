@@ -3,20 +3,25 @@
 namespace Plugin\jtl_payrexx\Util;
 
 use JTL\Cart\CartItem;
+use JTL\Checkout\Bestellung;
 use JTL\Helpers\Tax;
 use JTL\Session\Frontend;
 
-class BasketUtil {
+class BasketUtil
+{
 
-    public static function getBasketDetails($order)
+    /**
+     * @param Bestellung $order
+     * @return array
+     */
+    public static function getBasketDetails(Bestellung $order): array
     {
         $products = $order->Positionen;
-        $lineItems = [];
+        $basketItems = [];
+        $currencyFactor = Frontend::getCurrency()->getConversionFactor();
         foreach ($products as $productData) {
             switch ($productData->nPosTyp) {
                 case \C_WARENKORBPOS_TYP_VERSANDPOS:
-
-                    $currencyFactor = Frontend::getCurrency()->getConversionFactor();
                     $shippingPrice = Tax::getGross(
                         $productData->fPreis * $productData->nAnzahl,
                         CartItem::getTaxRate($productData)
@@ -24,7 +29,7 @@ class BasketUtil {
                     $shippingPrice *= $currencyFactor;
                     $shippingPrice = number_format($shippingPrice, 2, '.', '');
 
-                    $lineItems[] = [
+                    $basketItems[] = [
                         'name' => 'shipping',
                         'quantity' => 1,
                         'amount' => $shippingPrice * 100,
@@ -43,14 +48,12 @@ class BasketUtil {
                 case \C_WARENKORBPOS_TYP_GRATISGESCHENK:
                 default:
                     $isDiscount = false;
-                    if (\in_array($productData->nPosTyp, [
-                        \C_WARENKORBPOS_TYP_KUPON
-                    ], true)) {
+                    if (\in_array($productData->nPosTyp, [\C_WARENKORBPOS_TYP_KUPON], true)) {
                         $isDiscount = true;
                     }
-                    $name = \is_array($productData->cName) ? $productData->cName[$_SESSION['cISOSprache']] : $productData->cName;
-
-                    $currencyFactor = Frontend::getCurrency()->getConversionFactor();
+                    $name = \is_array($productData->cName)
+                        ? $productData->cName[$_SESSION['cISOSprache']]
+                        : $productData->cName;
 
                     $includingTax = true; // To Do: Improve
                     if ($includingTax) {
@@ -75,7 +78,7 @@ class BasketUtil {
                     }
 
                     if ($type === 'product') {
-                        $lineItems[] = [
+                        $basketItems[] = [
                             'name' => $name,
                             'description' => $productData->Artikel->cKurzBeschreibung,
                             'quantity' => $productData->nAnzahl,
@@ -85,15 +88,15 @@ class BasketUtil {
                     }
 
                     if ($type === 'discount') {
-                        $lineItems[] = [
+                        $basketItems[] = [
                             'name' => 'Discount',
                             'quantity' => 1,
                             'amount' => $priceTotal * 100,
                         ];
                     }
-		    }
+            }
         }
-        return $lineItems;
+        return $basketItems;
     }
 
     /**
@@ -102,7 +105,7 @@ class BasketUtil {
      * @param array $basket
      * @return float
      */
-    public static function getBasketAmount($basket)
+    public static function getBasketAmount(array $basket)
     {
         $basketAmount = 0;
 
@@ -119,7 +122,7 @@ class BasketUtil {
      * @param array $basket
      * @return string
      */
-    public static function createPurposeByBasket($basket): string
+    public static function createPurposeByBasket(array $basket): string
     {
         $desc = [];
         foreach ($basket as $product) {
