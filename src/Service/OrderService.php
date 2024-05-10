@@ -51,29 +51,16 @@ class OrderService
     }
 
     /**
-     * @param int $orderId
-     * @return object
-     */
-    public function getShopOrder(int $orderId)
-    {
-        return Shop::Container()->getDB()->queryPrepared(
-            'SELECT * FROM `tbestellung` WHERE `kBestellung`  = :kBestellung',
-            [':kBestellung' => $orderId],
-            ReturnType::SINGLE_OBJECT
-        );
-    }
-
-    /**
      * Handle transaction status.
      *
-     * @param int $orderId
+     * @param Bestellung $order
      * @param string $status
      * @param string $uuid
      * @param string $currency
      * @param int    $amount
      */
     public function handleTransactionStatus(
-        int $orderId,
+        Bestellung $order,
         string $status,
         string $uuid = '',
         string $currency = '',
@@ -87,7 +74,7 @@ class OrderService
                 break;
             case Transaction::CONFIRMED:
                 $orderNewStatus = \BESTELLUNG_STATUS_BEZAHLT;
-                $this->addIncommingPayment($orderId, $uuid, $currency, $amount);
+                $this->addIncommingPayment($order, $uuid, $currency, $amount);
                 return;
             case Transaction::REFUNDED:
                 // Refunded
@@ -111,15 +98,15 @@ class OrderService
                 break;
         }
 
-        $order = self::getShopOrder($orderId);
+        
         if (empty($orderNewStatus) || !$this->transitionAllowed($order->cStatus, $orderNewStatus)) {
             return;
         }
         if (in_array($orderNewStatus, ['refunded', 'partially-refunded'])) {
-            $this->updateOrderComment($order->kBestellung, $comment);
+            $this->updateOrderComment($order, $comment);
             return;
         }
-        $this->updateOrderStatus($order->kBestellung, $order->cStatus, $orderNewStatus, $comment);
+        $this->updateOrderStatus($order, $order->cStatus, $orderNewStatus, $comment);
     }
 
     /**
@@ -144,18 +131,21 @@ class OrderService
     }
 
     /**
-     * @param string $orderId
+     * @param Bestellung $orderId
      * @param string $currentStatus
      * @param string $newStatus
      * @param string $comment
      */
-    private function updateOrderStatus($orderId, $currentStatus, $newStatus, $comment = '')
+    private function updateOrderStatus(Bestellung $order, $currentStatus, $newStatus, $comment = '')
     {
         Shop::Container()->getDB()->update(
             'tbestellung',
             ['kBestellung', 'cStatus'],
-            [$orderId, $currentStatus],
-            (object)['cStatus' => $newStatus, 'cKommentar' => $comment]
+            [$order->kBestellung, $currentStatus],
+            (object)[
+                'cStatus' => $newStatus,
+                'cKommentar' => $order->cKommentar . '; ' . $comment
+            ]
         );
     }
 
@@ -163,35 +153,35 @@ class OrderService
      * @param int $orderId
      * @param string $comment
      */
-    private function updateOrderComment(int $orderId, string $comment)
+    private function updateOrderComment($order, string $comment)
     {
         Shop::Container()->getDB()->update(
             'tbestellung',
             ['kBestellung'],
-            [$orderId],
-            (object)['cKommentar' => $comment]
+            [$order->kBestellung],
+            (object)['cKommentar' => $order->cKommentar . '; ' . $comment]
         );
     }
 
     /**
      * Add incoming payment
      *
-     * @param int $orderId
+     * @param Bestellung $order
      * @param string $uuid
      * @param string $currency
      * @param int    $amount
      */
     private function addIncommingPayment(
-        int $orderId,
+        Bestellung $order,
         string $uuid,
         string $currency,
         int $amount
     ): void {
-        $order = new Bestellung($orderId);
-        if (!$order) {
-            return;
-        }
-        $incommingPayment = Shop::Container()->getDB()->selectSingleRow('tzahlungseingang', 'kBestellung', $orderId);
+        $incommingPayment = Shop::Container()->getDB()->selectSingleRow(
+            'tzahlungseingang',
+            'kBestellung',
+            $order->kBestellung
+        );
         // check the record for incomming payment for current order
         if (!empty($incommingPayment->kZahlungseingang)) {
             return;

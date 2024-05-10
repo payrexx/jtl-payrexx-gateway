@@ -167,7 +167,7 @@ class Base extends Method
         if (isset($args['cancelled'])) {
             $orderService = new OrderService();
             $orderService->handleTransactionStatus(
-                $order->kBestellung,
+                $order,
                 Transaction::CANCELLED
             );
         }

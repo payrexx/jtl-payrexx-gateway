@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Plugin\jtl_payrexx\Webhook;
 
 use Exception;
+use JTL\Checkout\Bestellung;
 use Plugin\jtl_payrexx\Service\OrderService;
 
 class Dispatcher
@@ -68,8 +69,9 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
+            $order = new Bestellung((int)$orderId);
             $this->orderService->handleTransactionStatus(
-                (int) $orderId,
+                $order,
                 $transaction->getStatus(),
                 $transaction->getUuid(),
                 $transaction->getInvoice()['currencyAlpha3'],
