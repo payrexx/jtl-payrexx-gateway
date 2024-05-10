@@ -69,7 +69,7 @@ class Dispatcher
                 $this->sendResponse('Fraudulent transaction status');
             }
             $this->orderService->handleTransactionStatus(
-                $orderId,
+                (int) $orderId,
                 $transaction->getStatus(),
                 $transaction->getUuid(),
                 $transaction->getInvoice()['currencyAlpha3'],
