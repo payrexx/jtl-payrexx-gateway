@@ -160,30 +160,6 @@
                 </MethodLanguage>
             </Method>
             <Method>
-                <Name>Visa</Name>
-                <Sort>4</Sort>
-                <SendMail>1</SendMail>
-                <Provider>Payrexx</Provider>
-                <TSCode>OTHER</TSCode>
-                <PreOrder>0</PreOrder>
-                <Soap>0</Soap>
-                <Curl>0</Curl>
-                <Sockets>0</Sockets>
-                <ClassFile>Visa.php</ClassFile>
-                <ClassName>Visa</ClassName>
-                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
-                <MethodLanguage iso="GER">
-                    <Name>Visa</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
-                </MethodLanguage>
-                <MethodLanguage iso="ENG">
-                    <Name>Visa</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
-                </MethodLanguage>
-            </Method>
-            <Method>
                 <Name>ApplePay</Name>
                 <Sort>5</Sort>
                 <SendMail>1</SendMail>

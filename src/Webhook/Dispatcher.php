@@ -20,12 +20,18 @@ class Dispatcher
     private $orderService;
 
     /**
+     *  @var array $data
+     */
+    private $data;
+
+    /**
      * @param $payrexxApiService
      */
     public function __construct($payrexxApiService)
     {
         $this->payrexxApiService = $payrexxApiService;
         $this->orderService = new OrderService();
+        $this->data = $_POST;
     }
 
     /**
@@ -35,12 +41,11 @@ class Dispatcher
     public function processWebhookResponse()
     {
         try {
-            $resp = $_REQUEST;
-            if (empty($resp)) {
+            if (empty($this->data)) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            $orderId = $resp['transaction']['invoice']['referenceId'] ?? '';
-            $gatewayId = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
+            $orderId = $this->data['transaction']['invoice']['referenceId'] ?? '';
+            $gatewayId = $this->data['transaction']['invoice']['paymentRequestId'] ?? '';
 
             if (empty($orderId)) {
                 $this->sendResponse('Webhook data incomplete');
@@ -50,29 +55,29 @@ class Dispatcher
                 $this->sendResponse('Verification failed');
             }
 
-            if (!isset($resp['transaction']['status'])) {
+            if (!isset($this->data['transaction']['status'])) {
                 $this->sendResponse('Missing transaction status');
             }
             $transaction = $this->payrexxApiService->getPayrexxTransaction(
-                $resp['transaction']['id']
+                (int) $this->data['transaction']['id']
             );
 
             if (!$transaction) {
                 $this->sendResponse('Transactions not found');
             }
-            if ($transaction->getStatus() !== $resp['transaction']['status']) {
+            if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
             $this->orderService->handleTransactionStatus(
                 $orderId,
                 $transaction->getStatus(),
                 $transaction->getUuid(),
-                $transaction->getInvoice()->getCurrencyAlpha3(),
-                (int) $transaction->getInvoice()->getTotalAmount(),
+                $transaction->getInvoice()['currencyAlpha3'],
+                (int) $transaction->getInvoice()['totalAmount']
             );
             $this->sendResponse('Webhook processed successfully!');
         } catch (Exception $e) {
-            $this->sendResponse('Error: ' . $e->getMessage());
+            $this->sendResponse('Error: ' . json_encode($e->getMessage()));
         }
     }
 

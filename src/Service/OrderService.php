@@ -2,6 +2,7 @@
 
 namespace Plugin\jtl_payrexx\Service;
 
+use JTL\Checkout\Bestellung;
 use JTL\Checkout\Zahlungsart;
 use JTL\DB\ReturnType;
 use JTL\Plugin\Payment\Method;
@@ -126,7 +127,7 @@ class OrderService
      * @param string $newStatus
      * @return bool
      */
-    private function transitionAllowed($currentStatus, $newStatus)
+    private function transitionAllowed($currentStatus, $newStatus): bool
     {
         if ($currentStatus == $newStatus) {
             return false;
@@ -159,10 +160,10 @@ class OrderService
     }
 
     /**
-     * @param string $orderId
+     * @param int $orderId
      * @param string $comment
      */
-    private function updateOrderComment($orderId, $comment)
+    private function updateOrderComment(int $orderId, string $comment)
     {
         Shop::Container()->getDB()->update(
             'tbestellung',
@@ -175,18 +176,21 @@ class OrderService
     /**
      * Add incoming payment
      *
-     * @param string $orderId
+     * @param int $orderId
      * @param string $uuid
      * @param string $currency
      * @param int    $amount
      */
     private function addIncommingPayment(
-        $orderId,
-        $uuid,
-        $currency,
-        $amount
-    ) {
-        $order = $this->getShopOrder($orderId);
+        int $orderId,
+        string $uuid,
+        string $currency,
+        int $amount
+    ): void {
+        $order = new Bestellung($orderId);
+        if (!$order) {
+            return;
+        }
         $incommingPayment = Shop::Container()->getDB()->selectSingleRow('tzahlungseingang', 'kBestellung', $orderId);
         // check the record for incomming payment for current order
         if (!empty($incommingPayment->kZahlungseingang)) {
