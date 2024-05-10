@@ -120,7 +120,7 @@ class Base extends Method
         $purpose = '';
         $basketItems = BasketUtil::getBasketDetails($order);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
-        if ($order->fGesamtsumme && $order->fGesamtsumme === $basketAmount) {
+        if ($order->fGesamtsumme && floatval($order->fGesamtsumme) === $basketAmount) {
             $basket = $basketItems;
         } else {
             $purpose = BasketUtil::createPurposeByBasket($basketItems);

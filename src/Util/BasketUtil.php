@@ -113,7 +113,7 @@ class BasketUtil
             $amount = $product['amount'] / 100;
             $basketAmount += $product['quantity'] * $amount;
         }
-        return floatval($basketAmount);
+        return floatval(number_format($basketAmount, 2, '.', ''));
     }
 
     /**
@@ -130,7 +130,7 @@ class BasketUtil
                 $product['name'],
                 $product['quantity'],
                 'x',
-                number_format($product['amount'] / 100, 2, '.'),
+                number_format($product['amount'] / 100, 2, '.', ''),
             ]);
         }
         return implode('; ', $desc);
