@@ -7,7 +7,6 @@ namespace Plugin\jtl_payrexx\paymentmethod;
 use JTL\Plugin\Payment\Method;
 use JTL\Plugin\Helper as PluginHelper;
 use JTL\Checkout\Bestellung;
-use Plugin\jtl_payrexx\paymentmethod\PayrexxPaymentGateway;
 use JTL\Plugin\PluginInterface;
 use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
@@ -22,11 +21,6 @@ use Plugin\jtl_payrexx\Util\BasketUtil;
  */
 class Base extends Method
 {
-    /**
-     * @var PayrexxPaymentGateway
-     */
-    private $payrexxPaymentGateway;
-
     /**
      * @var string
      */

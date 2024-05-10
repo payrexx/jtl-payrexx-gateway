@@ -206,5 +206,6 @@ class OrderService
         $incomingPayment->cZahlungsanbieter = $order->cZahlungsartName;
         $incomingPayment->cHinweis = $uuid;
         $paymentMethod->addIncomingPayment($order, $incomingPayment);
+        $paymentMethod->sendConfirmationMail($order);
     }
 }
