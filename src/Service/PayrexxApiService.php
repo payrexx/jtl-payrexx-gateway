@@ -6,9 +6,11 @@ use Exception;
 use JTL\Checkout\Bestellung;
 use JTL\Plugin\Helper as PluginHelper;
 use Payrexx\Models\Request\Gateway;
+use Payrexx\Models\Request\SignatureCheck;
 use Payrexx\Models\Request\Transaction;
 use Payrexx\Models\Response\Transaction as ResponseTransaction;
 use Payrexx\Payrexx;
+use Payrexx\PayrexxException;
 
 class PayrexxApiService
 {
@@ -114,7 +116,7 @@ class PayrexxApiService
 
         try {
             return $payrexx->create($gateway);
-        } catch (\Payrexx\PayrexxException $e) {
+        } catch (PayrexxException $e) {
             return null;
         }
     }
@@ -144,7 +146,7 @@ class PayrexxApiService
         try {
             $response = $payrexx->getOne($payrexxTransaction);
             return $response;
-        } catch (\Payrexx\PayrexxException $e) {
+        } catch (PayrexxException $e) {
             return null;
         }
     }
@@ -161,8 +163,24 @@ class PayrexxApiService
         try {
             $payrexxGateway = $payrexx->getOne($gateway);
             return $payrexxGateway;
-        } catch (\Payrexx\PayrexxException $e) {
+        } catch (PayrexxException $e) {
             throw new Exception('No gateway found by ID: ' . $gatewayId);
+        }
+    }
+
+    /**
+     * validate the api signature
+     *
+     * @return true|false
+     */
+    public function validateSignature(): bool
+    {
+        $payrexx = $this->getInterface();
+        try {
+            $payrexx->getOne(new SignatureCheck());
+            return true;
+        } catch (PayrexxException $e) {
+            return false;
         }
     }
 }

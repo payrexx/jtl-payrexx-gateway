@@ -132,7 +132,12 @@ class Base extends Method
         if ($gateway) {
             $orderService = new OrderService();
             $orderService->setPaymentGatewayId($order->kBestellung, $gateway->getId());
-            \header('Location:' . $gateway->getLink());
+            $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
+            $redirect = $gateway->getLink();
+            if (in_array($lang, ['en', 'de'])) {
+                $redirect = str_replace('?', $lang . '/?', $redirect);
+            }            
+            \header('Location:' . $redirect);
             exit();
         }
         $orderHash = $this->generateHash($order);

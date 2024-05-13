@@ -21,6 +21,8 @@ use JTL\Events\Dispatcher;
 use JTL\Plugin\Bootstrapper;
 use JTL\Plugin\Payment\Method;
 use JTL\Shop;
+use JTL\Smarty\JTLSmarty;
+use Plugin\jtl_payrexx\adminmenu\PayrexxBackendTabRenderer;
 use Plugin\jtl_payrexx\paymentmethod\Payrexx;
 
 /**
@@ -61,5 +63,19 @@ class Bootstrap extends Bootstrapper
                 Notification::getInstance()->addNotify($note);
             }
         }
+    }
+
+    /**
+     * Render the payrexx admin tabs in the shop backend
+     * 
+     * @param  string    $tabName
+     * @param  int       $menuID
+     * @param  JTLSmarty $smarty
+     * @return string
+     */
+    public function renderAdminMenuTab(string $tabName, int $menuID, JTLSmarty $smarty): string
+    {
+        $backendRenderer = new PayrexxBackendTabRenderer($this->getPlugin(), $this->getDB());
+        return $backendRenderer->renderPayrexxTabs($tabName, $menuID, $smarty);
     }
 }

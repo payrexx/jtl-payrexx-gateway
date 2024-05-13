@@ -11,6 +11,9 @@
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
+            <Customlink sort="0">
+                <Name>Validate</Name>
+            </Customlink>
             <!-- Payrexx Global Settings -->
             <Settingslink sort="1">
                 <Name>Payrexx Configuration</Name>
@@ -514,5 +517,26 @@
                 </LinkLanguage>
             </Link>
         </FrontendLink>
+        <Locales>
+            <!-- Backend language text -->
+            <Variable>
+                <Name>jtl_payrexx_signature_check_success</Name>
+                <Description>signature check success</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Signature validated successfully. Your configurations are correct.]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Signatur erfolgreich validiert. Ihre Grundeinstellungen sind korrekt.]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_signature_check_fail</Name>
+                <Description>signature check fail</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Signature validation failed. Pleae check your configurations.]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Die Überprüfung der Signatur ist fehlgeschlagen. Bitte überprüfen Sie Ihre Konfigurationen.]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_signature_check_submit</Name>
+                <Description>Submit button</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Click to validate]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Klicken Sie zum Bestätigen]]></VariableLocalized>
+            </Variable>
+        </Locales>
     </Install>
 </jtlshopplugin>
