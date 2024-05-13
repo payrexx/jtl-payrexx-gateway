@@ -49,7 +49,7 @@ class PayrexxBackendTabRenderer
     {
         $this->smarty = $smarty;
 
-        if ($tabName == 'Validate') {
+        if ($tabName == 'validate_configuration') {
             return $this->renderSignatureValidatePage();
         } else {
             throw new InvalidArgumentException('Cannot render tab ' . $tabName);

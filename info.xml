@@ -12,7 +12,7 @@
     <Install>
         <Adminmenu>
             <Customlink sort="0">
-                <Name>Validate</Name>
+                <Name>validate_configuration</Name>
             </Customlink>
             <!-- Payrexx Global Settings -->
             <Settingslink sort="1">
