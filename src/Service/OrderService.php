@@ -77,11 +77,17 @@ class OrderService
                 $this->addIncommingPayment($order, $uuid, $currency, $amount);
                 return;
             case Transaction::REFUNDED:
+                if (strpos($order->cKommentar, $uuid) !== false) {
+                    return;
+                }
                 // Refunded
                 $orderNewStatus = 'refunded';
                 $comment = 'Payment refunded (' . $uuid . ')';
                 break;
             case Transaction::PARTIALLY_REFUNDED:
+                if (strpos($order->cKommentar, $uuid) !== false) {
+                    return;
+                }
                 // partially refunded
                 $orderNewStatus = 'partially-refunded';
                 $comment = 'Payment was partially refunded (' . $uuid . ')';
