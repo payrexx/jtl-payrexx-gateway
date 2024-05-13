@@ -138,13 +138,17 @@ class OrderService
      */
     private function updateOrderStatus(Bestellung $order, $currentStatus, $newStatus, $comment = '')
     {
+        $oldComment = $order->cKommentar;
+        if (!empty($oldComment)) {
+            $oldComment = $oldComment . '; ';
+        }
         Shop::Container()->getDB()->update(
             'tbestellung',
             ['kBestellung', 'cStatus'],
             [$order->kBestellung, $currentStatus],
             (object)[
                 'cStatus' => $newStatus,
-                'cKommentar' => $order->cKommentar . '; ' . $comment
+                'cKommentar' => $oldComment . $comment
             ]
         );
     }
@@ -155,11 +159,15 @@ class OrderService
      */
     private function updateOrderComment($order, string $comment)
     {
+        $oldComment = $order->cKommentar;
+        if (!empty($oldComment)) {
+            $oldComment = $oldComment . '; ';
+        }
         Shop::Container()->getDB()->update(
             'tbestellung',
             ['kBestellung'],
             [$order->kBestellung],
-            (object)['cKommentar' => $order->cKommentar . '; ' . $comment]
+            (object)['cKommentar' =>  $oldComment . $comment]
         );
     }
 

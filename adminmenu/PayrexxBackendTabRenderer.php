@@ -2,7 +2,6 @@
 
 namespace Plugin\jtl_payrexx\adminmenu;
 
-use InvalidArgumentException;
 use JTL\Plugin\PluginInterface;
 use JTL\Shop;
 use JTL\DB\DbInterface;
@@ -52,7 +51,7 @@ class PayrexxBackendTabRenderer
         if ($tabName == 'validate_configuration') {
             return $this->renderSignatureValidatePage();
         } else {
-            throw new InvalidArgumentException('Cannot render tab ' . $tabName);
+            return '';
         }
     }
 
