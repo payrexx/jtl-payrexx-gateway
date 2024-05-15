@@ -22,6 +22,24 @@
                     <ValueName>payrexx_platform</ValueName>
                     <SelectboxOptions>
                         <Option value="payrexx.com" sort="0">Payrexx</Option>
+                        <Option value="zahls.ch" sort="1">Zahls</Option>
+                        <Option value="spenden-grunliberale.ch" sort="2">GrÃ¼nliberale Schweiz</Option>
+                        <Option value="deinshop.online" sort="3">Deinshop.online</Option>
+                        <Option value="swissbrain-pay.ch" sort="4">Swissbrain</Option>
+                        <Option value="loop-pay.com" sort="5">Loop Pay</Option>
+                        <Option value="shop-and-pay.com" sort="6">Shop and Pay</Option>
+                        <Option value="loxopay.ch" sort="7">Loxopay</Option>
+                        <Option value="ideal-pay.ch" sort="8">Ideal Pay</Option>
+                        <Option value="comvation.shop" sort="9">Comvation</Option>
+                        <Option value="payzzter.com" sort="10">Payzzter</Option>
+                        <Option value="go2flow.finance" sort="11">Go 2 Flow Finance</Option>
+                        <Option value="4else.de" sort="12">4else</Option>
+                        <Option value="bkpos-pay.com" sort="13">Hiopos</Option>
+                        <Option value="paymentmasta.com" sort="14">PaymentMasta</Option>
+                        <Option value="pay.boukii.com" sort="15">Boukii (Neuron-e)</Option>
+                        <Option value="payrexx.aboon.ch" sort="16">Aboon</Option>
+                        <Option value="1pay.ch" sort="17">1pay.ch</Option>
+                        <Option value="pay.weblandschaft.ch" sort="18">Weblandschaft</Option>
                     </SelectboxOptions>
                 </Setting>
                 <Setting type="text" initialValue="" sort="2" conf="Y">
