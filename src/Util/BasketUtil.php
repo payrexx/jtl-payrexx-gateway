@@ -20,6 +20,7 @@ class BasketUtil
         $basketItems = [];
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
         foreach ($products as $productData) {
+            $vatRate = CartItem::getTaxRate($productData);
             switch ($productData->nPosTyp) {
                 case \C_WARENKORBPOS_TYP_VERSANDPOS:
                     $shippingPrice = Tax::getGross(
@@ -33,6 +34,7 @@ class BasketUtil
                         'name' => 'shipping',
                         'quantity' => 1,
                         'amount' => $shippingPrice * 100,
+                        'vatRate' => $vatRate,
                     ];
                     break;
 
@@ -84,6 +86,7 @@ class BasketUtil
                             'quantity' => $productData->nAnzahl,
                             'amount' => $priceTotal * 100,
                             'sku' => $productData->cArtNr,
+                            'vatRate' => $vatRate, 
                         ];
                     }
 
@@ -92,6 +95,7 @@ class BasketUtil
                             'name' => 'Discount',
                             'quantity' => 1,
                             'amount' => $priceTotal * 100,
+                            'vatRate' => $vatRate, 
                         ];
                     }
             }
