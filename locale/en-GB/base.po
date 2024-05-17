@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-02 14:25+0000\n"
-"PO-Revision-Date: 2024-05-13 09:01+0000\n"
+"PO-Revision-Date: 2024-05-17 08:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: No linguistic content\n"
 "Language: zxx\n"
@@ -53,3 +53,9 @@ msgstr "Enter a profile ID if you wish to use a specific Look&Feel profile."
 
 msgid "validate_configuration"
 msgstr "Validate Configuration"
+
+msgid "Look and Feel Profile Id"
+msgstr "Look & Feel Profile ID"
+
+msgid "API Secret"
+msgstr "API Secret"
