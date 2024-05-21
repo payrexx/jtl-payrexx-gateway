@@ -2,7 +2,7 @@
 <jtlshopplugin>
     <Name>JTL Payrexx Payment</Name>
     <Description>JTL Payrexx Payment - Accept payments using Payrexx Payment gateway!</Description>
-    <Author>payrexx</Author>
+    <Author>Payrexx</Author>
     <URL>https://www.payrexx.com</URL>
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
@@ -11,6 +11,9 @@
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
+            <Customlink sort="0">
+                <Name>validate_configuration</Name>
+            </Customlink>
             <!-- Payrexx Global Settings -->
             <Settingslink sort="1">
                 <Name>Payrexx Configuration</Name>
@@ -19,6 +22,24 @@
                     <ValueName>payrexx_platform</ValueName>
                     <SelectboxOptions>
                         <Option value="payrexx.com" sort="0">Payrexx</Option>
+                        <Option value="zahls.ch" sort="1">Zahls</Option>
+                        <Option value="spenden-grunliberale.ch" sort="2">GrÃ¼nliberale Schweiz</Option>
+                        <Option value="deinshop.online" sort="3">Deinshop.online</Option>
+                        <Option value="swissbrain-pay.ch" sort="4">Swissbrain</Option>
+                        <Option value="loop-pay.com" sort="5">Loop Pay</Option>
+                        <Option value="shop-and-pay.com" sort="6">Shop and Pay</Option>
+                        <Option value="loxopay.ch" sort="7">Loxopay</Option>
+                        <Option value="ideal-pay.ch" sort="8">Ideal Pay</Option>
+                        <Option value="comvation.shop" sort="9">Comvation</Option>
+                        <Option value="payzzter.com" sort="10">Payzzter</Option>
+                        <Option value="go2flow.finance" sort="11">Go 2 Flow Finance</Option>
+                        <Option value="4else.de" sort="12">4else</Option>
+                        <Option value="bkpos-pay.com" sort="13">Hiopos</Option>
+                        <Option value="paymentmasta.com" sort="14">PaymentMasta</Option>
+                        <Option value="pay.boukii.com" sort="15">Boukii (Neuron-e)</Option>
+                        <Option value="payrexx.aboon.ch" sort="16">Aboon</Option>
+                        <Option value="1pay.ch" sort="17">1pay.ch</Option>
+                        <Option value="pay.weblandschaft.ch" sort="18">Weblandschaft</Option>
                     </SelectboxOptions>
                 </Setting>
                 <Setting type="text" initialValue="" sort="2" conf="Y">
@@ -55,17 +76,65 @@
                 <MethodLanguage iso="GER">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Amex</Name>
+                <Sort>1</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Amex.php</ClassFile>
+                <ClassName>Amex</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Amex</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Amex</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Bank Transfer</Name>
+                <Sort>2</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>BankTransfer.php</ClassFile>
+                <ClassName>BankTransfer</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>BankTransfer</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>BankTransfer</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
                 <Name>Mastercard</Name>
-                <Sort>0</Sort>
+                <Sort>3</Sort>
                 <SendMail>1</SendMail>
                 <Provider>Payrexx</Provider>
                 <TSCode>OTHER</TSCode>
@@ -79,14 +148,413 @@
                 <MethodLanguage iso="GER">
                     <Name>Mastercard</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Mastercard</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Info Text</InfoText>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Visa</Name>
+                <Sort>4</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Visa.php</ClassFile>
+                <ClassName>Visa</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Visa</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>ApplePay</Name>
+                <Sort>5</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>ApplePay.php</ClassFile>
+                <ClassName>ApplePay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>ApplePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>ApplePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Centi</Name>
+                <Sort>6</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Centi.php</ClassFile>
+                <ClassName>Centi</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Centi</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Centi</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>GooglePay</Name>
+                <Sort>7</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>GooglePay.php</ClassFile>
+                <ClassName>GooglePay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>GooglePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>GooglePay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>HeidiPay</Name>
+                <Sort>8</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>HeidiPay.php</ClassFile>
+                <ClassName>HeidiPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>HeidiPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Heidipay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Invoice</Name>
+                <Sort>9</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Invoice.php</ClassFile>
+                <ClassName>Invoice</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Invoice</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Invoice</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Maestro</Name>
+                <Sort>10</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Maestro.php</ClassFile>
+                <ClassName>Maestro</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Maestro</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Maestro</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Masterpass</Name>
+                <Sort>11</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Masterpass.php</ClassFile>
+                <ClassName>Masterpass</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Masterpass</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Masterpass</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Paypal</Name>
+                <Sort>12</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Paypal.php</ClassFile>
+                <ClassName>Paypal</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Paypal</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Paypal</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>PostFinanceCard</Name>
+                <Sort>13</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>PostFinanceCard.php</ClassFile>
+                <ClassName>PostFinanceCard</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>PostFinanceCard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>PostFinanceCard</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Reka</Name>
+                <Sort>14</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Reka.php</ClassFile>
+                <ClassName>Reka</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Reka</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Reka</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>SamsungPay</Name>
+                <Sort>15</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>SamsungPay.php</ClassFile>
+                <ClassName>SamsungPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>SamsungPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>SamsungPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Twint</Name>
+                <Sort>16</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Twint.php</ClassFile>
+                <ClassName>Twint</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Twint</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Twint</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>WirPay</Name>
+                <Sort>17</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>WirPay.php</ClassFile>
+                <ClassName>WirPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>WirPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>WirPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>PostFinanceEFinance</Name>
+                <Sort>0</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>PostFinanceEFinance.php</ClassFile>
+                <ClassName>PostFinanceEFinance</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>PostFinanceEFinance</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>PostFinanceEFinance</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
         </PaymentMethod>
+        <FrontendLink>
+            <Link>
+                <Filename>payrexx_webhook.php</Filename>
+                <Name>Payrexx Webhook</Name>
+                <Template>empty.tpl</Template>
+                <VisibleAfterLogin>N</VisibleAfterLogin>
+                <PrintButton>N</PrintButton>
+                <SSL>2</SSL>
+                <LinkLanguage iso="GER">
+                    <Seo>payrexx-webhook</Seo>
+                    <Name>Payrexx</Name>
+                    <Title>Payrexx</Title>
+                    <MetaTitle>Payrexx</MetaTitle>
+                    <MetaKeywords>Payrexx</MetaKeywords>
+                    <MetaDescription>Payrexx</MetaDescription>
+                </LinkLanguage>
+            </Link>
+        </FrontendLink>
+        <Locales>
+            <!-- Backend language text -->
+            <Variable>
+                <Name>jtl_payrexx_signature_check_success</Name>
+                <Description>signature check success</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Signature validated successfully. Your configurations are correct.]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Signatur erfolgreich validiert. Ihre Grundeinstellungen sind korrekt.]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_signature_check_fail</Name>
+                <Description>signature check fail</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Signature validation failed. Pleae check your configurations.]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Die Überprüfung der Signatur ist fehlgeschlagen. Bitte überprüfen Sie Ihre Konfigurationen.]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_signature_check_submit</Name>
+                <Description>Submit button</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Click to validate]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Klicken Sie zum Bestätigen]]></VariableLocalized>
+            </Variable>
+        </Locales>
     </Install>
 </jtlshopplugin>

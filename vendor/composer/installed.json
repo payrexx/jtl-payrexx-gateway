@@ -1,0 +1,57 @@
+{
+    "packages": [
+        {
+            "name": "payrexx/payrexx",
+            "version": "v1.8.7",
+            "version_normalized": "1.8.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/payrexx/payrexx-php.git",
+                "reference": "1f04a44cfb1bbdb113c128df31925e42163c0466"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/1f04a44cfb1bbdb113c128df31925e42163c0466",
+                "reference": "1f04a44cfb1bbdb113c128df31925e42163c0466",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.9"
+            },
+            "time": "2023-07-06T07:19:51+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Payrexx": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Payrexx AG",
+                    "homepage": "https://www.payrexx.com"
+                }
+            ],
+            "description": "Payrexx PHPLib",
+            "homepage": "https://www.payrexx.com",
+            "keywords": [
+                "gateway",
+                "payment"
+            ],
+            "support": {
+                "issues": "https://github.com/payrexx/payrexx-php/issues",
+                "source": "https://github.com/payrexx/payrexx-php/tree/v1.8.7"
+            },
+            "install-path": "../payrexx/payrexx"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

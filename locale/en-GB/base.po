@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-02 14:25+0000\n"
+"PO-Revision-Date: 2024-05-17 08:53+0000\n"
+"Last-Translator: \n"
+"Language-Team: No linguistic content\n"
+"Language: zxx\n"
+"Plural-Forms: nplurals=2; plural=n!=1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: en_IN\n"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Generator: Loco https://localise.biz/"
+
+msgctxt "JTL Payrexx Payment"
+msgid "JTL Payrexx Payment"
+msgstr "JTL Payrexx Payment"
+
+msgid "JTL Payrexx Payment - Accept payments using Payrexx Payment gateway!"
+msgstr "JTL Payrexx Payment - Accept payments using Payrexx Payment gateway!"
+
+msgid "Payrexx"
+msgstr "Payrexx"
+
+msgid "Payrexx Configuration"
+msgstr "Payrexx Configuration"
+
+msgid "Choose Your Platform"
+msgstr "Choose Your Platform"
+
+msgid "Instance Name"
+msgstr "Instance Name"
+
+msgid ""
+"INSTANCE NAME is a part of the url where you access your payrexx "
+"installation. https://INSTANCE.payrexx.com"
+msgstr ""
+"INSTANCE NAME is a part of the url where you access your payrexx "
+"installation. https://INSTANCE.payrexx.com"
+
+msgid ""
+"Paste here your API key from the Integrations page of your Payrexx merchant "
+"backend."
+msgstr ""
+"Paste here your API key from the Integrations page of your Payrexx merchant "
+"backend."
+
+msgid "Enter a profile ID if you wish to use a specific Look&Feel profile."
+msgstr "Enter a profile ID if you wish to use a specific Look&Feel profile."
+
+msgid "validate_configuration"
+msgstr "Validate Configuration"
+
+msgid "Look and Feel Profile Id"
+msgstr "Look & Feel Profile ID"
+
+msgid "API Secret"
+msgstr "API Secret"
