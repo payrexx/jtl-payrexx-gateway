@@ -28,5 +28,5 @@ Note: It may work on future JTL Shop releases, but performance cannot be guarant
 
 ## Payrexx Configuration
  1. To Configure the webhook URL in Payrexx, Log in to your Payrexx account.
- 2. Go to settings -> API --> Find Webhook URL
+ 2. Go to Webhooks -> Add webhook
  3. Insert the URL to your shop and add /payrexx-webhook (e.g. If your shop URL is http://www.example.com, the Webhook URL will be http://www.example.com/payrexx-webhook)
