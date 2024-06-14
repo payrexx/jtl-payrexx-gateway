@@ -10,8 +10,8 @@ Note: It may work on future JTL Shop releases, but performance cannot be guarant
 **Please install it manually**
 ### Manual Installation
 1. Download the latest version of the module (the '.zip' file)
-2. Uncompress the zip file you download and rename it to jtl_payrexx.
-3. Include it in your JTL shop /plugins folder.
+2. Uncompress the zip file.
+3. Include **jtl_payrexx** folder in your JTL shop /plugins folder.
 4. Login to JTL 5 shop backend > Plug-in manager, select the plugin and click Install
 5. After installation click on the Settings "gear" icon
 6. Enter the correct data from Payrexx and click Save.
