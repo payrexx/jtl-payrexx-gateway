@@ -18,13 +18,14 @@ Note: It may work on future JTL Shop releases, but performance cannot be guarant
 
 ### Installation via Shop Backend
 1. Download the latest version of the module (the '.zip' file)
-2. Go to the administration panel of your JTL Shop
-3. In your administration panel, select the 'Plugins' menu and then choose 'Plug-in Manager'
-4. Click the 'Upload' tab, select 'Choose', and then upload the '.zip' file that you downloaded earlier
-5. After the module has been uploaded, go to the 'Available' tag, activate the checkbox for 'jtl_payrexx', and press 'Install'
-6. Switching back to the 'Active' tab 
-7. After installation click on the Settings "gear" icon
-8. Enter the correct data from Payrexx and click Save.
+2. Uncompress the zip file and compress the zip for **jtl_payrexx**
+3. Go to the administration panel of your JTL Shop
+4. In your administration panel, select the 'Plugins' menu and then choose 'Plug-in Manager'
+5. Click the 'Upload' tab, select 'Choose', and then upload the 'jtl_payrexx.zip' file.
+6. After the module has been uploaded, go to the 'Available' tag, activate the checkbox for 'jtl_payrexx', and press 'Install'
+7. Switching back to the 'Active' tab 
+8. After installation click on the Settings "gear" icon
+9. Enter the correct data from Payrexx and click Save.
 
 ## Payrexx Configuration
  1. To Configure the webhook URL in Payrexx, Log in to your Payrexx account.
