@@ -13,7 +13,7 @@ class IdealPayment extends Base
     /**
      * @var string $pm payrexx payment method Id
      */
-    private $pm = 'ideal_payment';
+    private $pm = 'ideal-payment';
 
     public function __construct(string $moduleID)
     {
