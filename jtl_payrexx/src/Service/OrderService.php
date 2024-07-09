@@ -197,7 +197,7 @@ class OrderService
             $order->kBestellung
         );
         // check the record for incomming payment for current order
-        if (!empty($incommingPayment->kZahlungseingang)) {
+        if (!empty($incommingPayment->kZahlungseingang) && $incommingPayment->cHinweis == $uuid) {
             return;
         }
         $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
