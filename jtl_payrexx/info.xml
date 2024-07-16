@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
@@ -356,7 +356,7 @@
                 </MethodLanguage>
             </Method>
             <Method>
-                <Name>PostFinanceCard</Name>
+                <Name>Post Finance Pay</Name>
                 <Sort>13</Sort>
                 <SendMail>1</SendMail>
                 <Provider>Payrexx</Provider>
@@ -365,16 +365,16 @@
                 <Soap>0</Soap>
                 <Curl>0</Curl>
                 <Sockets>0</Sockets>
-                <ClassFile>PostFinanceCard.php</ClassFile>
-                <ClassName>PostFinanceCard</ClassName>
+                <ClassFile>PostFinancePay.php</ClassFile>
+                <ClassName>PostFinancePay</ClassName>
                 <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
                 <MethodLanguage iso="GER">
-                    <Name>PostFinanceCard</Name>
+                    <Name>Post Finance Pay</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
-                    <Name>PostFinanceCard</Name>
+                    <Name>Post Finance Pay</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
@@ -471,30 +471,6 @@
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>WirPay</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
-                </MethodLanguage>
-            </Method>
-            <Method>
-                <Name>PostFinanceEFinance</Name>
-                <Sort>18</Sort>
-                <SendMail>1</SendMail>
-                <Provider>Payrexx</Provider>
-                <TSCode>OTHER</TSCode>
-                <PreOrder>0</PreOrder>
-                <Soap>0</Soap>
-                <Curl>0</Curl>
-                <Sockets>0</Sockets>
-                <ClassFile>PostFinanceEFinance.php</ClassFile>
-                <ClassName>PostFinanceEFinance</ClassName>
-                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
-                <MethodLanguage iso="GER">
-                    <Name>PostFinanceEFinance</Name>
-                    <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
-                </MethodLanguage>
-                <MethodLanguage iso="ENG">
-                    <Name>PostFinanceEFinance</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
