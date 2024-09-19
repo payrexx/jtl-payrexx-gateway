@@ -97,14 +97,12 @@ class PayrexxApiService
         $gateway->setValidity(15);
 
         $customer = $order->oKunde;
+        $street = $customer->cStrasse . ' ' . $customer->cHausnummer;
         $gateway->addField('forename', $customer->cVorname);
         $gateway->addField('surname', $customer->cNachname);
         $gateway->addField('email', $customer->cMail);
         $gateway->addField('company', $customer->cFirma);
-        $gateway->addField(
-            'street',
-            $customer->cStrasse . ' ' . $customer->cHausnummer
-        );
+        $gateway->addField('street', $street);
         $gateway->addField('postcode', $customer->cPLZ);
         $gateway->addField('place', $customer->cOrt);
         $gateway->addField('country', $customer->cLand);
@@ -112,13 +110,11 @@ class PayrexxApiService
         $gateway->addField('custom_field_2', $order->cBestellNr, 'Shop Order Number');
 
         $deliveryInfo = $order->Lieferadresse;
+        $deliveryStreet = $deliveryInfo->cStrasse . ' ' . $deliveryInfo->cHausnummer;
         $gateway->addField('delivery_forename', $deliveryInfo->cVorname);
         $gateway->addField('delivery_surname', $deliveryInfo->cNachname);
         $gateway->addField('delivery_company', $deliveryInfo->cFirma);
-        $gateway->addField(
-            'delivery_street',
-            $deliveryInfo->cStrasse . ' ' . $deliveryInfo->cHausnummer
-        );
+        $gateway->addField('delivery_street', $deliveryStreet);
         $gateway->addField('delivery_postcode', $deliveryInfo->cPLZ);
         $gateway->addField('delivery_place', $deliveryInfo->cOrt);
         $gateway->addField('delivery_country', $deliveryInfo->cLand);
