@@ -104,7 +104,7 @@ class Base extends Method
      */
     public function preparePaymentProcess(Bestellung $order): void
     {
-        $currency  = Frontend::getCurrency()->getCode();
+        $currency = $order->Waehrung->getCode();
         $paymentHash = $this->generateHash($order);
         $successUrl = $this->getNotificationURL($paymentHash);
         $cancelUrl =  $this->getNotificationURL($paymentHash) . '&cancelled';
