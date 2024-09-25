@@ -104,17 +104,21 @@ class Base extends Method
      */
     public function preparePaymentProcess(Bestellung $order): void
     {
-        $currency = $order->Waehrung->getCode();
+        $payrexxApiService = new PayrexxApiService();
         $paymentHash = $this->generateHash($order);
         $successUrl = $this->getNotificationURL($paymentHash);
         $cancelUrl =  $this->getNotificationURL($paymentHash) . '&cancelled';
-        $payrexxApiService = new PayrexxApiService();
-        $pm = $this->pm;
-        $basket = [];
-        $purpose = '';
         $basketItems = BasketUtil::getBasketDetails($order);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
-        if ($order->fGesamtsumme && floatval($order->fGesamtsumme) === $basketAmount) {
+        
+        $currencyFactor = Frontend::getCurrency()->getConversionFactor();
+        $convertedPrice = $order->fGesamtsumme * $currencyFactor;
+        $totalAmount = (float)number_format($convertedPrice, 2, '.', '');
+        $currency = $order->Waehrung->cISO;
+
+        $basket = [];
+        $purpose = '';
+        if ($totalAmount && $totalAmount === $basketAmount) {
             $basket = $basketItems;
         } else {
             $purpose = BasketUtil::createPurposeByBasket($basketItems);
@@ -125,9 +129,10 @@ class Base extends Method
             $currency,
             $successUrl,
             $cancelUrl,
-            $pm,
+            $this->pm,
             $basket,
-            $purpose
+            $purpose,
+            $totalAmount
         );
         if ($gateway) {
             $orderService = new OrderService();

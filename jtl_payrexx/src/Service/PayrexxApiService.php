@@ -67,6 +67,7 @@ class PayrexxApiService
      * @param string $pm
      * @param array $basket
      * @param string $purpose
+     * @param float $totalAmount
      * @return Gateway|null
      */
     public function createPayrexxGateway(
@@ -77,13 +78,13 @@ class PayrexxApiService
         string $pm,
         array $basket,
         string $purpose,
+        float $totalAmount
     ) {
-        $totalAmount = $order->fGesamtsumme;
         $orderId = $order->kBestellung;
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
-        $gateway->setAmount($totalAmount * 100);
+        $gateway->setAmount((int)($totalAmount * 100));
         $gateway->setCurrency($currency);
         $gateway->setSuccessRedirectUrl($successUrl);
         $gateway->setFailedRedirectUrl($cancelUrl);
