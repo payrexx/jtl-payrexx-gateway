@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
@@ -543,6 +543,54 @@
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Ideal Payment</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Diners Club</Name>
+                <Sort>22</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>DinersClub.php</ClassFile>
+                <ClassName>DinersClub</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Diners Club</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Diners Club</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>Discover</Name>
+                <Sort>23</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>Discover.php</ClassFile>
+                <ClassName>Discover</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>Discover</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>Discover</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
