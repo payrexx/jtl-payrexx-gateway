@@ -46,7 +46,7 @@ class Bootstrap extends Bootstrapper
                         try {
                             $paymentMethod = $args['mail']->getData()->tbestellung->cZahlungsartName;
                             if ($paymentMethod === 'Payrexx' && $args['mail']->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG) {
-                                $args['mail']->setToMail('');
+                                $args['mail']->setToMail(''); // set empty to stop sending email.
                             }
                         } catch(\Exception $e) {
                            // nothing
