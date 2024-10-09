@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
+use JTL\Alert\Alert;
 use JTL\Plugin\Payment\Method;
 use JTL\Plugin\Helper as PluginHelper;
 use JTL\Checkout\Bestellung;
 use JTL\Plugin\PluginInterface;
 use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
+use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
@@ -180,6 +182,16 @@ class Base extends Method
                 $order,
                 Transaction::CANCELLED
             );
+
+            $langCode = $_SESSION['currentLanguage']->localizedName ?? 'en';
+            $langText = 'jtl_payrexx_payment_cancelled';
+            $errorMessage = $this->plugin->getLocalization()->getTranslation($langText, $langCode);;
+            $errorMessage = $errorMessage ?? 'Your order has been canceled. Please choose a payment method to create a new order.';
+            $alertHelper = Shop::Container()->getAlertService();
+            $alertHelper->addAlert(Alert::TYPE_ERROR, $errorMessage, md5($errorMessage), ['saveInSession' => true]);
+            $linkHelper = Shop::Container()->getLinkService();
+            \header('Location: ' . $linkHelper->getStaticRoute('bestellvorgang.php') . '?editZahlungsart=1');
+            exit();
         }
     }
 
