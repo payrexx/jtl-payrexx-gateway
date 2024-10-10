@@ -38,7 +38,23 @@ class Bootstrap extends Bootstrapper
     {
         parent::boot($dispatcher);
         if (Shop::isFrontend()) {
-            //... do whatever is neccessary in frontend
+            // Hooks
+            $dispatcher->listen(
+                'shop.hook.' . \HOOK_MAIL_PRERENDER,
+                function ($args) {
+                    if (isset($args['mail'])) {
+                        try {
+                            $paymentMethod = $args['mail']->getData()->tbestellung->cZahlungsartName;
+                            if ($paymentMethod === 'Payrexx' && $args['mail']->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG) {
+                                $args['mail']->setToMail(''); // set empty to stop sending email.
+                            }
+                        } catch(\Exception $e) {
+                           // nothing
+                        }
+                    }
+                },
+                10
+            );
         } else {
             $dispatcher->listen('backend.notification', [$this, 'checkPayments']);
         }

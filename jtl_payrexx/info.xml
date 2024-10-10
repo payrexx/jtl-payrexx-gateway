@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
@@ -633,6 +633,11 @@
                 <Description>Submit button</Description>
                 <VariableLocalized iso="ENG"><![CDATA[Click to validate]]></VariableLocalized>
                 <VariableLocalized iso="GER"><![CDATA[Klicken Sie zum Bestätigen]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_payment_cancelled</Name>
+                <VariableLocalized iso="GER"><![CDATA[Ihre Bestellung wurde storniert. Bitte wählen Sie eine Zahlungsmethode, um eine neue Bestellung zu erstellen.]]></VariableLocalized>
+                <VariableLocalized iso="ENG"><![CDATA[Your order has been canceled. Please choose a payment method to create a new order.]]></VariableLocalized>
             </Variable>
         </Locales>
     </Install>
