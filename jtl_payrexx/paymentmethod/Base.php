@@ -39,9 +39,6 @@ class Base extends Method
     /** @var PaymentMethod|null */
     private ?PaymentMethod $method;
 
-    /** @var bool */
-    private bool $payAgain;
-
     /**
      * @var string
      */
@@ -71,7 +68,6 @@ class Base extends Method
         $pluginID       = PluginHelper::getIDByModuleID($this->moduleID);
         $this->plugin   = PluginHelper::getLoaderByPluginID($pluginID)->init($pluginID);
         $this->method   = $this->plugin->getPaymentMethods()->getMethodByID($this->moduleID);
-        $this->payAgain = $nAgainCheckout > 0;
 
         return $this;
     }
@@ -84,7 +80,7 @@ class Base extends Method
      */
     public function isValidIntern(array $args_arr = []): bool
     {
-        return true;
+        return parent::isValidIntern($args_arr) && $this->duringCheckout === 0;
     }
 
     /**
@@ -126,6 +122,12 @@ class Base extends Method
             $purpose = BasketUtil::createPurposeByBasket($basketItems);
         }
 
+        $orderHash = $this->generateHash($order);
+        if (!$order->kBestellung) {
+            \header('Location:' . $this->getNotificationURL($orderHash));
+            exit();
+        }
+
         $gateway = $payrexxApiService->createPayrexxGateway(
             $order,
             $currency,
@@ -147,7 +149,6 @@ class Base extends Method
             \header('Location:' . $redirect);
             exit();
         }
-        $orderHash = $this->generateHash($order);
         \header('Location:' . $this->getNotificationURL($orderHash));
     }
 
@@ -207,6 +208,14 @@ class Base extends Method
      * @inheritDoc
      */
     public function redirectOnCancel(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function canPayAgain(): bool
     {
         return true;
     }
