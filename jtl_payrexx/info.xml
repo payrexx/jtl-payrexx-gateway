@@ -59,12 +59,12 @@
                 <MethodLanguage iso="GER">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Payment Before after completion not supported</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText>Payment Before after completion not supported</InfoText>
+                    <InfoText></InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
