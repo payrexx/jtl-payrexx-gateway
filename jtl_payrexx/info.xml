@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <Adminmenu>
@@ -59,12 +59,12 @@
                 <MethodLanguage iso="GER">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
+                    <InfoText>Payment Before after completion not supported</InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Payrexx</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
-                    <InfoText></InfoText>
+                    <InfoText>Payment Before after completion not supported</InfoText>
                 </MethodLanguage>
             </Method>
             <Method>
