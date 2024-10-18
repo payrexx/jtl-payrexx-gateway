@@ -144,6 +144,14 @@ class OrderService
      */
     private function updateOrderStatus(Bestellung $order, $currentStatus, $newStatus, $comment = '')
     {
+        if ($newStatus === \BESTELLUNG_STATUS_STORNO) {
+            $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
+            $moduleId = $paymentMethodEntity->cModulId ?? '';
+            $paymentMethod = new Method($moduleId);
+            $paymentMethod->cancelOrder($order->kBestellung);
+            return;
+        }
+
         $oldComment = $order->cKommentar;
         if (!empty($oldComment)) {
             $oldComment = $oldComment . '; ';

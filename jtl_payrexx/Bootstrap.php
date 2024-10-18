@@ -17,6 +17,7 @@ if (file_exists(dirname(__DIR__) . '/jtl_payrexx/vendor/autoload.php')) {
 
 use JTL\Backend\Notification;
 use JTL\Backend\NotificationEntry;
+use JTL\Checkout\Zahlungsart;
 use JTL\Events\Dispatcher;
 use JTL\Plugin\Bootstrapper;
 use JTL\Plugin\Payment\Method;
@@ -44,12 +45,22 @@ class Bootstrap extends Bootstrapper
                 function ($args) {
                     if (isset($args['mail'])) {
                         try {
-                            $paymentMethod = $args['mail']->getData()->tbestellung->cZahlungsartName;
-                            if ($paymentMethod === 'Payrexx' && $args['mail']->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG) {
-                                $args['mail']->setToMail(''); // set empty to stop sending email.
+                            $email = $args['mail'];
+                            $emailData = $email->getData();
+
+                            // Check if order data and payment method exist
+                            if (isset($emailData->tbestellung) && $emailData->tbestellung->kZahlungsart) {
+                                $paymentMethodEntity = new Zahlungsart((int)$emailData->tbestellung->kZahlungsart);
+                                $paymentProvider = $paymentMethodEntity->cAnbieter ?? '';
+
+                                if ($paymentProvider === 'Payrexx' &&
+                                    $email->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG
+                                ) {
+                                    $email->setToMail(''); // Set an empty recipient to stop sending
+                                }
                             }
                         } catch(\Exception $e) {
-                           // nothing
+                            // nothing
                         }
                     }
                 },
@@ -83,7 +94,7 @@ class Bootstrap extends Bootstrapper
 
     /**
      * Render the payrexx admin tabs in the shop backend
-     * 
+     *
      * @param  string    $tabName
      * @param  int       $menuID
      * @param  JTLSmarty $smarty
