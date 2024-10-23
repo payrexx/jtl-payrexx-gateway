@@ -54,7 +54,8 @@ class Bootstrap extends Bootstrapper
                                 $paymentProvider = $paymentMethodEntity->cAnbieter ?? '';
 
                                 if ($paymentProvider === 'Payrexx' &&
-                                    $email->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG
+                                    $email->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG &&
+                                    (int) $emailData->tbestellung->cStatus !== (int) \BESTELLUNG_STATUS_BEZAHLT
                                 ) {
                                     $email->setToMail(''); // Set an empty recipient to stop sending
                                 }
