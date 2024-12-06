@@ -45,6 +45,16 @@ class Base extends Method
     private $pm;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
+     * @var PayrexxApiService
+     */
+    private $payrexxApiService;
+
+    /**
      * PayrexxPayment constructor.
      *
      * @param string $moduleID
@@ -53,6 +63,8 @@ class Base extends Method
     {
         $this->pm = $pm;
         parent::__construct($moduleID);
+        $this->orderService = new OrderService();
+        $this->payrexxApiService = new PayrexxApiService();
     }
 
     /**
@@ -80,7 +92,7 @@ class Base extends Method
      */
     public function isValidIntern(array $args_arr = []): bool
     {
-        return parent::isValidIntern($args_arr) && $this->duringCheckout === 0;
+        return parent::isValidIntern($args_arr);
     }
 
     /**
@@ -103,9 +115,9 @@ class Base extends Method
     public function preparePaymentProcess(Bestellung $order): void
     {
         $payrexxApiService = new PayrexxApiService();
-        $paymentHash = $this->generateHash($order);
-        $successUrl = $this->getNotificationURL($paymentHash);
-        $cancelUrl =  $this->getNotificationURL($paymentHash) . '&cancelled';
+        $orderHash = $this->generateHash($order);
+        $successUrl = $this->getNotificationURL($orderHash);
+        $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
         $basketItems = BasketUtil::getBasketDetails($order);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
         
@@ -122,10 +134,8 @@ class Base extends Method
             $purpose = BasketUtil::createPurposeByBasket($basketItems);
         }
 
-        $orderHash = $this->generateHash($order);
         if (!$order->kBestellung) {
-            \header('Location:' . $this->getNotificationURL($orderHash));
-            exit();
+            $successUrl = $this->getNotificationURL($orderHash) . '&sh=' . $orderHash;
         }
 
         $gateway = $payrexxApiService->createPayrexxGateway(
@@ -140,7 +150,11 @@ class Base extends Method
         );
         if ($gateway) {
             $orderService = new OrderService();
-            $orderService->setPaymentGatewayId($order->kBestellung, $gateway->getId());
+            $orderService->setPaymentGatewayId(
+                $order->kBestellung,
+                $gateway->getId(),
+                $order->cBestellNr
+            );
             $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
             $redirect = $gateway->getLink();
             if (in_array($lang, ['en', 'de'])) {
@@ -194,6 +208,28 @@ class Base extends Method
             \header('Location: ' . $linkHelper->getStaticRoute('bestellvorgang.php') . '?editZahlungsart=1');
             exit();
         }
+
+        if (isset($args['sh'])) {
+            $result = $this->orderService->getOrderInfoByOrderId(
+                $order->kBestellung ?? $order->cBestellNr
+            );
+            if (!$result) {
+                return;
+            }
+            $transaction = $this->payrexxApiService->getTransactionByGatewayId(
+                (int) $result->gateway_id
+            );
+            if (!$transaction) {
+                return;
+            }
+            $this->orderService->handleTransactionStatus(
+                $order,
+                $transaction->getStatus(),
+                $transaction->getUuid(),
+                $transaction->getInvoice()['currencyAlpha3'],
+                (int) $transaction->getInvoice()['totalAmount']
+            );
+        }
     }
 
     /**
@@ -217,6 +253,6 @@ class Base extends Method
      */
     public function canPayAgain(): bool
     {
-        return true;
+        return false;
     }
 }
