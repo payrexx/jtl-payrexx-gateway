@@ -69,8 +69,12 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
-            $orderId = $this->orderService->getShopOrderId($orderId);
-            $order = new Bestellung((int)$orderId);
+            if (!$order = new Bestellung((int) $orderId)) {
+                $result = $this->orderService->getOrderInfoByOrderId($orderId);
+                if ($result) {
+                    $order = new Bestellung((int)$result->order_id);
+                }
+            }
             if ($order) {
                 $this->orderService->handleTransactionStatus(
                     $order,

@@ -57,7 +57,7 @@ class Bootstrap extends Bootstrapper
                                     $email->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG &&
                                     (int) $emailData->tbestellung->cStatus !== (int) \BESTELLUNG_STATUS_BEZAHLT
                                 ) {
-                                    $email->setToMail(''); // Set an empty recipient to stop sending
+                                    // $email->setToMail(''); // Set an empty recipient to stop sending
                                 }
                             }
                         } catch(\Exception $e) {

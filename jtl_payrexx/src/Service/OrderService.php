@@ -17,9 +17,9 @@ class OrderService
      *
      * @param int|null $orderId
      * @param int $gatewayId
-     * @param string $orderNumber
+     * @param string $orderHash
      */
-    public function setPaymentGatewayId(?int $orderId, int $gatewayId, ?string $orderNumber): void
+    public function setPaymentGatewayId(?int $orderId, int $gatewayId, ?string $orderHash): void
     {
         $payrexxPayment = new stdClass();
         $payrexxPayment->gateway_id = $gatewayId;
@@ -28,7 +28,7 @@ class OrderService
             $payrexxPayment->order_id = (int) $orderId;
         }
         if ($orderNumber) {
-            $payrexxPayment->order_no = $orderNumber;
+            $payrexxPayment->order_hash = $orderHash;
         }
 
         Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
@@ -46,7 +46,7 @@ class OrderService
         $info = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
                 FROM `plugin_jtl_payrexx_payments`
-                WHERE (`order_id`  = :shopOrderId OR `order_no` = :shopOrderId) AND `gateway_id` = :gatewayId',
+                WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId) AND `gateway_id` = :gatewayId',
             [
                 ':shopOrderId' => $orderId,
                 ':gatewayId' => $gatewayId
@@ -237,7 +237,7 @@ class OrderService
         $result = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
                 FROM `plugin_jtl_payrexx_payments`
-                WHERE (`order_id`  = :shopOrderId OR `order_no` = :shopOrderId)',
+                WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId)',
             [
                 ':shopOrderId' => $orderId,
             ],
@@ -254,7 +254,7 @@ class OrderService
         $result = Shop::Container()->getDB()->queryPrepared(
             'SELECT `kBestellung`
                 FROM `tbestellung`
-                WHERE (`kBestellung`  = :shopOrderId OR `cBestellNr` = :shopOrderId)',
+                WHERE `kBestellung`  = :shopOrderId',
             [
                 ':shopOrderId' => $orderId,
             ],

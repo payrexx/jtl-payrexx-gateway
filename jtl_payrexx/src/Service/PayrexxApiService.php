@@ -208,7 +208,13 @@ class PayrexxApiService
         if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
             return null;
         }
-        if (!in_array($gateway->getStatus(), [Transaction::CONFIRMED, Transaction::WAITING])) {
+        if (!in_array(
+            $gateway->getStatus(),
+            [
+                ResponseTransaction::CONFIRMED,
+                ResponseTransaction::WAITING
+            ]
+        )) {
             return null;
         }
 

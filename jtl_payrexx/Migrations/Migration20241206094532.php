@@ -11,7 +11,7 @@ class Migration20241206094532 extends Migration implements IMigration
     {
         $this->execute(
             "ALTER TABLE `plugin_jtl_payments` 
-             ADD `order_no` VARCHAR(25) NULL AFTER `gateway_id`;"
+             ADD `order_hash` VARCHAR(100) NULL AFTER `gateway_id`;"
         );
 
         $this->execute(
@@ -24,7 +24,7 @@ class Migration20241206094532 extends Migration implements IMigration
     {
         $this->execute(
             "ALTER TABLE `plugin_jtl_payments` 
-             DROP COLUMN `order_no`;"
+             DROP COLUMN `order_hash`;"
         );
 
         $this->execute(

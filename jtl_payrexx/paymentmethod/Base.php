@@ -114,6 +114,9 @@ class Base extends Method
      */
     public function preparePaymentProcess(Bestellung $order): void
     {
+        if (isset($_SESSION['payrexxOrder'])) {
+            unset($_SESSION['payrexxOrder']);
+        }
         $payrexxApiService = new PayrexxApiService();
         $orderHash = $this->generateHash($order);
         $successUrl = $this->getNotificationURL($orderHash);
@@ -135,7 +138,7 @@ class Base extends Method
         }
 
         if (!$order->kBestellung) {
-            $successUrl = $this->getNotificationURL($orderHash) . '&sh=' . $orderHash;
+            $successUrl = $this->getNotificationURL($orderHash) . '&payed';
         }
 
         $gateway = $payrexxApiService->createPayrexxGateway(
@@ -150,11 +153,16 @@ class Base extends Method
         );
         if ($gateway) {
             $orderService = new OrderService();
-            $orderService->setPaymentGatewayId(
-                $order->kBestellung,
-                $gateway->getId(),
-                $order->cBestellNr
-            );
+            if ($order->kBestellung) {
+                $orderService->setPaymentGatewayId(
+                    $order->kBestellung,
+                    $gateway->getId(),
+                );
+            }
+            $_SESSION['payrexxOrder'] = [
+                'gatewayId' => $gateway->getId(),
+                'orderHash' => $orderHash,
+            ];
             $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
             $redirect = $gateway->getLink();
             if (in_array($lang, ['en', 'de'])) {
@@ -176,7 +184,10 @@ class Base extends Method
      */
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
-        return true;
+        if (isset($args['payed'])) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -209,15 +220,17 @@ class Base extends Method
             exit();
         }
 
-        if (isset($args['sh'])) {
-            $result = $this->orderService->getOrderInfoByOrderId(
-                $order->kBestellung ?? $order->cBestellNr
+        if (isset($args['sh']) &&
+            isset($_SESSION['payrexxOrder']) &&
+            ($args['sh'] === $_SESSION['payrexxOrder']['orderHash'])
+        ) {
+            $orderService->setPaymentGatewayId(
+                $order->kBestellung,
+                (int) $_SESSION['payrexxOrder']['gatewayId'],
+                $_SESSION['payrexxOrder']['orderHash']
             );
-            if (!$result) {
-                return;
-            }
             $transaction = $this->payrexxApiService->getTransactionByGatewayId(
-                (int) $result->gateway_id
+                (int) $_SESSION['payrexxOrder']['gatewayId']
             );
             if (!$transaction) {
                 return;
