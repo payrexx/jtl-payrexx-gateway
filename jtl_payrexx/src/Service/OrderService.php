@@ -225,7 +225,6 @@ class OrderService
         $incomingPayment->cHinweis = $uuid;
         $paymentMethod->addIncomingPayment($order, $incomingPayment);
         $paymentMethod->sendConfirmationMail($order);
-        $paymentMethod->sendMail($order->kBestellung, \MAILTEMPLATE_BESTELLBESTAETIGUNG);
     }
 
     /**
