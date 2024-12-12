@@ -115,6 +115,9 @@ class Base extends Method
     public function preparePaymentProcess(Bestellung $order): void
     {
         if (isset($_SESSION['payrexxOrder'])) {
+            $this->payrexxApiService->deletePayrexxGateway(
+                (int) $_SESSION['payrexxOrder']['gatewayId']
+            );
             unset($_SESSION['payrexxOrder']);
         }
         $payrexxApiService = new PayrexxApiService();
@@ -149,14 +152,15 @@ class Base extends Method
             $this->pm,
             $basket,
             $purpose,
-            $totalAmount
+            $totalAmount,
+            $orderHash
         );
         if ($gateway) {
-            $orderService = new OrderService();
             if ($order->kBestellung) {
-                $orderService->setPaymentGatewayId(
+                $this->orderService->setPaymentGatewayId(
                     $order->kBestellung,
                     $gateway->getId(),
+                    $orderHash,
                 );
             }
             $_SESSION['payrexxOrder'] = [
@@ -165,7 +169,8 @@ class Base extends Method
             ];
             $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
             $redirect = $gateway->getLink();
-            if (in_array($lang, ['en', 'de'])) {
+            $lang = strtolower(substr($lang, 0, 2));
+            if (in_array($lang, ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'])) {
                 $redirect = str_replace('?', $lang . '/?', $redirect);
             }            
             \header('Location:' . $redirect);
@@ -203,8 +208,7 @@ class Base extends Method
         parent::handleNotification($order, $hash, $args);
 
         if (isset($args['cancelled'])) {
-            $orderService = new OrderService();
-            $orderService->handleTransactionStatus(
+            $this->orderService->handleTransactionStatus(
                 $order,
                 Transaction::CANCELLED
             );
@@ -224,7 +228,7 @@ class Base extends Method
             isset($_SESSION['payrexxOrder']) &&
             ($args['sh'] === $_SESSION['payrexxOrder']['orderHash'])
         ) {
-            $orderService->setPaymentGatewayId(
+            $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
                 (int) $_SESSION['payrexxOrder']['gatewayId'],
                 $_SESSION['payrexxOrder']['orderHash']

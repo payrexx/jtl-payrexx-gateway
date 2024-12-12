@@ -78,9 +78,10 @@ class PayrexxApiService
         string $pm,
         array $basket,
         string $purpose,
-        float $totalAmount
+        float $totalAmount,
+        string $orderHash
     ) {
-        $orderId = $order->kBestellung;
+        $referenceId = $order->kBestellung ?? $orderHash;
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
@@ -94,7 +95,7 @@ class PayrexxApiService
 
         $gateway->setPsp([]);
         $gateway->setPm([$pm]);
-        $gateway->setReferenceId($orderId);
+        $gateway->setReferenceId($referenceId);
         $gateway->setValidity(15);
 
         $customer = $order->oKunde;
@@ -229,5 +230,31 @@ class PayrexxApiService
         }
 
         return $this->getPayrexxTransaction(end($transactions)['id']);
+    }
+
+    /**
+     * delete payrexx gateway
+     *
+     * @param int $gatewayId
+     */
+    public function deletePayrexxGateway(int $gatewayId): void
+    {
+        if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
+            return;
+        }
+        $invoices = $gateway->getInvoices();
+
+        if ($invoices) {
+            $invoice = end($invoices);
+            if (!empty($invoice['transactions'])) {
+                return;
+            }
+        }
+        $payrexx = $this->getInterface();
+        try {
+            $payrexx->delete($gateway);
+        } catch (\Payrexx\PayrexxException $e) {
+            // no action.
+        }
     }
 }

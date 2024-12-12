@@ -40,33 +40,6 @@ class Bootstrap extends Bootstrapper
         parent::boot($dispatcher);
         if (Shop::isFrontend()) {
             // Hooks
-            $dispatcher->listen(
-                'shop.hook.' . \HOOK_MAIL_PRERENDER,
-                function ($args) {
-                    if (isset($args['mail'])) {
-                        try {
-                            $email = $args['mail'];
-                            $emailData = $email->getData();
-
-                            // Check if order data and payment method exist
-                            if (isset($emailData->tbestellung) && $emailData->tbestellung->kZahlungsart) {
-                                $paymentMethodEntity = new Zahlungsart((int)$emailData->tbestellung->kZahlungsart);
-                                $paymentProvider = $paymentMethodEntity->cAnbieter ?? '';
-
-                                if ($paymentProvider === 'Payrexx' &&
-                                    $email->getTemplate()->getId() === \MAILTEMPLATE_BESTELLBESTAETIGUNG &&
-                                    (int) $emailData->tbestellung->cStatus !== (int) \BESTELLUNG_STATUS_BEZAHLT
-                                ) {
-                                    // $email->setToMail(''); // Set an empty recipient to stop sending
-                                }
-                            }
-                        } catch(\Exception $e) {
-                            // nothing
-                        }
-                    }
-                },
-                10
-            );
         } else {
             $dispatcher->listen('backend.notification', [$this, 'checkPayments']);
         }

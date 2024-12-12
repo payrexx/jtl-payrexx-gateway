@@ -45,13 +45,14 @@ class Dispatcher
             if (empty($this->data)) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            $orderId = $this->data['transaction']['invoice']['referenceId'] ?? '';
+            // reference id refers order id or order hash
+            $referenceId = $this->data['transaction']['invoice']['referenceId'] ?? '';
             $gatewayId = $this->data['transaction']['invoice']['paymentRequestId'] ?? '';
 
-            if (empty($orderId)) {
+            if (empty($referenceId)) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            $verify = $this->orderService->getOrderGatewayId($orderId, (int) $gatewayId);
+            $verify = $this->orderService->getOrderGatewayId($referenceId, (int) $gatewayId);
             if (!$verify) {
                 $this->sendResponse('Verification failed');
             }
@@ -69,13 +70,14 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
-            if (!$order = new Bestellung((int) $orderId)) {
-                $result = $this->orderService->getOrderInfoByOrderId($orderId);
+            $order = new Bestellung((int) $referenceId);
+            if (!$order->kBestellung) {
+                $result = $this->orderService->getOrderInfoByReference($referenceId);
                 if ($result) {
                     $order = new Bestellung((int)$result->order_id);
                 }
             }
-            if ($order) {
+            if ($order->kBestellung) {
                 $this->orderService->handleTransactionStatus(
                     $order,
                     $transaction->getStatus(),

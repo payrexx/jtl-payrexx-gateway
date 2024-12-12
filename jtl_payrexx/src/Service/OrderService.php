@@ -27,7 +27,7 @@ class OrderService
         if ($orderId) {
             $payrexxPayment->order_id = (int) $orderId;
         }
-        if ($orderNumber) {
+        if ($orderHash) {
             $payrexxPayment->order_hash = $orderHash;
         }
 
@@ -46,7 +46,7 @@ class OrderService
         $info = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
                 FROM `plugin_jtl_payrexx_payments`
-                WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId) AND `gateway_id` = :gatewayId',
+                WHERE (`order_id` = :shopOrderId OR `order_hash` = :shopOrderId) AND `gateway_id` = :gatewayId',
             [
                 ':shopOrderId' => $orderId,
                 ':gatewayId' => $gatewayId
@@ -228,38 +228,23 @@ class OrderService
         $paymentMethod->sendMail($order->kBestellung, \MAILTEMPLATE_BESTELLBESTAETIGUNG);
     }
 
-
     /**
-     * Get 
+     * Get order info by order Id.
+     * 
+     * @param string $referenceId
+     * @return object
      */
-    public function getOrderInfoByOrderId($orderId)
+    public function getOrderInfoByReference($referenceId)
     {
         $result = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
                 FROM `plugin_jtl_payrexx_payments`
                 WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId)',
             [
-                ':shopOrderId' => $orderId,
+                ':shopOrderId' => $referenceId,
             ],
             ReturnType::SINGLE_OBJECT
         );
         return $result;
-    }
-
-    /**
-     * @param 
-     */
-    public function getShopOrderId($orderId)
-    {
-        $result = Shop::Container()->getDB()->queryPrepared(
-            'SELECT `kBestellung`
-                FROM `tbestellung`
-                WHERE `kBestellung`  = :shopOrderId',
-            [
-                ':shopOrderId' => $orderId,
-            ],
-            ReturnType::SINGLE_OBJECT
-        );
-        return (int) $result->kBestellung;
     }
 }
