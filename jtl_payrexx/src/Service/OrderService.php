@@ -15,15 +15,21 @@ class OrderService
     /**
      * Set payrexx gateway id
      *
-     * @param int $orderId
+     * @param int|null $orderId
      * @param int $gatewayId
+     * @param string $orderHash
      */
-    public function setPaymentGatewayId(int $orderId, int $gatewayId): void
+    public function setPaymentGatewayId(?int $orderId, int $gatewayId, ?string $orderHash): void
     {
         $payrexxPayment = new stdClass();
-        $payrexxPayment->order_id = $orderId;
         $payrexxPayment->gateway_id = $gatewayId;
-        $payrexxPayment->created_at =  date('Y-m-d H:i:s');
+        $payrexxPayment->created_at = date('Y-m-d H:i:s');
+        if ($orderId) {
+            $payrexxPayment->order_id = (int) $orderId;
+        }
+        if ($orderHash) {
+            $payrexxPayment->order_hash = $orderHash;
+        }
 
         Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
     }
@@ -31,16 +37,16 @@ class OrderService
     /**
      * Get gateway id
      *
-     * @param int $orderId
+     * @param mixed $orderId
      * @param int $gatewayId
      * @return object
      */
-    public function getOrderGatewayId(int $orderId, int $gatewayId)
+    public function getOrderGatewayId($orderId, int $gatewayId)
     {
         $info = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
                 FROM `plugin_jtl_payrexx_payments`
-                WHERE `order_id`  = :shopOrderId and `gateway_id` = :gatewayId',
+                WHERE (`order_id` = :shopOrderId OR `order_hash` = :shopOrderId) AND `gateway_id` = :gatewayId',
             [
                 ':shopOrderId' => $orderId,
                 ':gatewayId' => $gatewayId
@@ -219,6 +225,25 @@ class OrderService
         $incomingPayment->cHinweis = $uuid;
         $paymentMethod->addIncomingPayment($order, $incomingPayment);
         $paymentMethod->sendConfirmationMail($order);
-        $paymentMethod->sendMail($order->kBestellung, \MAILTEMPLATE_BESTELLBESTAETIGUNG);
+    }
+
+    /**
+     * Get order info by order Id.
+     * 
+     * @param string $referenceId
+     * @return object
+     */
+    public function getOrderInfoByReference($referenceId)
+    {
+        $result = Shop::Container()->getDB()->queryPrepared(
+            'SELECT `gateway_id`, `order_id`
+                FROM `plugin_jtl_payrexx_payments`
+                WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId)',
+            [
+                ':shopOrderId' => $referenceId,
+            ],
+            ReturnType::SINGLE_OBJECT
+        );
+        return $result;
     }
 }

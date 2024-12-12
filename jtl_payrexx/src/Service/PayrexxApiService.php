@@ -78,9 +78,10 @@ class PayrexxApiService
         string $pm,
         array $basket,
         string $purpose,
-        float $totalAmount
+        float $totalAmount,
+        string $orderHash
     ) {
-        $orderId = $order->kBestellung;
+        $referenceId = $order->kBestellung ?? $orderHash;
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
@@ -94,7 +95,7 @@ class PayrexxApiService
 
         $gateway->setPsp([]);
         $gateway->setPm([$pm]);
-        $gateway->setReferenceId($orderId);
+        $gateway->setReferenceId($referenceId);
         $gateway->setValidity(15);
 
         $customer = $order->oKunde;
@@ -164,6 +165,8 @@ class PayrexxApiService
     }
 
     /**
+     * Get payrexx gateway
+     *
      * @param integer $gatewayId
      * @return \Payrexx\Models\Request\Gateway|Exception
      */
@@ -173,10 +176,9 @@ class PayrexxApiService
         $gateway = new Gateway();
         $gateway->setId($gatewayId);
         try {
-            $payrexxGateway = $payrexx->getOne($gateway);
-            return $payrexxGateway;
+            return $payrexx->getOne($gateway);
         } catch (PayrexxException $e) {
-            throw new Exception('No gateway found by ID: ' . $gatewayId);
+            return null;
         }
     }
 
@@ -193,6 +195,66 @@ class PayrexxApiService
             return true;
         } catch (PayrexxException $e) {
             return false;
+        }
+    }
+
+    /**
+     * get the Payrexx Transaction
+     *
+     * @param int $gatewayId
+     * @return \Payrexx\Models\Response\Transaction|null
+     */
+    public function getTransactionByGatewayId(int $gatewayId)
+    {
+        if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
+            return null;
+        }
+        if (!in_array(
+            $gateway->getStatus(),
+            [
+                ResponseTransaction::CONFIRMED,
+                ResponseTransaction::WAITING
+            ]
+        )) {
+            return null;
+        }
+
+        $invoices = $gateway->getInvoices();
+
+        if (!$invoices || !$invoice = end($invoices)) {
+            return null;
+        }
+
+        if (!$transactions = $invoice['transactions']) {
+            return null;
+        }
+
+        return $this->getPayrexxTransaction(end($transactions)['id']);
+    }
+
+    /**
+     * delete payrexx gateway
+     *
+     * @param int $gatewayId
+     */
+    public function deletePayrexxGateway(int $gatewayId): void
+    {
+        if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
+            return;
+        }
+        $invoices = $gateway->getInvoices();
+
+        if ($invoices) {
+            $invoice = end($invoices);
+            if (!empty($invoice['transactions'])) {
+                return;
+            }
+        }
+        $payrexx = $this->getInterface();
+        try {
+            $payrexx->delete($gateway);
+        } catch (\Payrexx\PayrexxException $e) {
+            // no action.
         }
     }
 }
