@@ -55,7 +55,14 @@ class BasketUtil
                 case \C_WARENKORBPOS_TYP_GRATISGESCHENK:
                 default:
                     $isDiscount = false;
-                    if (\in_array($productData->nPosTyp, [\C_WARENKORBPOS_TYP_KUPON], true)) {
+                    if (in_array(
+                            $productData->nPosTyp,
+                            [
+                                \C_WARENKORBPOS_TYP_KUPON,
+                                \C_WARENKORBPOS_TYP_GUTSCHEIN,
+                                \C_WARENKORBPOS_TYP_NEUKUNDENKUPON
+                            ], true
+                    )) {
                         $isDiscount = true;
                     }
                     $name = \is_array($productData->cName)
@@ -107,6 +114,14 @@ class BasketUtil
                         ];
                     }
             }
+        }
+        if ($order->GuthabenNutzen && $order->fGuthaben > 0) {
+            $gutscheinPrice = number_format($order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', '');
+            $basketItems[] = [
+                'name' => 'Store Credit',
+                'quantity' => 1,
+                'amount' => $gutscheinPrice * (-100),
+            ];
         }
         return $basketItems;
     }
