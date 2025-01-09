@@ -114,6 +114,7 @@ class Base extends Method
      */
     public function preparePaymentProcess(Bestellung $order): void
     {
+        parent::preparePaymentProcess($order);
         if (isset($_SESSION['payrexxOrder'])) {
             $this->payrexxApiService->deletePayrexxGateway(
                 (int) $_SESSION['payrexxOrder']['gatewayId']
