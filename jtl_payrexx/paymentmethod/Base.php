@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Plugin\jtl_payrexx\paymentmethod;
 
+use Exception;
 use JTL\Alert\Alert;
 use JTL\Plugin\Payment\Method;
 use JTL\Plugin\Helper as PluginHelper;
 use JTL\Checkout\Bestellung;
+use JTL\Checkout\OrderHandler;
 use JTL\Plugin\PluginInterface;
 use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
@@ -191,6 +193,18 @@ class Base extends Method
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
         if (isset($args['payed'])) {
+            try {
+                $orderHandler = new OrderHandler(
+                    Shop::Container()->getDB(),
+                    Frontend::getCustomer(),
+                    Frontend::getCart()
+                );
+                // It is available from version 5.2.0
+                if (method_exists($orderHandler, 'createOrderNo')) {
+                    $order->cBestellNr = $orderHandler->createOrderNo();
+                }
+            } catch(Exception $e) {
+            }
             return true;
         }
         return false;
