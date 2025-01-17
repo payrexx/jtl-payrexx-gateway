@@ -82,7 +82,7 @@ class PayrexxApiService
         float $totalAmount,
         string $orderHash
     ) {
-        $referenceId = $order->kBestellung ?? $orderHash;
+        $referenceId = $order->cBestellNr ?? $orderHash;
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
