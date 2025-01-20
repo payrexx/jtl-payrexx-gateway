@@ -31,7 +31,12 @@ class BasketUtil
                     $shippingPrice = number_format($shippingPrice, 2, '.', '');
 
                     $basketItems[] = [
-                        'name' => 'shipping',
+                        'name' => [
+                            1 => 'Versand',
+                            2 => 'Shipping',
+                            3 => 'Livraison',
+                            4 => 'Spedizione',
+                        ],
                         'quantity' => 1,
                         'amount' => $shippingPrice * 100,
                         'vatRate' => $vatRate,
@@ -86,16 +91,19 @@ class BasketUtil
                             'quantity' => $productData->nAnzahl,
                             'amount' => $priceTotal * 100,
                             'sku' => $productData->cArtNr,
-                            'vatRate' => $vatRate, 
+                            'vatRate' => $vatRate,
                         ];
                     }
 
                     if ($type === 'discount') {
                         $basketItems[] = [
-                            'name' => 'Discount',
+                            'name' => [
+                                1 => 'Rabatt',
+                                2 => 'Discount',
+                            ],
                             'quantity' => 1,
                             'amount' => $priceTotal * 100,
-                            'vatRate' => $vatRate, 
+                            'vatRate' => $vatRate,
                         ];
                     }
             }
@@ -131,7 +139,7 @@ class BasketUtil
         $desc = [];
         foreach ($basket as $product) {
             $desc[] = implode(' ', [
-                $product['name'],
+                is_array( $product['name'] ) ? $product['name'][2] : $product['name'],
                 $product['quantity'],
                 'x',
                 number_format($product['amount'] / 100, 2, '.', ''),
