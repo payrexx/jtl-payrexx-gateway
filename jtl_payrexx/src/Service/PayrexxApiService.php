@@ -68,6 +68,7 @@ class PayrexxApiService
      * @param array $basket
      * @param string $purpose
      * @param float $totalAmount
+     * @param string $orderHash
      * @return Gateway|null
      */
     public function createPayrexxGateway(
@@ -81,7 +82,7 @@ class PayrexxApiService
         float $totalAmount,
         string $orderHash
     ) {
-        $referenceId = $order->kBestellung ?? $orderHash;
+        $referenceId = $order->cBestellNr ?? $orderHash;
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
@@ -98,16 +99,16 @@ class PayrexxApiService
         $gateway->setReferenceId($referenceId);
         $gateway->setValidity(15);
 
-        $customer = $order->oKunde;
-        $street = $customer->cStrasse . ' ' . $customer->cHausnummer;
-        $gateway->addField('forename', $customer->cVorname);
-        $gateway->addField('surname', $customer->cNachname);
-        $gateway->addField('email', $customer->cMail);
-        $gateway->addField('company', $customer->cFirma);
+        $billingAddress = $order->oRechnungsadresse ?? $order->oKunde;
+        $street = $billingAddress->cStrasse . ' ' . $billingAddress->cHausnummer;
+        $gateway->addField('forename', $billingAddress->cVorname);
+        $gateway->addField('surname', $billingAddress->cNachname);
+        $gateway->addField('email', $billingAddress->cMail);
+        $gateway->addField('company', $billingAddress->cFirma);
         $gateway->addField('street', $street);
-        $gateway->addField('postcode', $customer->cPLZ);
-        $gateway->addField('place', $customer->cOrt);
-        $gateway->addField('country', $customer->cLand);
+        $gateway->addField('postcode', $billingAddress->cPLZ);
+        $gateway->addField('place', $billingAddress->cOrt);
+        $gateway->addField('country', $billingAddress->cLand);
         $gateway->addField('custom_field_1', $order->kBestellung, 'Shop order ID');
         $gateway->addField('custom_field_2', $order->cBestellNr, 'Shop Order Number');
 

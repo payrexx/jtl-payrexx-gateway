@@ -125,11 +125,11 @@ class Base extends Method
         }
         $payrexxApiService = new PayrexxApiService();
         $orderHash = $this->generateHash($order);
-        $successUrl = $this->getNotificationURL($orderHash);
+        $successUrl = $this->getReturnURL($order);
         $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
         $basketItems = BasketUtil::getBasketDetails($order);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
-        
+
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
         $convertedPrice = $order->fGesamtsumme * $currencyFactor;
         $totalAmount = (float)number_format($convertedPrice, 2, '.', '');
@@ -143,8 +143,25 @@ class Base extends Method
             $purpose = BasketUtil::createPurposeByBasket($basketItems);
         }
 
-        if (!$order->kBestellung) {
+        $orderNumber = '';
+        if (!$order->kBestellung) { // payment before order creation
+            try {
+                $orderHandler = new OrderHandler(
+                    Shop::Container()->getDB(),
+                    Frontend::getCustomer(),
+                    Frontend::getCart()
+                );
+                // It is available from version 5.2.0
+                if (method_exists($orderHandler, 'createOrderNo')) {
+                    $orderNumber = $orderHandler->createOrderNo();
+                }
+            } catch(Exception $e) {
+            }
             $successUrl = $this->getNotificationURL($orderHash) . '&payed';
+            if ($orderNumber) {
+                $successUrl .= '&orderNo=' . $orderNumber;
+                $order->cBestellNr = $orderNumber;
+            }
         }
 
         $gateway = $payrexxApiService->createPayrexxGateway(
@@ -163,19 +180,22 @@ class Base extends Method
                 $this->orderService->setPaymentGatewayId(
                     $order->kBestellung,
                     $gateway->getId(),
-                    $orderHash,
+                    $order->cBestellNr ?? $orderHash,
                 );
             }
             $_SESSION['payrexxOrder'] = [
                 'gatewayId' => $gateway->getId(),
                 'orderHash' => $orderHash,
             ];
+            if ($orderNumber) {
+                $_SESSION['payrexxOrder']['orderNo'] = $orderNumber;
+            }
             $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
             $redirect = $gateway->getLink();
             $lang = strtolower(substr($lang, 0, 2));
             if (in_array($lang, ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'])) {
                 $redirect = str_replace('?', $lang . '/?', $redirect);
-            }            
+            }
             \header('Location:' . $redirect);
             exit();
         }
@@ -193,17 +213,9 @@ class Base extends Method
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
         if (isset($args['payed'])) {
-            try {
-                $orderHandler = new OrderHandler(
-                    Shop::Container()->getDB(),
-                    Frontend::getCustomer(),
-                    Frontend::getCart()
-                );
-                // It is available from version 5.2.0
-                if (method_exists($orderHandler, 'createOrderNo')) {
-                    $order->cBestellNr = $orderHandler->createOrderNo();
-                }
-            } catch(Exception $e) {
+            $orderNumber = $args['orderNo'] ?? '';
+            if (!empty($orderNumber)) {
+                $order->cBestellNr = $orderNumber;
             }
             return true;
         }
@@ -239,14 +251,22 @@ class Base extends Method
             exit();
         }
 
+        $orderNumber = $args['orderNo'] ?? '';
         if (isset($args['sh']) &&
             isset($_SESSION['payrexxOrder']) &&
-            ($args['sh'] === $_SESSION['payrexxOrder']['orderHash'])
+            (
+                ($args['sh'] === $_SESSION['payrexxOrder']['orderHash']) ||
+                (
+                    !empty($orderNumber) &&
+                    isset($_SESSION['payrexxOrder']['orderNo']) &&
+                    $args['orderNo'] === $_SESSION['payrexxOrder']['orderNo']
+                )
+            )
         ) {
             $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
                 (int) $_SESSION['payrexxOrder']['gatewayId'],
-                $_SESSION['payrexxOrder']['orderHash']
+                $order->cBestellNr
             );
             $transaction = $this->payrexxApiService->getTransactionByGatewayId(
                 (int) $_SESSION['payrexxOrder']['gatewayId']
