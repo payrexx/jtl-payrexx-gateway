@@ -125,7 +125,7 @@ class Base extends Method
         }
         $payrexxApiService = new PayrexxApiService();
         $orderHash = $this->generateHash($order);
-        $successUrl = $this->getNotificationURL($orderHash);
+        $successUrl = $this->getReturnURL($order);
         $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
         $basketItems = BasketUtil::getBasketDetails($order);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
@@ -162,8 +162,6 @@ class Base extends Method
                 $successUrl .= '&orderNo=' . $orderNumber;
                 $order->cBestellNr = $orderNumber;
             }
-        } else {
-           $successUrl = $this->getReturnURL($order);
         }
 
         $gateway = $payrexxApiService->createPayrexxGateway(
