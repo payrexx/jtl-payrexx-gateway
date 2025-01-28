@@ -131,16 +131,16 @@ class BasketUtil
                 'amount' => $gutscheinPrice * 100,
             ];
         } elseif (!empty($_SESSION['Bestellung']->GutscheinLocalized)) {
-			$creditAmount 		   = $_SESSION['Bestellung']->GutscheinLocalized;
-			$creditAmount 		   = preg_replace('/[^0-9,.]/', '', $creditAmount);
-			$creditAmount 		   = (float) str_replace(',', '.', $creditAmount);
-			$convertedCreditAmount =  strval(round($creditAmount, 2) * 100);
+            $creditAmount 		   = $_SESSION['Bestellung']->GutscheinLocalized;
+            $creditAmount 		   = preg_replace('/[^0-9,.]/', '', $creditAmount);
+            $creditAmount 		   = (float) str_replace(',', '.', $creditAmount);
+            $convertedCreditAmount =  strval(round($creditAmount, 2) * 100);
             $basketItems[] = [
                 'name' => 'Store Credit',
                 'quantity' => 1,
                 'amount' => $convertedCreditAmount * (-100),
             ];
-		}
+        }
         return $basketItems;
     }
 
