@@ -70,7 +70,7 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
-            $order = new Bestellung((int) $referenceId);
+            $order = new Bestellung((int) $referenceId); // // Order Number or Order hash
             if (!$order->kBestellung) {
                 $result = $this->orderService->getOrderInfoByReference($referenceId);
                 if ($result) {
@@ -84,6 +84,10 @@ class Dispatcher
                     $transaction->getUuid(),
                     $transaction->getInvoice()['currencyAlpha3'],
                     (int) $transaction->getInvoice()['totalAmount']
+                );
+            } else {
+                $this->sendResponse('Webhook received before order creation,
+                    Order will create on success page. Order Number is ' . $referenceId
                 );
             }
             $this->sendResponse('Webhook processed successfully!');

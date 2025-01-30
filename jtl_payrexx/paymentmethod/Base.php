@@ -176,13 +176,11 @@ class Base extends Method
             $orderHash
         );
         if ($gateway) {
-            if ($order->kBestellung) {
-                $this->orderService->setPaymentGatewayId(
-                    $order->kBestellung,
-                    $gateway->getId(),
-                    $order->cBestellNr ?? $orderHash,
-                );
-            }
+            $this->orderService->setPaymentGatewayId(
+                $order->kBestellung ?? null,
+                $gateway->getId(),
+                $order->cBestellNr ?? $orderHash,
+            );
             $_SESSION['payrexxOrder'] = [
                 'gatewayId' => $gateway->getId(),
                 'orderHash' => $orderHash,
