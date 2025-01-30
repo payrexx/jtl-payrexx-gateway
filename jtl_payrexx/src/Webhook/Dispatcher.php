@@ -70,7 +70,7 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
-            $order = new Bestellung((int) $referenceId); // // Order Number or Order hash
+            $order = new Bestellung((int) $referenceId);
             if (!$order->kBestellung) {
                 $result = $this->orderService->getOrderInfoByReference($referenceId);
                 if ($result) {

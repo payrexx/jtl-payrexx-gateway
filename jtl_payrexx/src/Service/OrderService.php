@@ -227,7 +227,7 @@ class OrderService
     }
 
     /**
-     * Get order info by order Id.
+     * Get order info by reference ID.
      *
      * @param string $referenceId
      * @return object
