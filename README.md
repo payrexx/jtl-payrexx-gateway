@@ -3,7 +3,7 @@
 A Payrexx plugin to accept payments in the JTL Shop.
 
 ## Support
-This module supports JTL Shop versions 5.0 - 5.3.*
+This module supports JTL Shop versions 5.0 - 5.4.1
 Note: It may work on future JTL Shop releases, but performance cannot be guaranteed.
 
 ## Installation
