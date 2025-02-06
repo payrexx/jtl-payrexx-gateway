@@ -87,7 +87,7 @@ class Dispatcher
                 );
             } else {
                 $this->sendResponse('Webhook received before order creation,
-                 Order will be created on the success page.Order Number is ' . $referenceId
+                 Order will be created on the success page. Order Number is ' . $referenceId
                 );
             }
             $this->sendResponse('Webhook processed successfully!');
