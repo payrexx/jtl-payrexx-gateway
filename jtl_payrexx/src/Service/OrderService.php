@@ -110,7 +110,6 @@ class OrderService
                 break;
         }
 
-        
         if (empty($orderNewStatus) || !$this->transitionAllowed($order->cStatus, $orderNewStatus)) {
             return;
         }
@@ -228,17 +227,23 @@ class OrderService
     }
 
     /**
-     * Get order info by order Id.
-     * 
+     * Get order info by reference ID.
+     *
      * @param string $referenceId
      * @return object
      */
     public function getOrderInfoByReference($referenceId)
     {
         $result = Shop::Container()->getDB()->queryPrepared(
-            'SELECT `gateway_id`, `order_id`
-                FROM `plugin_jtl_payrexx_payments`
-                WHERE (`order_id`  = :shopOrderId OR `order_hash` = :shopOrderId)',
+            'SELECT
+                `gateway_id`,
+                `order_id`
+            FROM
+                `plugin_jtl_payrexx_payments`
+            WHERE
+                (
+                    `order_id` = :shopOrderId OR `order_hash` = :shopOrderId
+                ) AND `order_id` IS NOT NULL',
             [
                 ':shopOrderId' => $referenceId,
             ],

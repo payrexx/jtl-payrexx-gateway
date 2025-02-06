@@ -85,6 +85,10 @@ class Dispatcher
                     $transaction->getInvoice()['currencyAlpha3'],
                     (int) $transaction->getInvoice()['totalAmount']
                 );
+            } else {
+                $this->sendResponse('Webhook received before order creation,
+                 Order will be created on the success page. Order Number is ' . $referenceId
+                );
             }
             $this->sendResponse('Webhook processed successfully!');
         } catch (Exception $e) {
