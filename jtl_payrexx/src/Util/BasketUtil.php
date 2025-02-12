@@ -114,8 +114,11 @@ class BasketUtil
             );
             $basketItems[] = [
                 'name' => [
-                    'Guthaben im Geschäft',
-                    'Store Credit',
+                    1 => 'Kundenguthaben',
+                    2 => 'Customer Credit',
+                    3 => 'Avoirs des clients',
+                    4 => 'Saldo del credito del cliente',
+                    15 => 'Kundenguthaben',
                 ],
                 'quantity' => 1,
                 'amount' => $gutscheinPrice * 100,
