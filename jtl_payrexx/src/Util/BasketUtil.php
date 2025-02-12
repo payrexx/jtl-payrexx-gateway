@@ -108,6 +108,19 @@ class BasketUtil
                     }
             }
         }
+        if ($order->GuthabenNutzen && $order->fGuthaben && $order->fGuthaben < 0) {
+            $gutscheinPrice = number_format(
+                $order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', ''
+            );
+            $basketItems[] = [
+                'name' => [
+                    'Guthaben im Geschäft',
+                    'Store Credit',
+                ],
+                'quantity' => 1,
+                'amount' => $gutscheinPrice * 100,
+            ];
+        }
         return $basketItems;
     }
 
