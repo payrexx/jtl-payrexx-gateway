@@ -108,6 +108,22 @@ class BasketUtil
                     }
             }
         }
+        if ($order->GuthabenNutzen && $order->fGuthaben && $order->fGuthaben < 0) {
+            $gutscheinPrice = number_format(
+                $order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', ''
+            );
+            $basketItems[] = [
+                'name' => [
+                    1 => 'Kundenguthaben',
+                    2 => 'Customer Credit',
+                    3 => 'Avoirs des clients',
+                    4 => 'Saldo del credito del cliente',
+                    15 => 'Kundenguthaben',
+                ],
+                'quantity' => 1,
+                'amount' => $gutscheinPrice * 100,
+            ];
+        }
         return $basketItems;
     }
 
