@@ -217,6 +217,7 @@ class Base extends Method
             }
             return true;
         }
+        $this->handleCancellation('jtl_before_order_payrexx_payment_cancelled');
         return false;
     }
 
@@ -237,16 +238,7 @@ class Base extends Method
                 $order,
                 Transaction::CANCELLED
             );
-
-            $langCode = $_SESSION['currentLanguage']->localizedName ?? 'en';
-            $langText = 'jtl_payrexx_payment_cancelled';
-            $errorMessage = $this->plugin->getLocalization()->getTranslation($langText, $langCode);;
-            $errorMessage = $errorMessage ?? 'Your order has been canceled. Please choose a payment method to create a new order.';
-            $alertHelper = Shop::Container()->getAlertService();
-            $alertHelper->addAlert(Alert::TYPE_ERROR, $errorMessage, md5($errorMessage), ['saveInSession' => true]);
-            $linkHelper = Shop::Container()->getLinkService();
-            \header('Location: ' . $linkHelper->getStaticRoute('bestellvorgang.php') . '?editZahlungsart=1');
-            exit();
+            $this->handleCancellation('jtl_after_order_payrexx_payment_cancelled');
         }
 
         $orderNumber = $args['orderNo'] ?? '';
@@ -304,5 +296,32 @@ class Base extends Method
     public function canPayAgain(): bool
     {
         return false;
+    }
+
+    /**
+     * Handle payment cancellation
+     *
+     * @param string $messageKey
+     */
+    private function handleCancellation(string $messageKey): void
+    {
+        $langCode = $_SESSION['currentLanguage']->iso ?? 'eng';
+        $errorMessage = $this->plugin->getLocalization()->getTranslation(
+            $messageKey,
+            $langCode
+        ) ?? '';
+        if (!empty($errorMessage)) {
+            $alertHelper = Shop::Container()->getAlertService();
+            $alertHelper->addAlert(
+                Alert::TYPE_ERROR,
+                $errorMessage,
+                md5($errorMessage),
+                ['saveInSession' => true]
+            );
+        }
+
+        $linkHelper = Shop::Container()->getLinkService();
+        \header('Location: ' . $linkHelper->getStaticRoute('bestellvorgang.php') . '?editZahlungsart=1');
+        exit();
     }
 }
