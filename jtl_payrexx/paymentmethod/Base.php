@@ -303,7 +303,7 @@ class Base extends Method
      *
      * @param string $messageKey
      */
-    public function handleCancellation($messageKey): void
+    private function handleCancellation(string $messageKey): void
     {
         $langCode = $_SESSION['currentLanguage']->iso ?? 'eng';
         $errorMessage = $this->plugin->getLocalization()->getTranslation(
