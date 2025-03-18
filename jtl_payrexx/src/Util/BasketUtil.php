@@ -12,9 +12,10 @@ class BasketUtil
 
     /**
      * @param Bestellung $order
+     * @param array $voucherPayment
      * @return array
      */
-    public static function getBasketDetails(Bestellung $order): array
+    public static function getBasketDetails(Bestellung $order, array $voucherPayments): array
     {
         $products = $order->Positionen;
         $basketItems = [];
@@ -124,6 +125,23 @@ class BasketUtil
                 'amount' => $gutscheinPrice * 100,
             ];
         }
+
+        if (!empty($voucherPayments)) {
+            foreach ($voucherPayments as $voucherPayment) {
+                $basketItems[] = [
+                    'name' => [
+                        1 => 'Gutschein',
+                        2 => 'Voucher',
+                        3 => 'Bon',
+                        4 => 'Voucher',
+                        15 => 'Gutschein',
+                    ],
+                    'quantity' => 1,
+                    'amount' => $voucherPayment->fBetrag * (-100),
+                ];
+            }
+        }
+
         return $basketItems;
     }
 
