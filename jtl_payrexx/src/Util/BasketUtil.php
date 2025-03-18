@@ -12,7 +12,7 @@ class BasketUtil
 
     /**
      * @param Bestellung $order
-     * @param array $voucherPayment
+     * @param array $voucherPayments
      * @return array
      */
     public static function getBasketDetails(Bestellung $order, array $voucherPayments): array
@@ -116,6 +116,7 @@ class BasketUtil
                     }
             }
         }
+
         if ($order->GuthabenNutzen && $order->fGuthaben && $order->fGuthaben < 0) {
             $gutscheinPrice = number_format(
                 $order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', ''
@@ -130,16 +131,6 @@ class BasketUtil
                 ],
                 'quantity' => 1,
                 'amount' => $gutscheinPrice * 100,
-            ];
-        } elseif (!empty($_SESSION['Bestellung']->GutscheinLocalized)) {
-            $creditAmount 		   = $_SESSION['Bestellung']->GutscheinLocalized;
-            $creditAmount 		   = preg_replace('/[^0-9,.]/', '', $creditAmount);
-            $creditAmount 		   = (float) str_replace(',', '.', $creditAmount);
-            $convertedCreditAmount =  strval(round($creditAmount, 2) * 100);
-            $basketItems[] = [
-                'name' => 'Store Credit',
-                'quantity' => 1,
-                'amount' => $convertedCreditAmount * (-100),
             ];
         }
 
