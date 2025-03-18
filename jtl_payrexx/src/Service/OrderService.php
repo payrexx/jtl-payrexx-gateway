@@ -251,19 +251,4 @@ class OrderService
         );
         return $result;
     }
-
-    /**
-     * Get incoming payments
-     *
-     * @param Bestellung $order
-     * @return array
-     */
-    public function getIncomingPayments(Bestellung $order): array
-    {
-        return Shop::Container()->getDB()->selectAll(
-            'tzahlungseingang',
-            'kBestellung',
-            $order->kBestellung,
-        );
-    }
 }

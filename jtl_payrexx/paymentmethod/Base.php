@@ -127,32 +127,16 @@ class Base extends Method
         $orderHash = $this->generateHash($order);
         $successUrl = $this->getReturnURL($order);
         $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
+        $basketItems = BasketUtil::getBasketDetails($order);
+        $basketAmount = BasketUtil::getBasketAmount($basketItems);
+
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
         $convertedPrice = $order->fGesamtsumme * $currencyFactor;
         $totalAmount = (float)number_format($convertedPrice, 2, '.', '');
         $currency = $order->Waehrung->cISO;
 
-        $voucherPayments = [];
-        $totalVoucherAmount = 0;
-
-        if ($order->kBestellung) {
-            $incomingPayments = $this->orderService->getIncomingPayments($order);
-            if (!empty($incomingPayments)) {
-                foreach ($incomingPayments as $incomingPayment) {
-                    if (strpos($incomingPayment->cHinweis, 'Voucher') !== false) {
-                        $voucherPayments[] = $incomingPayment;
-                        $totalVoucherAmount += $incomingPayment->fBetrag;
-                    }
-                }
-            }
-        }
-
-        $totalAmount -= $totalVoucherAmount; // Deduct all voucher payments
-
         $basket = [];
         $purpose = '';
-        $basketItems = BasketUtil::getBasketDetails($order, $voucherPayments);
-        $basketAmount = BasketUtil::getBasketAmount($basketItems);
         if ($totalAmount && $totalAmount === $basketAmount) {
             $basket = $basketItems;
         } else {
