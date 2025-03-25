@@ -10,6 +10,18 @@
     <Version>1.0.18</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
+        <JS>
+            <file>
+                <name>googlePay.js</name>
+                <priority>5</priority>
+                <position>body</position>
+            </file>
+            <file>
+                <name>applePay.js</name>
+                <priority>5</priority>
+                <position>body</position>
+            </file>
+        </JS>
         <Adminmenu>
             <Customlink sort="0">
                 <Name>validate_configuration</Name>
