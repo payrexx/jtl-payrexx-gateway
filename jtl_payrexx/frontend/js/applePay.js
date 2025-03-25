@@ -10,7 +10,7 @@
     });
 
     /**
-     * Check the deive to support apple pay.
+     * Check the device to support apple pay.
      */
     function checkApplePaySupport() {
         if ((window.ApplePaySession && ApplePaySession.canMakePayments()) !== true) {
