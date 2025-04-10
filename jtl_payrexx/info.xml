@@ -21,6 +21,11 @@
                 <priority>5</priority>
                 <position>body</position>
             </file>
+            <file>
+                <name>samsungPay.js</name>
+                <priority>5</priority>
+                <position>body</position>
+            </file>
         </JS>
         <Adminmenu>
             <Customlink sort="0">
