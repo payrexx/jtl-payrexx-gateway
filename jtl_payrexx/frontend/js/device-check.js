@@ -96,7 +96,7 @@
      */
     const checkSamsungPaySupport = ($samsungPay) => {
         const ua = navigator.userAgent;
-        if (!(ua.includes("Android") && ua.includes("Mobile"))) {
+        if (!(ua.indexOf("Android") > 0 && ua.indexOf("Mobile") > 0)) {
             $samsungPay.hide();
         }
     };
