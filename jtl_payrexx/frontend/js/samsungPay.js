@@ -1,8 +1,8 @@
 (function ($) {
     'use strict';
 
-    $(document).ready(function() {
-        setTimeout(function() {
+    $(document).ready(() => {
+        setTimeout(() => {
             if ($(".checkout-payment-options [id^='kPlugin_'][id$='_samsungpay']").length) {
                 checkSamsungPaySupport();
             }
@@ -10,12 +10,12 @@
     });
 
     /**
-     * Check the device to support samsung pay.
+     * Check the device to support Samsung Pay.
      */
-    function checkSamsungPaySupport() {
-        var ua = window.navigator.userAgent;
-        if (!(ua.indexOf("Android") > 0) && !(ua.indexOf("Mobile") > 0)) {
+    const checkSamsungPaySupport = () => {
+        const ua = navigator.userAgent;
+        if (!(ua.indexOf("Android") > 0 && ua.indexOf("Mobile") > 0)) {
             $(".checkout-payment-options [id^='kPlugin_'][id$='_samsungpay']").hide();
         }
-    }
+    };
 }(jQuery));
