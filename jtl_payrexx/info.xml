@@ -12,17 +12,7 @@
     <Install>
         <JS>
             <file>
-                <name>googlePay.js</name>
-                <priority>5</priority>
-                <position>body</position>
-            </file>
-            <file>
-                <name>applePay.js</name>
-                <priority>5</priority>
-                <position>body</position>
-            </file>
-            <file>
-                <name>samsungPay.js</name>
+                <name>device-check.js</name>
                 <priority>5</priority>
                 <position>body</position>
             </file>

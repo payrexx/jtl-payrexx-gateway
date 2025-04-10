@@ -1,20 +1,40 @@
 (function ($) {
     'use strict';
-
     $(document).ready(() => {
         setTimeout(() => {
-            if ($(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']").length) {
+            const $applePay = $(".checkout-payment-options [id^='kPlugin_'][id$='_applepay']");
+            if ($applePay.length) {
+                checkApplePaySupport($applePay);
+            }
+
+            const $googlePay = $(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']");
+            if ($googlePay.length) {
                 loadGooglePayScript(() => {
-                    checkGooglePaySupport();
+                    checkGooglePaySupport($googlePay);
                 });
             }
+
+            const $samsungPay = $(".checkout-payment-options [id^='kPlugin_'][id$='_samsungpay']");
+            if ($samsungPay.length) {
+                checkSamsungPaySupport($samsungPay);
+            }
+
         }, 100);
     });
 
     /**
+     * Check if Apple Pay is supported.
+     */
+    const checkApplePaySupport = ($applePay) => {
+        if (!(window.ApplePaySession && ApplePaySession.canMakePayments())) {
+            $applePay.hide();
+        }
+    };
+
+     /**
      * Load Google Pay SDK
      */
-    const loadGooglePayScript = (callback) => {
+     const loadGooglePayScript = (callback) => {
         if (typeof google === "undefined" || typeof google.payments === "undefined") {
             const script = document.createElement("script");
             script.src = "https://pay.google.com/gp/p/js/pay.js";
@@ -29,8 +49,8 @@
     /**
      * Check if the device supports Google Pay.
      */
-    const checkGooglePaySupport = () => {
-        $(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']").hide();
+    const checkGooglePaySupport = ($googlePay) => {
+        $googlePay.hide();
 
         try {
             const baseRequest = {
@@ -59,15 +79,25 @@
             paymentsClient.isReadyToPay(isReadyToPayRequest)
                 .then((response) => {
                     if (response.result) {
-                        $(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']").show();
+                        $googlePay.show();
                     }
                 })
                 .catch((err) => {
-                    console.error("Google Pay Error:", err);
+                    console.error("Google Pay isReadyToPay Error:", err);
                 });
 
         } catch (err) {
             console.error("Google Pay SDK Error:", err);
+        }
+    };
+
+    /**
+     * Check if Samsung Pay is supported.
+     */
+    const checkSamsungPaySupport = ($samsungPay) => {
+        const ua = navigator.userAgent;
+        if (!(ua.includes("Android") && ua.includes("Mobile"))) {
+            $samsungPay.hide();
         }
     };
 }(jQuery));
