@@ -8,6 +8,7 @@ use JTL\DB\ReturnType;
 use JTL\Plugin\Payment\Method;
 use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
+use Plugin\jtl_payrexx\Util\LoggerUtil;
 use stdClass;
 
 class OrderService
@@ -170,6 +171,16 @@ class OrderService
                 'cKommentar' => $oldComment . $comment
             ]
         );
+        LoggerUtil::addLog(
+            sprintf(
+                "Payrexx::updateOrderStatus(): status changed to the order %s from %s status to %s",
+                $order->cBestellNr,
+                $currentStatus,
+                $newStatus,
+            ),
+            $order,
+            null
+        );
     }
 
     /**
@@ -204,6 +215,19 @@ class OrderService
         string $currency,
         int $amount
     ): void {
+        $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
+        $moduleId = $paymentMethodEntity->cModulId ?? '';
+
+        $logData = [
+            'order' => $order->cBestellNr,
+            'transaction' => $uuid,
+        ];
+
+        LoggerUtil::addLog(
+            'Payrexx::addIncommingPayment(): process started: ' . $order->cBestellNr,
+            $order,
+            $logData
+        );
         $incommingPayment = Shop::Container()->getDB()->selectSingleRow(
             'tzahlungseingang',
             'kBestellung',
@@ -213,16 +237,25 @@ class OrderService
         if (!empty($incommingPayment->kZahlungseingang) && $incommingPayment->cHinweis == $uuid) {
             return;
         }
-        $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
-        $moduleId = $paymentMethodEntity->cModulId ?? '';
         $paymentMethod = new Method($moduleId);
         $paymentMethod->setOrderStatusToPaid($order);
+        LoggerUtil::addLog(
+            'Payrexx::addIncommingPayment(): setOrderStatusToPaid() processed: ' . $order->cBestellNr,
+            $order,
+            $logData
+        );
+
         $incomingPayment = new stdClass();
         $incomingPayment->fBetrag = $amount / 100;
         $incomingPayment->cISO = $currency;
         $incomingPayment->cZahlungsanbieter = $order->cZahlungsartName;
         $incomingPayment->cHinweis = $uuid;
         $paymentMethod->addIncomingPayment($order, $incomingPayment);
+        LoggerUtil::addLog(
+            'Payrexx::addIncommingPayment(): addIncomingPayment() processed: ' . $order->cBestellNr,
+            $order,
+            $logData
+        );
         $paymentMethod->sendConfirmationMail($order);
     }
 

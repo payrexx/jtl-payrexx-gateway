@@ -7,6 +7,7 @@ namespace Plugin\jtl_payrexx\Webhook;
 use Exception;
 use JTL\Checkout\Bestellung;
 use Plugin\jtl_payrexx\Service\OrderService;
+use Plugin\jtl_payrexx\Util\LoggerUtil;
 
 class Dispatcher
 {
@@ -78,6 +79,11 @@ class Dispatcher
                 }
             }
             if ($order->kBestellung) {
+                LoggerUtil::addLog(
+                    "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
+                    $order,
+                    $this->data
+                );
                 $this->orderService->handleTransactionStatus(
                     $order,
                     $transaction->getStatus(),
@@ -86,6 +92,11 @@ class Dispatcher
                     (int) $transaction->getInvoice()['totalAmount']
                 );
             } else {
+                LoggerUtil::addLog(
+                    "Payrexx:processWebhookResponse(), Webhook received before creating order: " .  $order->cBestellNr,
+                    $order,
+                    $this->data
+                );
                 $this->sendResponse('Webhook received before order creation,
                  Order will be created on the success page. Order Number is ' . $referenceId
                 );

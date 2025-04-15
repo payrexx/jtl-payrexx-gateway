@@ -215,8 +215,14 @@ class Base extends Method
             if (!empty($orderNumber)) {
                 $order->cBestellNr = $orderNumber;
             }
+            $this->doLog(
+                'Payrexx::finalizeOrder(), Payment success: ' . $orderNumber
+            );
             return true;
         }
+        $this->doLog(
+            'Payrexx::finalizeOrder(), Payment was cancelled/failed: ' . $args['orderNo'] ?? ''
+        );
         $this->handleCancellation('jtl_before_order_payrexx_payment_cancelled');
         return false;
     }
@@ -237,6 +243,9 @@ class Base extends Method
             $this->orderService->handleTransactionStatus(
                 $order,
                 Transaction::CANCELLED
+            );
+            $this->doLog(
+                'Payrexx::handleNotification(), Payment was cancelled: ' . $order->cBestellNr
             );
             $this->handleCancellation('jtl_after_order_payrexx_payment_cancelled');
         }
@@ -264,6 +273,9 @@ class Base extends Method
             if (!$transaction) {
                 return;
             }
+            $this->doLog(
+                'Payrexx::handleNotification(), Process handleTransactionStatus(): ' . $order->cBestellNr
+            );
             $this->orderService->handleTransactionStatus(
                 $order,
                 $transaction->getStatus(),
