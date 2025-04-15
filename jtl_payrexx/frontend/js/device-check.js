@@ -2,21 +2,21 @@
     'use strict';
     $(document).ready(() => {
         setTimeout(() => {
-            const $applePay = $(".checkout-payment-options [id^='kPlugin_'][id$='_applepay']");
-            if ($applePay.length) {
-                checkApplePaySupport($applePay);
+            const $isApplePayAvailable = $(".checkout-payment-options [id^='kPlugin_'][id$='_applepay']");
+            if ($isApplePayAvailable.length) {
+                checkApplePaySupport($isApplePayAvailable);
             }
 
-            const $googlePay = $(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']");
-            if ($googlePay.length) {
+            const $isGooglePayAvailable = $(".checkout-payment-options [id^='kPlugin_'][id$='_googlepay']");
+            if ($isGooglePayAvailable.length) {
                 loadGooglePayScript(() => {
-                    checkGooglePaySupport($googlePay);
+                    checkGooglePaySupport($isGooglePayAvailable);
                 });
             }
 
-            const $samsungPay = $(".checkout-payment-options [id^='kPlugin_'][id$='_samsungpay']");
-            if ($samsungPay.length) {
-                checkSamsungPaySupport($samsungPay);
+            const $isSamsungPayAvailable = $(".checkout-payment-options [id^='kPlugin_'][id$='_samsungpay']");
+            if ($isSamsungPayAvailable.length) {
+                checkSamsungPaySupport($isSamsungPayAvailable);
             }
 
         }, 100);
@@ -25,9 +25,9 @@
     /**
      * Check if Apple Pay is supported.
      */
-    const checkApplePaySupport = ($applePay) => {
+    const checkApplePaySupport = ($isApplePayAvailable) => {
         if (!(window.ApplePaySession && ApplePaySession.canMakePayments())) {
-            $applePay.hide();
+            $isApplePayAvailable.hide();
         }
     };
 
@@ -49,8 +49,8 @@
     /**
      * Check if the device supports Google Pay.
      */
-    const checkGooglePaySupport = ($googlePay) => {
-        $googlePay.hide();
+    const checkGooglePaySupport = ($isGooglePayAvailable) => {
+        $isGooglePayAvailable.hide();
 
         try {
             const baseRequest = {
@@ -79,7 +79,7 @@
             paymentsClient.isReadyToPay(isReadyToPayRequest)
                 .then((response) => {
                     if (response.result) {
-                        $googlePay.show();
+                        $isGooglePayAvailable.show();
                     }
                 })
                 .catch((err) => {
@@ -94,10 +94,10 @@
     /**
      * Check if Samsung Pay is supported.
      */
-    const checkSamsungPaySupport = ($samsungPay) => {
+    const checkSamsungPaySupport = ($isSamsungPayAvailable) => {
         const ua = navigator.userAgent;
         if (!(ua.indexOf("Android") > 0 && ua.indexOf("Mobile") > 0)) {
-            $samsungPay.hide();
+            $isSamsungPayAvailable.hide();
         }
     };
 }(jQuery));
