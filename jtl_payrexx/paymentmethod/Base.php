@@ -220,9 +220,6 @@ class Base extends Method
             );
             return true;
         }
-        $this->doLog(
-            'Payrexx::finalizeOrder(), Payment was cancelled/failed (Payment before order completion): ' . $args['orderNo'] ?? ''
-        );
         $this->handleCancellation('jtl_before_order_payrexx_payment_cancelled');
         return false;
     }
