@@ -216,12 +216,12 @@ class Base extends Method
                 $order->cBestellNr = $orderNumber;
             }
             $this->doLog(
-                'Payrexx::finalizeOrder(), Payment success: ' . $orderNumber
+                'Payrexx::finalizeOrder(), Payment success (Payment before order completion) ' . $orderNumber
             );
             return true;
         }
         $this->doLog(
-            'Payrexx::finalizeOrder(), Payment was cancelled/failed: ' . $args['orderNo'] ?? ''
+            'Payrexx::finalizeOrder(), Payment was cancelled/failed (Payment before order completion): ' . $args['orderNo'] ?? ''
         );
         $this->handleCancellation('jtl_before_order_payrexx_payment_cancelled');
         return false;
