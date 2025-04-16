@@ -24,7 +24,6 @@ class LoggerUtil
         $logLevel = \LOGLEVEL_NOTICE
     ): void {
         try {
-            echo $order->kZahlungsart;
             $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
             $moduleId = $paymentMethodEntity->cModulId ?? '';
 
