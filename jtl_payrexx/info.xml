@@ -49,7 +49,7 @@
                 </Setting>
                 <Setting type="selectbox" initialValue="no" sort="5" conf="Y">
                     <Name>Enable Logging</Name>
-                    <Description><![CDATA[Enable or disable for debugging purposes. Recommended to enable only troubleshooting.]]></Description>
+                    <Description><![CDATA[Enable Logging Description]]></Description>
                     <ValueName>payrexx_log</ValueName>
                     <SelectboxOptions>
                         <Option value="yes" sort="0">Yes</Option>

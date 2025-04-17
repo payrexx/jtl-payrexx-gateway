@@ -177,8 +177,7 @@ class OrderService
                 $order->cBestellNr,
                 $currentStatus,
                 $newStatus,
-            ),
-            null
+            )
         );
     }
 

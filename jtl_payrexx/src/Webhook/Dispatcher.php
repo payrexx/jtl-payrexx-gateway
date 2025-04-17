@@ -81,7 +81,6 @@ class Dispatcher
             if ($order->kBestellung) {
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
-                    $order,
                     $this->data
                 );
                 $this->orderService->handleTransactionStatus(
