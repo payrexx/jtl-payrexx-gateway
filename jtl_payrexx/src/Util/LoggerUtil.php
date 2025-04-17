@@ -3,9 +3,8 @@
 namespace Plugin\jtl_payrexx\Util;
 
 use Exception;
-use JTL\Checkout\Bestellung;
-use JTL\Checkout\Zahlungsart;
-use JTL\Checkout\ZahlungsLog;
+use JTL\Plugin\Helper as PluginHelper;
+use JTL\Shop;
 
 class LoggerUtil
 {
@@ -13,26 +12,25 @@ class LoggerUtil
      * Add log
      *
      * @param string     $message
-     * @param Bestellung $order
      * @param array|null $logData
-     * @param int        $logLevel
      */
     public static function addLog(
         string $message,
-        Bestellung $order,
         ?array $logData,
-        $logLevel = \LOGLEVEL_NOTICE
     ): void {
         try {
-            $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
-            $moduleId = $paymentMethodEntity->cModulId ?? '';
-
-            ZahlungsLog::add(
-                $moduleId,
-                $message,
-                !empty($logData) ? json_encode($logData) : '',
-                $logLevel
-            );
+            $plugin = PluginHelper::getPluginById('jtl_payrexx');
+            $config = $plugin->getConfig();
+            if (trim($config->getValue('payrexx_log') === 'no')) {
+                return;
+            }
+            if (\method_exists($plugin, 'getLogger')) {
+                $logger = $plugin->getLogger();
+            } else {
+                // fallback for shop versions < 5.3.0
+                $logger = Shop::Container()->getLogService();
+            }
+            $logger->debug($message . !empty($logData) ? 'data:' . json_encode($logData) : '');
         } catch(Exception $e) {
         }
     }

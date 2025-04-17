@@ -178,7 +178,6 @@ class OrderService
                 $currentStatus,
                 $newStatus,
             ),
-            $order,
             null
         );
     }
@@ -225,7 +224,6 @@ class OrderService
 
         LoggerUtil::addLog(
             'Payrexx::addIncommingPayment(): process started: ' . $order->cBestellNr,
-            $order,
             $logData
         );
         $incommingPayment = Shop::Container()->getDB()->selectSingleRow(
@@ -241,7 +239,6 @@ class OrderService
         $paymentMethod->setOrderStatusToPaid($order);
         LoggerUtil::addLog(
             'Payrexx::addIncommingPayment(): setOrderStatusToPaid() processed: ' . $order->cBestellNr,
-            $order,
             $logData
         );
 
@@ -253,7 +250,6 @@ class OrderService
         $paymentMethod->addIncomingPayment($order, $incomingPayment);
         LoggerUtil::addLog(
             'Payrexx::addIncommingPayment(): addIncomingPayment() processed: ' . $order->cBestellNr,
-            $order,
             $logData
         );
         $paymentMethod->sendConfirmationMail($order);

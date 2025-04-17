@@ -47,6 +47,15 @@
                     <Description><![CDATA[Enter a profile ID if you wish to use a specific Look&Feel profile.]]></Description>
                     <ValueName>payrexx_look_and_feel_id</ValueName>
                 </Setting>
+                <Setting type="selectbox" initialValue="no" sort="5" conf="Y">
+                    <Name>Enable Logging</Name>
+                    <Description><![CDATA[Enable or disable for debugging purposes. Recommended to enable only troubleshooting.]]></Description>
+                    <ValueName>payrexx_log</ValueName>
+                    <SelectboxOptions>
+                        <Option value="yes" sort="0">Yes</Option>
+                        <Option value="no" sort="1">No</Option>
+                    </SelectboxOptions>
+                </Setting>
             </Settingslink>
         </Adminmenu>
         <PaymentMethod>

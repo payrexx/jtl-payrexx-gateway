@@ -94,7 +94,6 @@ class Dispatcher
             } else {
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Webhook received before creating order: " .  $order->cBestellNr,
-                    $order,
                     $this->data
                 );
                 $this->sendResponse('Webhook received before order creation,
