@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-02 14:25+0000\n"
-"PO-Revision-Date: 2025-04-18 10:48+0530\n"
+"PO-Revision-Date: 2025-04-23 18:08+0530\n"
 "Last-Translator: \n"
 "Language-Team: No linguistic content\n"
 "Language: zxx\n"
@@ -57,3 +57,9 @@ msgstr "Logging aktivieren"
 
 msgid "Enable Logging Description"
 msgstr "Aktivieren oder deaktivieren Sie diese Option für Debugging-Zwecke. Es wird empfohlen, diese Option nur für die Fehlersuche zu aktivieren. Sie ist wirksam, wenn der Protokolltyp Debug ist (Fehlerbehebung->Logbuch->Einstellungen)"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nein"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-02 14:25+0000\n"
-"PO-Revision-Date: 2025-04-17 13:46+0530\n"
+"PO-Revision-Date: 2025-04-23 18:08+0530\n"
 "Last-Translator: \n"
 "Language-Team: No linguistic content\n"
 "Language: zxx\n"
@@ -57,3 +57,9 @@ msgstr "Enable Logging"
 
 msgid "Enable Logging Description"
 msgstr "Enable or disable for debugging purposes. Recommended to enable only for troubleshooting. It is effective for log type is debug (Troubleshooting->log->settings)"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"

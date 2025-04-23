@@ -52,8 +52,8 @@
                     <Description><![CDATA[Enable Logging Description]]></Description>
                     <ValueName>payrexx_log</ValueName>
                     <SelectboxOptions>
-                        <Option value="yes" sort="0">Yes</Option>
-                        <Option value="no" sort="1">No</Option>
+                        <Option value="yes" sort="0"><![CDATA[Yes]]></Option>
+                        <Option value="no" sort="1"><![CDATA[No]]></Option>
                     </SelectboxOptions>
                 </Setting>
             </Settingslink>

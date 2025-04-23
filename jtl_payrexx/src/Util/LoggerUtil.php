@@ -21,7 +21,7 @@ class LoggerUtil
         try {
             $plugin = PluginHelper::getPluginById('jtl_payrexx');
             $config = $plugin->getConfig();
-            if (trim($config->getValue('payrexx_log') !== 'yes')) {
+            if (trim($config->getValue('payrexx_log')) !== 'yes') {
                 return;
             }
             if (\method_exists($plugin, 'getLogger')) {
@@ -31,7 +31,7 @@ class LoggerUtil
                 $logger = Shop::Container()->getLogService();
             }
             $logger->info($message . (!empty($logData) ? 'data:' . json_encode($logData) : ''));
-        } catch(Exception $e) {
+        } catch (Exception) {
         }
     }
 }
