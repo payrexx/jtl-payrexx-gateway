@@ -18,6 +18,7 @@ use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
 use Plugin\jtl_payrexx\Util\BasketUtil;
+use Plugin\jtl_payrexx\Util\LoggerUtil;
 
 /**
  * Class Base
@@ -215,6 +216,9 @@ class Base extends Method
             if (!empty($orderNumber)) {
                 $order->cBestellNr = $orderNumber;
             }
+            LoggerUtil::addLog(
+                'Payrexx::finalizeOrder(), Payment success (Payment before order completion) ' . $orderNumber
+            );
             return true;
         }
         $this->handleCancellation('jtl_before_order_payrexx_payment_cancelled');
@@ -237,6 +241,10 @@ class Base extends Method
             $this->orderService->handleTransactionStatus(
                 $order,
                 Transaction::CANCELLED
+            );
+            
+            LoggerUtil::addLog(
+                'Payrexx::handleNotification(), Payment was cancelled: ' . $order->cBestellNr
             );
             $this->handleCancellation('jtl_after_order_payrexx_payment_cancelled');
         }
@@ -264,6 +272,9 @@ class Base extends Method
             if (!$transaction) {
                 return;
             }
+            LoggerUtil::addLog(
+                'Payrexx::handleNotification(), Process handleTransactionStatus(): ' . $order->cBestellNr
+            );
             $this->orderService->handleTransactionStatus(
                 $order,
                 $transaction->getStatus(),
