@@ -12,9 +12,10 @@ class BasketUtil
 
     /**
      * @param Bestellung $order
+     * @param array $voucherPayments
      * @return array
      */
-    public static function getBasketDetails(Bestellung $order): array
+    public static function getBasketDetails(Bestellung $order, array $voucherPayments): array
     {
         $products = $order->Positionen;
         $basketItems = [];
@@ -55,7 +56,14 @@ class BasketUtil
                 case \C_WARENKORBPOS_TYP_GRATISGESCHENK:
                 default:
                     $isDiscount = false;
-                    if (\in_array($productData->nPosTyp, [\C_WARENKORBPOS_TYP_KUPON], true)) {
+                    if (in_array(
+                            $productData->nPosTyp,
+                            [
+                                \C_WARENKORBPOS_TYP_KUPON,
+                                \C_WARENKORBPOS_TYP_GUTSCHEIN,
+                                \C_WARENKORBPOS_TYP_NEUKUNDENKUPON
+                            ], true
+                    )) {
                         $isDiscount = true;
                     }
                     $name = \is_array($productData->cName)
@@ -108,6 +116,7 @@ class BasketUtil
                     }
             }
         }
+
         if ($order->GuthabenNutzen && $order->fGuthaben && $order->fGuthaben < 0) {
             $gutscheinPrice = number_format(
                 $order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', ''
@@ -124,6 +133,23 @@ class BasketUtil
                 'amount' => $gutscheinPrice * 100,
             ];
         }
+
+        if (!empty($voucherPayments)) {
+            foreach ($voucherPayments as $voucherPayment) {
+                $basketItems[] = [
+                    'name' => [
+                        1 => 'Gutschein',
+                        2 => 'Voucher',
+                        3 => 'Bon',
+                        4 => 'Voucher',
+                        15 => 'Gutschein',
+                    ],
+                    'quantity' => 1,
+                    'amount' => $voucherPayment->fBetrag * (-100),
+                ];
+            }
+        }
+
         return $basketItems;
     }
 
