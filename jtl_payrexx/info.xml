@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.2.3</ShopVersion>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <JS>
@@ -655,6 +655,30 @@
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
                     <Name>Powerpay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+            </Method>
+            <Method>
+                <Name>CembraPay</Name>
+                <Sort>26</Sort>
+                <SendMail>1</SendMail>
+                <Provider>Payrexx</Provider>
+                <TSCode>OTHER</TSCode>
+                <PreOrder>0</PreOrder>
+                <Soap>0</Soap>
+                <Curl>0</Curl>
+                <Sockets>0</Sockets>
+                <ClassFile>CembraPay.php</ClassFile>
+                <ClassName>CembraPay</ClassName>
+                <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
+                <MethodLanguage iso="GER">
+                    <Name>CembraPay</Name>
+                    <ChargeName>Payrexx Payment Method</ChargeName>
+                    <InfoText></InfoText>
+                </MethodLanguage>
+                <MethodLanguage iso="ENG">
+                    <Name>CembraPay</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
