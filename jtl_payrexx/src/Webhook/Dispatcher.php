@@ -71,14 +71,12 @@ class Dispatcher
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
             }
-            $order = new Bestellung((int) $referenceId);
-            if (!$order->kBestellung) {
-                $result = $this->orderService->getOrderInfoByReference($referenceId);
-                if ($result) {
-                    $order = new Bestellung((int)$result->order_id);
-                }
+            $order = null;
+            $orderInfo = $this->orderService->getOrderInfoByReference($referenceId);
+            if ($orderInfo) {
+                $order = new Bestellung((int)$orderInfo->order_id);
             }
-            if ($order->kBestellung) {
+            if ($order && $order->kBestellung) {
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
                     $this->data
@@ -92,7 +90,7 @@ class Dispatcher
                 );
             } else {
                 LoggerUtil::addLog(
-                    "Payrexx:processWebhookResponse(), Webhook received before creating order: " .  $order->cBestellNr,
+                    "Payrexx:processWebhookResponse(), Webhook received before creating order: " . $referenceId,
                     $this->data
                 );
                 $this->sendResponse('Webhook received before order creation,
