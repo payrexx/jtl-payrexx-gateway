@@ -10,13 +10,8 @@ namespace Plugin\jtl_payrexx\paymentmethod;
  */
 class SamsungPay extends Base
 {
-    /**
-     * @var string $pm
-     */
-    private $pm = 'samsung-pay';
-
     public function __construct(string $moduleID)
     {
-        parent::__construct($moduleID, $this->pm);
+        parent::__construct($moduleID, 'samsung-pay');
     }
 }

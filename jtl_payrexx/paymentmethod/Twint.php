@@ -10,13 +10,8 @@ namespace Plugin\jtl_payrexx\paymentmethod;
  */
 class Twint extends Base
 {
-    /**
-     * @var string $pm payrexx payment method Id
-     */
-    private $pm = 'twint';
-
     public function __construct(string $moduleID)
     {
-        parent::__construct($moduleID, $this->pm);
+        parent::__construct($moduleID, 'twint');
     }
 }

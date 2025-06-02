@@ -28,7 +28,7 @@ class OrderService
         Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
     }
 
-    public function getOrderGatewayId(mixed $orderId, int $gatewayId): int
+    public function getOrderGatewayId(string|int $orderId, int $gatewayId): int
     {
         $info = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
@@ -212,7 +212,7 @@ class OrderService
         $paymentMethod->sendConfirmationMail($order);
     }
 
-    public function getOrderInfoByReference(mixed $referenceId): ?stdClass 
+    public function getOrderInfoByReference(string|int $referenceId): ?stdClass 
     {
         $result = Shop::Container()->getDB()->queryPrepared(
             'SELECT
