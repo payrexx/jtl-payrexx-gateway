@@ -6,8 +6,8 @@
     <URL>https://www.payrexx.com</URL>
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
-    <ShopVersion>5.0.0</ShopVersion>
-    <Version>1.0.21</Version>
+    <ShopVersion>5.2.3</ShopVersion>
+    <Version>1.1.0</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <JS>
