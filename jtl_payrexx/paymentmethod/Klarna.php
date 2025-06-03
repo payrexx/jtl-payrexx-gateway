@@ -10,13 +10,8 @@ namespace Plugin\jtl_payrexx\paymentmethod;
  */
 class Klarna extends Base
 {
-    /**
-     * @var string $pm payrexx payment method Id
-     */
-    private $pm = 'klarna';
-
     public function __construct(string $moduleID)
     {
-        parent::__construct($moduleID, $this->pm);
+        parent::__construct($moduleID, 'klarna');
     }
 }

@@ -10,27 +10,12 @@ use Plugin\jtl_payrexx\Service\PayrexxApiService;
 
 class PayrexxBackendTabRenderer
 {
-    /**
-     * @var PluginInterface
-     */
-    private $plugin;
+    private PluginInterface $plugin;
 
-    /**
-     * @var DbInterface
-     */
-    private $db;
+    private DbInterface $db;
 
-    /**
-     * @var JTLSmarty
-     */
-    private $smarty;
+    private JTLSmarty $smarty;
 
-    /**
-     * PayrexxBackendTabRenderer constructor.
-     *
-     * @param PluginInterface $plugin
-     * @param DbInterface     $db
-     */
     public function __construct(PluginInterface $plugin, DbInterface $db)
     {
         $this->plugin = $plugin;
@@ -38,11 +23,9 @@ class PayrexxBackendTabRenderer
     }
 
     /**
-     * @param  string    $tabName
-     * @param  int       $menuID
-     * @param  JTLSmarty $smarty
-     * @return string
-     * @throws \SmartyException
+     * Renders payrexx tab HTML.
+     *
+     * @throws \SmartyException If template rendering fails.
      */
     public function renderPayrexxTabs(string $tabName, int $menuID, JTLSmarty $smarty): string
     {
@@ -55,11 +38,6 @@ class PayrexxBackendTabRenderer
         }
     }
 
-    /**
-     * render Signature Validate Page
-     *
-     * @return string
-     */
     private function renderSignatureValidatePage(): string
     {
         $request = $_REQUEST;

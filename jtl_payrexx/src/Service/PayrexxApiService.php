@@ -2,7 +2,6 @@
 
 namespace Plugin\jtl_payrexx\Service;
 
-use Exception;
 use JTL\Checkout\Bestellung;
 use JTL\Plugin\Helper as PluginHelper;
 use Payrexx\Models\Request\Gateway;
@@ -14,32 +13,14 @@ use Payrexx\PayrexxException;
 
 class PayrexxApiService
 {
-    /**
-     * @var string
-     */
-    private $instance;
+    private string $instance;
 
-    /**
-     * @var string
-     */
-    private $apiKey;
+    private string $apiKey;
 
-    /**
-     * @var string
-     */
-    private $platform;
+    private string $platform;
 
-    /**
-     * @var string
-     */
-    private $lookAndFeelId;
+    private string $lookAndFeelId;
 
-    /**
-     * Constructor
-     *
-     * @param EntityRepository $customerRepository
-     * @param LoggerInterface $logger
-     */
     public function __construct()
     {
         self::init();
@@ -57,19 +38,9 @@ class PayrexxApiService
         $this->apiKey   = trim($config->getValue('payrexx_api_key'));
         $this->lookAndFeelId = trim($config->getValue('payrexx_look_and_feel_id'));
     }
+
     /**
      * Create Gateway
-     *
-     * @param Bestellung $order
-     * @param string $currency
-     * @param string $successUrl
-     * @param string $cancelUrl
-     * @param string $pm
-     * @param array $basket
-     * @param string $purpose
-     * @param float $totalAmount
-     * @param string $orderHash
-     * @return Gateway|null
      */
     public function createPayrexxGateway(
         Bestellung $order,
@@ -81,7 +52,7 @@ class PayrexxApiService
         string $purpose,
         float $totalAmount,
         string $orderHash
-    ) {
+    ): ?Gateway {
         $referenceId = $order->cBestellNr ?? $orderHash;
 
         $payrexx = $this->getInterface();
@@ -135,21 +106,12 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * @return \Payrexx\Payrexx
-     */
     public function getInterface(): \Payrexx\Payrexx
     {
         $platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
         return new Payrexx($this->instance, $this->apiKey, '', $platform);
     }
 
-    /**
-     * Get payrexx transaction
-     *
-     * @param int $payrexxTransactionId
-     * @return \Payrexx\Models\Response\Transaction|null
-     */
     public function getPayrexxTransaction(int $payrexxTransactionId): ?ResponseTransaction
     {
         $payrexx = $this->getInterface();
@@ -165,13 +127,7 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * Get payrexx gateway
-     *
-     * @param integer $gatewayId
-     * @return \Payrexx\Models\Request\Gateway|Exception
-     */
-    public function getPayrexxGateway(int $gatewayId)
+    public function getPayrexxGateway(int $gatewayId): ?Gateway
     {
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
@@ -183,11 +139,6 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * validate the api signature
-     *
-     * @return true|false
-     */
     public function validateSignature(): bool
     {
         $payrexx = $this->getInterface();
@@ -199,13 +150,7 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * get the Payrexx Transaction
-     *
-     * @param int $gatewayId
-     * @return \Payrexx\Models\Response\Transaction|null
-     */
-    public function getTransactionByGatewayId(int $gatewayId)
+    public function getTransactionByGatewayId(int $gatewayId): ?ResponseTransaction
     {
         if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
             return null;
@@ -233,11 +178,6 @@ class PayrexxApiService
         return $this->getPayrexxTransaction(end($transactions)['id']);
     }
 
-    /**
-     * delete payrexx gateway
-     *
-     * @param int $gatewayId
-     */
     public function deletePayrexxGateway(int $gatewayId): void
     {
         if (!$gateway = $this->getPayrexxGateway($gatewayId)) {

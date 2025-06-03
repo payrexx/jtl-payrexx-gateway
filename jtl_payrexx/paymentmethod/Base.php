@@ -11,7 +11,6 @@ use JTL\Plugin\Helper as PluginHelper;
 use JTL\Checkout\Bestellung;
 use JTL\Checkout\OrderHandler;
 use JTL\Plugin\PluginInterface;
-use JTL\Plugin\Data\PaymentMethod;
 use JTL\Session\Frontend;
 use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
@@ -20,49 +19,28 @@ use Plugin\jtl_payrexx\Service\PayrexxApiService;
 use Plugin\jtl_payrexx\Util\BasketUtil;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+
 /**
  * Class Base
  * @package Plugin\jtl_payrexx\paymentmethod
  */
 class Base extends Method
 {
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $caption;
-
-    /** @var PluginInterface */
     private PluginInterface $plugin;
 
-    /** @var PaymentMethod|null */
-    private ?PaymentMethod $method;
+    private string $pm;
 
-    /**
-     * @var string
-     */
-    private $pm;
+    private OrderService $orderService;
 
-    /**
-     * @var OrderService
-     */
-    private $orderService;
-
-    /**
-     * @var PayrexxApiService
-     */
-    private $payrexxApiService;
+    private PayrexxApiService $payrexxApiService;
 
     /**
      * PayrexxPayment constructor.
-     *
-     * @param string $moduleID
      */
-    public function __construct(string $moduleID, $pm)
+    public function __construct(string $moduleID, string $pm)
     {
         $this->pm = $pm;
         parent::__construct($moduleID);
@@ -70,12 +48,6 @@ class Base extends Method
         $this->payrexxApiService = new PayrexxApiService();
     }
 
-    /**
-     * Sets the name and caption for the payment method
-     *
-     * @param  int $nAgainCheckout
-     * @return $this
-     */
     public function init(int $nAgainCheckout = 0): self
     {
         parent::init($nAgainCheckout);
@@ -87,23 +59,11 @@ class Base extends Method
         return $this;
     }
 
-    /**
-     * Check the payment condition for displaying the payment on payment page
-     *
-     * @param  array $args_arr
-     * @return bool
-     */
     public function isValidIntern(array $args_arr = []): bool
     {
         return parent::isValidIntern($args_arr);
     }
 
-    /**
-     * Called when additional template is used
-     *
-     * @param  array $post
-     * @return bool
-     */
     public function handleAdditional(array $post): bool
     {
         return true;
@@ -111,9 +71,6 @@ class Base extends Method
 
     /**
      * Initiates the Payment process
-     *
-     * @param  Bestellung $order
-     * @return none
      */
     public function preparePaymentProcess(Bestellung $order): void
     {
@@ -203,11 +160,6 @@ class Base extends Method
 
     /**
      * Called on notification URL
-     *
-     * @param  Bestellung $order
-     * @param  string     $hash
-     * @param  array      $args
-     * @return bool
      */
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
@@ -227,11 +179,6 @@ class Base extends Method
 
     /**
      * Called when order is finalized and created on notification URL
-     *
-     * @param  Bestellung $order
-     * @param  string     $hash
-     * @param  array      $args
-     * @return none
      */
     public function handleNotification(Bestellung $order, string $hash, array $args): void
     {
@@ -285,25 +232,16 @@ class Base extends Method
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function redirectOnPaymentSuccess(): bool
     {
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function redirectOnCancel(): bool
     {
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function canPayAgain(): bool
     {
         return false;
@@ -311,8 +249,6 @@ class Base extends Method
 
     /**
      * Handle payment cancellation
-     *
-     * @param string $messageKey
      */
     private function handleCancellation(string $messageKey): void
     {

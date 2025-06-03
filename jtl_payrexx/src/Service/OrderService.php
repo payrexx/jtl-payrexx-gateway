@@ -13,13 +13,6 @@ use stdClass;
 
 class OrderService
 {
-    /**
-     * Set payrexx gateway id
-     *
-     * @param int|null $orderId
-     * @param int $gatewayId
-     * @param string $orderHash
-     */
     public function setPaymentGatewayId(?int $orderId, int $gatewayId, ?string $orderHash): void
     {
         $payrexxPayment = new stdClass();
@@ -35,14 +28,7 @@ class OrderService
         Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
     }
 
-    /**
-     * Get gateway id
-     *
-     * @param mixed $orderId
-     * @param int $gatewayId
-     * @return object
-     */
-    public function getOrderGatewayId($orderId, int $gatewayId)
+    public function getOrderGatewayId(string|int $orderId, int $gatewayId): int
     {
         $info = Shop::Container()->getDB()->queryPrepared(
             'SELECT `gateway_id`, `order_id`
@@ -54,25 +40,16 @@ class OrderService
             ],
             ReturnType::SINGLE_OBJECT
         );
-        return $info->gateway_id;
+        return $info?->gateway_id ?? 0;
     }
 
-    /**
-     * Handle transaction status.
-     *
-     * @param Bestellung $order
-     * @param string $status
-     * @param string $uuid
-     * @param string $currency
-     * @param int    $amount
-     */
     public function handleTransactionStatus(
         Bestellung $order,
         string $status,
         string $uuid = '',
         string $currency = '',
         int $amount = 0
-    ) {
+    ): void {
         $orderNewStatus = '';
         switch ($status) {
             case Transaction::WAITING:
@@ -121,14 +98,9 @@ class OrderService
         $this->updateOrderStatus($order, $order->cStatus, $orderNewStatus, $comment);
     }
 
-    /**
-     * @param string $currentStatus
-     * @param string $newStatus
-     * @return bool
-     */
-    private function transitionAllowed($currentStatus, $newStatus): bool
+    private function transitionAllowed(int $currentStatus, int $newStatus): bool
     {
-        if ($currentStatus == $newStatus) {
+        if ($currentStatus === $newStatus) {
             return false;
         }
         switch ($newStatus) {
@@ -142,14 +114,12 @@ class OrderService
         return true;
     }
 
-    /**
-     * @param Bestellung $orderId
-     * @param string $currentStatus
-     * @param string $newStatus
-     * @param string $comment
-     */
-    private function updateOrderStatus(Bestellung $order, $currentStatus, $newStatus, $comment = '')
-    {
+    private function updateOrderStatus(
+        Bestellung $order,
+        int $currentStatus,
+        int $newStatus,
+        string $comment = ''
+    ): void {
         if ($newStatus === \BESTELLUNG_STATUS_STORNO) {
             $paymentMethodEntity = new Zahlungsart((int)$order->kZahlungsart);
             $moduleId = $paymentMethodEntity->cModulId ?? '';
@@ -176,16 +146,12 @@ class OrderService
                 "Payrexx::updateOrderStatus(): status changed to the order %s from %s status to %s",
                 $order->cBestellNr,
                 $currentStatus,
-                $newStatus,
+                $newStatus
             )
         );
     }
 
-    /**
-     * @param int $orderId
-     * @param string $comment
-     */
-    private function updateOrderComment($order, string $comment)
+    private function updateOrderComment(Bestellung $order, string $comment): void
     {
         $oldComment = $order->cKommentar;
         if (!empty($oldComment)) {
@@ -199,14 +165,6 @@ class OrderService
         );
     }
 
-    /**
-     * Add incoming payment
-     *
-     * @param Bestellung $order
-     * @param string $uuid
-     * @param string $currency
-     * @param int    $amount
-     */
     private function addIncommingPayment(
         Bestellung $order,
         string $uuid,
@@ -254,13 +212,7 @@ class OrderService
         $paymentMethod->sendConfirmationMail($order);
     }
 
-    /**
-     * Get order info by reference ID.
-     *
-     * @param string $referenceId
-     * @return object
-     */
-    public function getOrderInfoByReference($referenceId)
+    public function getOrderInfoByReference(string|int $referenceId): ?stdClass 
     {
         $result = Shop::Container()->getDB()->queryPrepared(
             'SELECT
