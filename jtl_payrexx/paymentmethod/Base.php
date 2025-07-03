@@ -52,9 +52,8 @@ class Base extends Method
     {
         parent::init($nAgainCheckout);
 
-        $pluginID       = PluginHelper::getIDByModuleID($this->moduleID);
-        $this->plugin   = PluginHelper::getLoaderByPluginID($pluginID)->init($pluginID);
-        $this->method   = $this->plugin->getPaymentMethods()->getMethodByID($this->moduleID);
+        $pluginID     = PluginHelper::getIDByModuleID($this->moduleID);
+        $this->plugin = PluginHelper::getLoaderByPluginID($pluginID)->init($pluginID);
 
         return $this;
     }
