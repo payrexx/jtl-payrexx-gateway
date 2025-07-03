@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Example: Gateway request model
+ *
+ * @author    Payrexx Development <info@payrexx.com>
+ * @copyright Payrexx AG
+ * @since     v1.3.0
+ */
+
 spl_autoload_register(function($class) {
     $root = dirname(__DIR__);
     $classFile = $root . '/lib/' . str_replace('\\', '/', $class) . '.php';
@@ -37,7 +45,7 @@ $gateway->setSuccessRedirectUrl('https://www.merchant-website.com/success');
 $gateway->setFailedRedirectUrl('https://www.merchant-website.com/failed');
 $gateway->setCancelRedirectUrl('https://www.merchant-website.com/cancel');
 
-// optional: payment service provider(s) to use (see http://developers.payrexx.com/docs/miscellaneous)
+// optional: payment service provider(s) to use (see https://docs.payrexx.com/developer/general-info/payment-provider)
 // empty array = all available psps
 $gateway->setPsp([]);
 //$gateway->setPsp(array(4));
@@ -119,6 +127,7 @@ $gateway->addField($type = 'custom_field_1', $value = '123456789', $name = array
     3 => 'Benutzerdefiniertes Feld (FR)',
     4 => 'Benutzerdefiniertes Feld (IT)',
 ));
+$gateway->addField($type = 'custom_field_2', $value = '123456789', $name = 'Custom Field');
 
 try {
     $response = $payrexx->create($gateway);
