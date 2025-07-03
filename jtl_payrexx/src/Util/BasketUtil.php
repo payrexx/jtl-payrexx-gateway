@@ -31,12 +31,7 @@ class BasketUtil
                     $shippingPrice = number_format($shippingPrice, 2, '.', '');
 
                     $basketItems[] = [
-                        'name' => [
-                            1 => 'Versand',
-                            2 => 'Shipping',
-                            3 => 'Livraison',
-                            4 => 'Spedizione',
-                        ],
+                        'name' => self::getPurposeLangText('Shipping'),
                         'quantity' => 1,
                         'amount' => $shippingPrice * 100,
                         'vatRate' => $vatRate,
@@ -97,10 +92,7 @@ class BasketUtil
 
                     if ($type === 'discount') {
                         $basketItems[] = [
-                            'name' => [
-                                1 => 'Rabatt',
-                                2 => 'Discount',
-                            ],
+                            'name' => self::getPurposeLangText('Discount'),
                             'quantity' => 1,
                             'amount' => $priceTotal * 100,
                             'vatRate' => $vatRate,
@@ -113,13 +105,7 @@ class BasketUtil
                 $order->Waehrung->getConversionFactor() * $order->fGuthaben, 2, '.', ''
             );
             $basketItems[] = [
-                'name' => [
-                    1 => 'Kundenguthaben',
-                    2 => 'Customer Credit',
-                    3 => 'Avoirs des clients',
-                    4 => 'Saldo del credito del cliente',
-                    15 => 'Kundenguthaben',
-                ],
+                'name' => self::getPurposeLangText('Customer Credit'),
                 'quantity' => 1,
                 'amount' => $gutscheinPrice * 100,
             ];
@@ -152,15 +138,56 @@ class BasketUtil
      */
     public static function createPurposeByBasket(array $basket): string
     {
+        $locale = $_SESSION['currentLanguage']->getIso639() ?? 'en';
         $desc = [];
         foreach ($basket as $product) {
+            $productName = $product['name'];
             $desc[] = implode(' ', [
-                is_array( $product['name'] ) ? $product['name'][2] : $product['name'],
+                is_array($productName)
+                    ? self::getPurposeLangText($productName[2], $locale)
+                    : $productName,
                 $product['quantity'],
                 'x',
                 number_format($product['amount'] / 100, 2, '.', ''),
             ]);
         }
         return implode('; ', $desc);
+    }
+
+    private static function getPurposeLangText(string $textKey, ?string $locale = null): array|string
+    {
+        $translation =  [
+            'Shipping' => [
+                1 => 'Versand',
+                2 => 'Shipping',
+                3 => 'Livraison',
+                4 => 'Spedizione',
+            ],
+            'Discount' => [
+                1 => 'Rabatt',
+                2 => 'Discount',
+                3 => 'Remise',
+                4 => 'Sconto',
+            ],
+            'Customer Credit' => [
+                1 => 'Kundenguthaben',
+                2 => 'Customer Credit',
+                3 => 'Avoirs des clients',
+                4 => 'Saldo del credito del cliente',
+                15 => 'Kundenguthaben',
+            ],
+        ];
+        if ($locale === null) {
+            return $translation[$textKey] ?? $textKey;
+        }
+
+        $map = [
+            'de' => 1,
+            'en' => 2,
+            'fr' => 3,
+            'it' => 4,
+        ];
+        $langKey = $map[$locale] ?? 2;
+        return $translation[$textKey][$langKey] ?? $textKey;
     }
 }
