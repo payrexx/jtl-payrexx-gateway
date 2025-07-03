@@ -145,7 +145,7 @@ class Base extends Method
             if ($orderNumber) {
                 $_SESSION['payrexxOrder']['orderNo'] = $orderNumber;
             }
-            $lang = $_SESSION['currentLanguage']->localizedName ?? 'en';
+            $lang = $_SESSION['currentLanguage']->getIso639() ?? 'en';
             $redirect = $gateway->getLink();
             $lang = strtolower(substr($lang, 0, 2));
             if (in_array($lang, ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'])) {
