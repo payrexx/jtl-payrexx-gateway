@@ -126,7 +126,7 @@ class Base extends Method
         try {
             $metaData = [
                 'X-Shop-Version'   => Shop::getShopDatabaseVersion(),
-				'X-Plugin-Version' => $this->plugin->getMeta()->getVersion(),
+                'X-Plugin-Version' => $this->plugin->getMeta()->getVersion(),
             ];
         } catch (Exception $e) {}
 
