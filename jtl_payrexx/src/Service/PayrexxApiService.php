@@ -97,7 +97,7 @@ class PayrexxApiService
         if (!empty($basket)) {
             $gateway->setBasket($basket);
         } else {
-            $gateway->setPurpose([$purpose]);
+            $gateway->setPurpose($purpose);
         }
 
         if (!empty($metaData)) {
