@@ -121,6 +121,14 @@ class Base extends Method
             }
         }
 
+        $metaData = [];
+        try {
+            $metaData = [
+                'X-Shop-Version'   => (string) Shop::getShopDatabaseVersion(),
+                'X-Plugin-Version' => (string) $this->plugin->getMeta()->getVersion(),
+            ];
+        } catch (Exception $e) {}
+
         $gateway = $payrexxApiService->createPayrexxGateway(
             $order,
             $currency,
@@ -130,7 +138,8 @@ class Base extends Method
             $basket,
             $purpose,
             $totalAmount,
-            $orderHash
+            $orderHash,
+            $metaData
         );
         if ($gateway) {
             $this->orderService->setPaymentGatewayId(
@@ -188,7 +197,7 @@ class Base extends Method
                 $order,
                 Transaction::CANCELLED
             );
-            
+
             LoggerUtil::addLog(
                 'Payrexx::handleNotification(), Payment was cancelled: ' . $order->cBestellNr
             );
