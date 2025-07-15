@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.2.3</ShopVersion>
-    <Version>1.1.2</Version>
+    <Version>1.1.7</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <JS>
@@ -34,17 +34,20 @@
                 </Setting>
                 <Setting type="text" initialValue="" sort="2" conf="Y">
                     <Name>Instance Name</Name>
-                    <Description><![CDATA[INSTANCE NAME is a part of the url where you access your payrexx installation. https://INSTANCE.payrexx.com]]></Description>
+                    <Description>
+                        <![CDATA[INSTANCE NAME is a part of the url where you access your payrexx installation. https://INSTANCE.payrexx.com]]></Description>
                     <ValueName>payrexx_instance</ValueName>
                 </Setting>
                 <Setting type="text" initialValue="" sort="3" conf="Y">
                     <Name>API Secret</Name>
-                    <Description><![CDATA[Paste here your API key from the Integrations page of your Payrexx merchant backend.]]></Description>
+                    <Description>
+                        <![CDATA[Paste here your API key from the Integrations page of your Payrexx merchant backend.]]></Description>
                     <ValueName>payrexx_api_key</ValueName>
                 </Setting>
                 <Setting type="text" initialValue="" sort="4" conf="Y">
                     <Name>Look and Feel Profile Id</Name>
-                    <Description><![CDATA[Enter a profile ID if you wish to use a specific Look&Feel profile.]]></Description>
+                    <Description>
+                        <![CDATA[Enter a profile ID if you wish to use a specific Look&Feel profile.]]></Description>
                     <ValueName>payrexx_look_and_feel_id</ValueName>
                 </Setting>
                 <Setting type="selectbox" initialValue="no" sort="5" conf="Y">
@@ -707,30 +710,64 @@
             <Variable>
                 <Name>jtl_payrexx_signature_check_success</Name>
                 <Description>signature check success</Description>
-                <VariableLocalized iso="ENG"><![CDATA[Signature validated successfully. Your configurations are correct.]]></VariableLocalized>
-                <VariableLocalized iso="GER"><![CDATA[Signatur erfolgreich validiert. Ihre Grundeinstellungen sind korrekt.]]></VariableLocalized>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[Signature validated successfully. Your configurations are correct.]]></VariableLocalized>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Signatur erfolgreich validiert. Ihre Grundeinstellungen sind korrekt.]]></VariableLocalized>
             </Variable>
             <Variable>
                 <Name>jtl_payrexx_signature_check_fail</Name>
                 <Description>signature check fail</Description>
-                <VariableLocalized iso="ENG"><![CDATA[Signature validation failed. Pleae check your configurations.]]></VariableLocalized>
-                <VariableLocalized iso="GER"><![CDATA[Die Überprüfung der Signatur ist fehlgeschlagen. Bitte überprüfen Sie Ihre Konfigurationen.]]></VariableLocalized>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[Signature validation failed. Please check your configurations.]]></VariableLocalized>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Die Überprüfung der Signatur ist fehlgeschlagen. Bitte überprüfen Sie Ihre Konfigurationen.]]></VariableLocalized>
             </Variable>
             <Variable>
                 <Name>jtl_signature_check_submit</Name>
                 <Description>Submit button</Description>
                 <VariableLocalized iso="ENG"><![CDATA[Click to validate]]></VariableLocalized>
-                <VariableLocalized iso="GER"><![CDATA[Klicken Sie zum Bestätigen]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Zugansdaten validieren]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_signature_check_submit_tooltip</Name>
+                <Description>Submit button tooltip</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Cheks the signature and validity of the credentials]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Überprüft die Signatur und Validität des API-Schlüssels]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_connect_new_integration</Name>
+                <Description>Submit button</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Connect to Payrexx]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Mit Payrexx verbinden]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_connect_new_integration_tooltip</Name>
+                <Description>connect new integration tooltip</Description>
+                <VariableLocalized iso="ENG"><![CDATA[Connect to Payrexx to create a new integration and get your credentials (opens a popup).]]></VariableLocalized>
+                <VariableLocalized iso="GER"><![CDATA[Mit Payrexx verbinden, um eine Integration zu erstelen und die Zugangsdaten zu laden (öffnet ein Popup).]]></VariableLocalized>
+            </Variable>
+            <Variable>
+                <Name>jtl_payrexx_no_instance</Name>
+                <Description>no payrexx instance connected</Description>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[No instance connected. Click "Connect to Payrexx" or enter credentials manually.]]></VariableLocalized>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Keine Instanz verbunden. Klicke "Mit Payrexx verbinden" oder gib die Zugangsdaten manuell ein.]]></VariableLocalized>
             </Variable>
             <Variable>
                 <Name>jtl_after_order_payrexx_payment_cancelled</Name>
-                <VariableLocalized iso="GER"><![CDATA[Ihre Bestellung wurde storniert. Bitte wählen Sie eine Zahlungsmethode, um eine neue Bestellung zu erstellen.]]></VariableLocalized>
-                <VariableLocalized iso="ENG"><![CDATA[Your order has been canceled. Please choose a payment method to create a new order.]]></VariableLocalized>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Ihre Bestellung wurde storniert. Bitte wählen Sie eine Zahlungsmethode, um eine neue Bestellung zu erstellen.]]></VariableLocalized>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[Your order has been canceled. Please choose a payment method to create a new order.]]></VariableLocalized>
             </Variable>
             <Variable>
                 <Name>jtl_before_order_payrexx_payment_cancelled</Name>
-                <VariableLocalized iso="GER"><![CDATA[Ihre Zahlung wurde storniert. Bitte wählen Sie Ihre bevorzugte Zahlungsmethode, um fortzufahren.]]></VariableLocalized>
-                <VariableLocalized iso="ENG"><![CDATA[Your payment has been canceled. Please select your preferred payment method to continue.]]></VariableLocalized>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Ihre Zahlung wurde storniert. Bitte wählen Sie Ihre bevorzugte Zahlungsmethode, um fortzufahren.]]></VariableLocalized>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[Your payment has been canceled. Please select your preferred payment method to continue.]]></VariableLocalized>
             </Variable>
         </Locales>
     </Install>
