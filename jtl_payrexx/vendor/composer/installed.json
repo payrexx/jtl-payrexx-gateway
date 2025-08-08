@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v2.0.0",
-            "version_normalized": "2.0.0.0",
+            "version": "v2.0.2",
+            "version_normalized": "2.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "b176b906b99b4be1b8059a2a6ec96f40ecdda7f6"
+                "reference": "88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/b176b906b99b4be1b8059a2a6ec96f40ecdda7f6",
-                "reference": "b176b906b99b4be1b8059a2a6ec96f40ecdda7f6",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b",
+                "reference": "88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b",
                 "shasum": ""
             },
             "require": {
@@ -23,7 +23,7 @@
                 "pestphp/pest": "^3.8",
                 "phpstan/phpstan": "^1.9"
             },
-            "time": "2025-07-02T08:48:39+00:00",
+            "time": "2025-07-14T09:31:51+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -49,7 +49,7 @@
             ],
             "support": {
                 "issues": "https://github.com/payrexx/payrexx-php/issues",
-                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.0"
+                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.2"
             },
             "install-path": "../payrexx/payrexx"
         }

@@ -3,7 +3,7 @@
         'name' => 'payrexx_gateway/jtl_payrexx',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'c110b963ff0462e0f3ff3ac006ffe4a660c2d24b',
+        'reference' => '1fc00cb0671efec2584d30b244b7812aadabbb4e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'payrexx/payrexx' => array(
-            'pretty_version' => 'v2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => 'b176b906b99b4be1b8059a2a6ec96f40ecdda7f6',
+            'pretty_version' => 'v2.0.2',
+            'version' => '2.0.2.0',
+            'reference' => '88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../payrexx/payrexx',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'payrexx_gateway/jtl_payrexx' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c110b963ff0462e0f3ff3ac006ffe4a660c2d24b',
+            'reference' => '1fc00cb0671efec2584d30b244b7812aadabbb4e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
