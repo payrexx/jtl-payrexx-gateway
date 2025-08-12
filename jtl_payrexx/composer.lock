@@ -4,26 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e714e8a0783c3ccab5f4b9b4346f7d6f",
+    "content-hash": "ee1fe9adcfe951d10860319874059053",
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v1.8.10",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "ab932dca32c607cbaa6f8da9b9e1de2efe28021f"
+                "reference": "88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/ab932dca32c607cbaa6f8da9b9e1de2efe28021f",
-                "reference": "ab932dca32c607cbaa6f8da9b9e1de2efe28021f",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b",
+                "reference": "88ebd2d02e1809fff7b5fa93b4a66e3ac0186e9b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
+                "guzzlehttp/guzzle": "^7.0",
+                "pestphp/pest": "^3.8",
                 "phpstan/phpstan": "^1.9"
             },
             "type": "library",
@@ -50,20 +52,20 @@
             ],
             "support": {
                 "issues": "https://github.com/payrexx/payrexx-php/issues",
-                "source": "https://github.com/payrexx/payrexx-php/tree/v1.8.10"
+                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.2"
             },
-            "time": "2024-10-21T06:19:05+00:00"
+            "time": "2025-07-14T09:31:51+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
