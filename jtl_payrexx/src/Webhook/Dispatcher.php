@@ -73,10 +73,10 @@ class Dispatcher
             }
             $order = null;
             $orderInfo = $this->orderService->getOrderInfoByReference($referenceId);
-            if ($orderInfo) {
+            if ($orderInfo !== null) {
                 $order = new Bestellung((int)$orderInfo->order_id);
             }
-            if ($order && $order->kBestellung) {
+            if ($order !== null && $order->kBestellung) {
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
                     $this->data
