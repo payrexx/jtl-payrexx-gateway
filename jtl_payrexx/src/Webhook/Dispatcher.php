@@ -46,6 +46,7 @@ class Dispatcher
             if (empty($this->data)) {
                 $this->sendResponse('Webhook data incomplete');
             }
+            LoggerUtil::addLog("Payrexx:processWebhookResponse() started", $this->data);
             // reference id refers order id or order hash
             $referenceId = $this->data['transaction']['invoice']['referenceId'] ?? '';
             $gatewayId = $this->data['transaction']['invoice']['paymentRequestId'] ?? '';
@@ -53,7 +54,12 @@ class Dispatcher
             if (empty($referenceId)) {
                 $this->sendResponse('Webhook data incomplete');
             }
+            LoggerUtil::addLog(
+                "Payrexx:processWebhookResponse(), process getOrderGatewayId(): " . $referenceId,
+                $this->data
+            );
             $verify = $this->orderService->getOrderGatewayId($referenceId, (int) $gatewayId);
+            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
             if (!$verify) {
                 $this->sendResponse('Verification failed');
             }
@@ -61,9 +67,14 @@ class Dispatcher
             if (!isset($this->data['transaction']['status'])) {
                 $this->sendResponse('Missing transaction status');
             }
+            LoggerUtil::addLog(
+                "Payrexx:processWebhookResponse(), process getPayrexxTransaction(): " . $referenceId,
+                $this->data
+            );
             $transaction = $this->payrexxApiService->getPayrexxTransaction(
                 (int) $this->data['transaction']['id']
             );
+            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getPayrexxTransaction() finished");
 
             if (!$transaction) {
                 $this->sendResponse('Transactions not found');
@@ -72,11 +83,15 @@ class Dispatcher
                 $this->sendResponse('Fraudulent transaction status');
             }
             $order = null;
+            LoggerUtil::addLog(
+                "Payrexx:processWebhookResponse(), process getOrderInfoByReference(): " . $referenceId,
+            );
             $orderInfo = $this->orderService->getOrderInfoByReference($referenceId);
-            if ($orderInfo) {
+            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderInfoByReference() finished");
+            if ($orderInfo !== null) {
                 $order = new Bestellung((int)$orderInfo->order_id);
             }
-            if ($order && $order->kBestellung) {
+            if ($order !== null && $order->kBestellung) {
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
                     $this->data

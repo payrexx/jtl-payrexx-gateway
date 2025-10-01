@@ -58,7 +58,7 @@ class PayrexxApiService
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
-        $gateway->setAmount((int)($totalAmount * 100));
+        $gateway->setAmount((int)(string)($totalAmount * 100));
         $gateway->setCurrency($currency);
         $gateway->setSuccessRedirectUrl($successUrl);
         $gateway->setFailedRedirectUrl($cancelUrl);

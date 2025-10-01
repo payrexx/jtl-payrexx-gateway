@@ -229,6 +229,6 @@ class OrderService
             ],
             ReturnType::SINGLE_OBJECT
         );
-        return $result;
+        return $result === false ? null : $result;
     }
 }
