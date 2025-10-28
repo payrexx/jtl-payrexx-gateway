@@ -676,12 +676,12 @@
                 <ClassName>CembraPay</ClassName>
                 <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
                 <MethodLanguage iso="GER">
-                    <Name>Kauf auf Rechnung (Cembra Pay)</Name>
+                    <Name>Kauf auf Rechnung (CembraPay)</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
-                    <Name>Purchase on Account (Cembra Pay)</Name>
+                    <Name>Purchase on Account (CembraPay)</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
