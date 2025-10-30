@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.2.3</ShopVersion>
-    <Version>1.3.2</Version>
+    <Version>1.3.3</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <JS>
@@ -676,12 +676,12 @@
                 <ClassName>CembraPay</ClassName>
                 <TemplateFile>template/payrexx_payment.tpl</TemplateFile>
                 <MethodLanguage iso="GER">
-                    <Name>CembraPay</Name>
+                    <Name>Kauf auf Rechnung (CembraPay)</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
                 <MethodLanguage iso="ENG">
-                    <Name>CembraPay</Name>
+                    <Name>Purchase on Account (CembraPay)</Name>
                     <ChargeName>Payrexx Payment Method</ChargeName>
                     <InfoText></InfoText>
                 </MethodLanguage>
