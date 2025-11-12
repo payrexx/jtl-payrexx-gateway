@@ -29,8 +29,6 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
  */
 class Base extends Method
 {
-    private const LANG = ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'];
-
     private PluginInterface $plugin;
 
     private string $pm;
@@ -38,6 +36,8 @@ class Base extends Method
     private OrderService $orderService;
 
     private PayrexxApiService $payrexxApiService;
+
+    private $supportedLang = ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'];
 
     /**
      * PayrexxPayment constructor.
@@ -134,7 +134,7 @@ class Base extends Method
         $gatewayLang = '';
         $lang = $_SESSION['currentLanguage']->getIso639() ?? 'en';
         $lang = strtolower(substr($lang, 0, 2));
-        if (in_array($lang, self::LANG)) {
+        if (in_array($lang, $this->supportedLang)) {
             $gatewayLang = $lang;
         }
 
