@@ -29,6 +29,8 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
  */
 class Base extends Method
 {
+    private const LANG = ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'];
+
     private PluginInterface $plugin;
 
     private string $pm;
@@ -129,6 +131,13 @@ class Base extends Method
             ];
         } catch (Exception $e) {}
 
+        $gatewayLang = '';
+        $lang = $_SESSION['currentLanguage']->getIso639() ?? 'en';
+        $lang = strtolower(substr($lang, 0, 2));
+        if (in_array($lang, self::LANG)) {
+            $gatewayLang = $lang;
+        }
+
         $gateway = $payrexxApiService->createPayrexxGateway(
             $order,
             $currency,
@@ -139,7 +148,8 @@ class Base extends Method
             $purpose,
             $totalAmount,
             $orderHash,
-            $metaData
+            $metaData,
+            $gatewayLang
         );
         if ($gateway) {
             $this->orderService->setPaymentGatewayId(
@@ -154,13 +164,7 @@ class Base extends Method
             if ($orderNumber) {
                 $_SESSION['payrexxOrder']['orderNo'] = $orderNumber;
             }
-            $lang = $_SESSION['currentLanguage']->getIso639() ?? 'en';
-            $redirect = $gateway->getLink();
-            $lang = strtolower(substr($lang, 0, 2));
-            if (in_array($lang, ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'])) {
-                $redirect = str_replace('?', $lang . '/?', $redirect);
-            }
-            \header('Location:' . $redirect);
+            \header('Location:' . $gateway->getLink());
             exit();
         }
         \header('Location:' . $this->getNotificationURL($orderHash));

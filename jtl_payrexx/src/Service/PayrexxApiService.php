@@ -52,7 +52,8 @@ class PayrexxApiService
         string $purpose,
         float $totalAmount,
         string $orderHash,
-        array $metaData
+        array $metaData,
+        string $language
     ): ?Gateway {
         $referenceId = $order->cBestellNr ?? $orderHash;
 
@@ -102,6 +103,10 @@ class PayrexxApiService
 
         if (!empty($metaData)) {
             $payrexx->setHttpHeaders($metaData);
+        }
+
+        if (!empty($language)) {
+            $payrexx->setLanguage($language);
         }
 
         try {
