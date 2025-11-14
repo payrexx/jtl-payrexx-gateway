@@ -101,12 +101,12 @@ class PayrexxApiService
             $gateway->setPurpose($purpose);
         }
 
-        if (!empty($metaData)) {
-            $payrexx->setHttpHeaders($metaData);
+        if (!empty($language)) {
+            $gateway->setLanguage($language);
         }
 
-        if (!empty($language)) {
-            $payrexx->setLanguage($language);
+        if (!empty($metaData)) {
+            $payrexx->setHttpHeaders($metaData);
         }
 
         try {
