@@ -52,7 +52,8 @@ class PayrexxApiService
         string $purpose,
         float $totalAmount,
         string $orderHash,
-        array $metaData
+        array $metaData,
+        string $language
     ): ?Gateway {
         $referenceId = $order->cBestellNr ?? $orderHash;
 
@@ -98,6 +99,10 @@ class PayrexxApiService
             $gateway->setBasket($basket);
         } else {
             $gateway->setPurpose($purpose);
+        }
+
+        if (!empty($language)) {
+            $gateway->setLanguage($language);
         }
 
         if (!empty($metaData)) {
