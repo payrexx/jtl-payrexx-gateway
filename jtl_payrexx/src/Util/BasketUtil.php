@@ -33,7 +33,7 @@ class BasketUtil
                     $basketItems[] = [
                         'name' => self::getPurposeLangText('Shipping'),
                         'quantity' => 1,
-                        'amount' => $shippingPrice * 100,
+                        'amount' => (int)(string)($shippingPrice * 100),
                         'vatRate' => $vatRate,
                     ];
                     break;
@@ -74,9 +74,6 @@ class BasketUtil
                     $type = 'product';
                     if ($isDiscount === true) {
                         $type = 'discount';
-                        if ($priceTotal > 0) {
-                            $priceTotal = -100 * $priceTotal;
-                        }
                     }
 
                     if ($type === 'product') {
@@ -84,17 +81,21 @@ class BasketUtil
                             'name' => $name,
                             'description' => $productData->Artikel->cKurzBeschreibung,
                             'quantity' => $productData->nAnzahl,
-                            'amount' => $priceTotal * 100,
+                            'amount' => (int)(string)($priceTotal * 100),
                             'sku' => $productData->cArtNr,
                             'vatRate' => $vatRate,
                         ];
                     }
 
                     if ($type === 'discount') {
+                        $priceTotal = $priceTotal * 100;
+                        if ($priceTotal > 0) {
+                            $priceTotal = -$priceTotal;
+                        }
                         $basketItems[] = [
                             'name' => self::getPurposeLangText('Discount'),
                             'quantity' => 1,
-                            'amount' => $priceTotal * 100,
+                            'amount' => (int)(string)$priceTotal,
                             'vatRate' => $vatRate,
                         ];
                     }
@@ -107,7 +108,7 @@ class BasketUtil
             $basketItems[] = [
                 'name' => self::getPurposeLangText('Customer Credit'),
                 'quantity' => 1,
-                'amount' => $gutscheinPrice * 100,
+                'amount' => (int)(string)($gutscheinPrice * 100),
             ];
         }
         return $basketItems;
@@ -117,17 +118,17 @@ class BasketUtil
      * Get Basket Amount
      *
      * @param array $basket
-     * @return float
+     * @return int
      */
-    public static function getBasketAmount(array $basket)
+    public static function getBasketAmount(array $basket): int
     {
         $basketAmount = 0;
 
         foreach ($basket as $product) {
-            $amount = $product['amount'] / 100;
+            $amount = $product['amount'];
             $basketAmount += $product['quantity'] * $amount;
         }
-        return floatval(number_format($basketAmount, 2, '.', ''));
+        return $basketAmount;
     }
 
     /**

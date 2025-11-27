@@ -50,7 +50,7 @@ class PayrexxApiService
         string $pm,
         array $basket,
         string $purpose,
-        float $totalAmount,
+        int $totalAmount,
         string $orderHash,
         array $metaData,
         string $language
@@ -59,7 +59,7 @@ class PayrexxApiService
 
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
-        $gateway->setAmount((int)(string)($totalAmount * 100));
+        $gateway->setAmount($totalAmount);
         $gateway->setCurrency($currency);
         $gateway->setSuccessRedirectUrl($successUrl);
         $gateway->setFailedRedirectUrl($cancelUrl);

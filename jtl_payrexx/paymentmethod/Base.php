@@ -92,11 +92,12 @@ class Base extends Method
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
         $convertedPrice = $order->fGesamtsumme * $currencyFactor;
         $totalAmount = (float)number_format($convertedPrice, 2, '.', '');
+        $totalAmountInCents = (int)(string)($totalAmount * 100);
         $currency = $order->Waehrung->cISO;
 
         $basket = [];
         $purpose = '';
-        if ($totalAmount && $totalAmount === $basketAmount) {
+        if ($totalAmountInCents && $totalAmountInCents === $basketAmount) {
             $basket = $basketItems;
         } else {
             $purpose = BasketUtil::createPurposeByBasket($basketItems);
@@ -146,7 +147,7 @@ class Base extends Method
             $this->pm,
             $basket,
             $purpose,
-            $totalAmount,
+            $totalAmountInCents,
             $orderHash,
             $metaData,
             $gatewayLang
