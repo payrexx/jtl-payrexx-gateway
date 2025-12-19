@@ -4,7 +4,7 @@
   "description": "JTL-Shop 5 Plugin Container",
   "require": {
     "php": "^8.0",
-    "payrexx/payrexx": "^2.0.4"
+    "payrexx/payrexx": "^2.0.7"
   },
   "autoload": {
     "psr-4": {
