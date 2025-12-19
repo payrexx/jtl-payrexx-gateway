@@ -7,12 +7,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "34252a32edae129c4a1da39d444e7fe97312ab77"
+                "reference": "2488323455e0508e99ebe58204d8112a8487efb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/34252a32edae129c4a1da39d444e7fe97312ab77",
-                "reference": "34252a32edae129c4a1da39d444e7fe97312ab77",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/2488323455e0508e99ebe58204d8112a8487efb8",
+                "reference": "2488323455e0508e99ebe58204d8112a8487efb8",
                 "shasum": ""
             },
             "require": {
@@ -23,7 +23,7 @@
                 "pestphp/pest": "^3.8",
                 "phpstan/phpstan": "^1.9"
             },
-            "time": "2025-12-18T13:33:10+00:00",
+            "time": "2025-12-19T08:10:36+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
