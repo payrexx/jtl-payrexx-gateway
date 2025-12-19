@@ -7,7 +7,7 @@
     <PluginID>jtl_payrexx</PluginID>
     <XMLVersion>100</XMLVersion>
     <ShopVersion>5.2.3</ShopVersion>
-    <Version>1.3.4</Version>
+    <Version>1.3.5</Version>
     <CreateDate>2024-04-15</CreateDate>
     <Install>
         <JS>
