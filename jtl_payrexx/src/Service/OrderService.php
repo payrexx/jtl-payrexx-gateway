@@ -88,11 +88,13 @@ class OrderService
                 break;
         }
 
-        if (empty($orderNewStatus) || !$this->transitionAllowed($order->cStatus, $orderNewStatus)) {
+        $allowedRefundStatuses = ['refunded', 'partially-refunded'];
+        if (in_array($orderNewStatus, $allowedRefundStatuses)) {
+            $this->updateOrderComment($order, $comment);
             return;
         }
-        if (in_array($orderNewStatus, ['refunded', 'partially-refunded'])) {
-            $this->updateOrderComment($order, $comment);
+
+        if (empty($orderNewStatus) || !$this->transitionAllowed($order->cStatus, $orderNewStatus)) {
             return;
         }
         $this->updateOrderStatus($order, $order->cStatus, $orderNewStatus, $comment);
