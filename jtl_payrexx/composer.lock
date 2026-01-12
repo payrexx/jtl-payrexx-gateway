@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83a71361392c22cbf5d9fa8f19cd40d1",
+    "content-hash": "9951388cf2eef8510c5bb23926550479",
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v2.0.7",
+            "version": "v2.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "2488323455e0508e99ebe58204d8112a8487efb8"
+                "reference": "95473689ba082d327effbbc43fc2302d36c6c8bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/2488323455e0508e99ebe58204d8112a8487efb8",
-                "reference": "2488323455e0508e99ebe58204d8112a8487efb8",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/95473689ba082d327effbbc43fc2302d36c6c8bd",
+                "reference": "95473689ba082d327effbbc43fc2302d36c6c8bd",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
             "require-dev": {
                 "guzzlehttp/guzzle": "^7.0",
                 "pestphp/pest": "^3.8",
-                "phpstan/phpstan": "^1.9"
+                "phpstan/phpstan": "^2.1"
             },
             "type": "library",
             "autoload": {
@@ -52,9 +52,9 @@
             ],
             "support": {
                 "issues": "https://github.com/payrexx/payrexx-php/issues",
-                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.7"
+                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.8"
             },
-            "time": "2025-12-19T08:10:36+00:00"
+            "time": "2025-12-29T10:48:31+00:00"
         }
     ],
     "packages-dev": [],
