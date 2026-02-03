@@ -22,19 +22,20 @@ use Payrexx\Models\Response\Transaction as ResponseTransaction;
  */
 class Transaction extends Base
 {
-    protected int $amount;
-    protected string $currency;
-    protected string $purpose;
-    protected float $vatRate;
-    protected array $fields;
-    protected string $referenceId;
-    protected string $recipient;
-    protected string $filterDatetimeUtcGreaterThan;
-    protected string $filterDatetimeUtcLessThan;
+    protected int $amount = 0;
+    protected string $currency = '';
+    protected string $purpose = '';
+    protected ?float $vatRate = null;
+    protected array $fields = [];
+    protected string $referenceId = '';
+    protected string $payoutDescriptor = '';
+    protected string $recipient = '';
+    protected string $filterDatetimeUtcGreaterThan = '';
+    protected string $filterDatetimeUtcLessThan = '';
     protected bool $filterMyTransactionsOnly = false;
     protected string $orderByTime = 'ASC';
-    protected int $offset;
-    protected int $limit;
+    protected int $offset = 1;
+    protected int $limit = 10;
 
     public function getAmount(): int
     {
@@ -97,6 +98,16 @@ class Transaction extends Base
     public function setReferenceId(string $referenceId): void
     {
         $this->referenceId = $referenceId;
+    }
+
+    public function getPayoutDescriptor(): string
+    {
+        return $this->payoutDescriptor;
+    }
+
+    public function setPayoutDescriptor(string $payoutDescriptor): void
+    {
+        $this->payoutDescriptor = $payoutDescriptor;
     }
 
     public function getRecipient(): string

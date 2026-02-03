@@ -9,6 +9,9 @@ use JTL\Checkout\Bestellung;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
+if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
+    require_once __DIR__ . '/../../vendor/autoload.php';
+}
 class Dispatcher
 {
     /**
@@ -113,7 +116,7 @@ class Dispatcher
                 );
             }
             $this->sendResponse('Webhook processed successfully!');
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->sendResponse('Error: ' . json_encode($e->getMessage()));
         }
     }
