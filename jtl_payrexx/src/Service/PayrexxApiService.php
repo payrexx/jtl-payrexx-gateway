@@ -10,13 +10,6 @@ use Payrexx\Models\Request\Transaction;
 use Payrexx\Models\Response\Transaction as ResponseTransaction;
 use Payrexx\Payrexx;
 use Payrexx\PayrexxException;
-use Throwable;
-use Plugin\jtl_payrexx\Util\LoggerUtil;
-
-$autoload = realpath(__DIR__ . '/../../vendor/autoload.php');
-if (is_string($autoload) && is_file($autoload)) {
-    require_once $autoload;
-}
 
 class PayrexxApiService
 {
@@ -131,50 +124,17 @@ class PayrexxApiService
 
     public function getPayrexxTransaction(int $payrexxTransactionId): ?ResponseTransaction
     {
+        $payrexx = $this->getInterface();
+
+        $payrexxTransaction = new Transaction();
+        $payrexxTransaction->setId($payrexxTransactionId);
+
         try {
-            $payrexx = $this->getInterface();
-            $class = Transaction::class;
-
-            if (!class_exists($class, true)) {
-                LoggerUtil::addLog('Payrexx Transaction class not loaded', ['class' => $class]);
-                return null;
-            }
-            LoggerUtil::addLog(
-                'Payrexx getPayrexxTransaction inside step 1',
-                [
-                    'transactionId' => $payrexxTransactionId,
-                ]
-            );
-
-            $payrexxTransaction = new Transaction();
-
-            LoggerUtil::addLog(
-                'Payrexx getPayrexxTransaction inside step 2',
-                [
-                    'transactionId' => $payrexxTransactionId,
-                ]
-            );
-            $payrexxTransaction->setId($payrexxTransactionId);
-            LoggerUtil::addLog(
-                'Payrexx getPayrexxTransaction inside step 3',
-                [
-                    'transactionId' => $payrexxTransactionId,
-                ]
-            );
-
-            return $payrexx->getOne($payrexxTransaction);
-
-        } catch (\Throwable $e) {
-            LoggerUtil::addLog(
-                'Payrexx getPayrexxTransaction failed',
-                [
-                    'transactionId' => $payrexxTransactionId,
-                    'message'       => $e->getMessage(),
-                ]
-            );
+            $response = $payrexx->getOne($payrexxTransaction);
+            return $response;
+        } catch (PayrexxException $e) {
             return null;
         }
-
     }
 
     public function getPayrexxGateway(int $gatewayId): ?Gateway

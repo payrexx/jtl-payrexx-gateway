@@ -7,7 +7,6 @@ namespace Plugin\jtl_payrexx\Webhook;
 use Exception;
 use JTL\Checkout\Bestellung;
 use Plugin\jtl_payrexx\Service\OrderService;
-use Plugin\jtl_payrexx\Service\PayrexxApiService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
 class Dispatcher
@@ -27,9 +26,12 @@ class Dispatcher
      */
     private $data;
 
-    public function __construct()
+    /**
+     * @param $payrexxApiService
+     */
+    public function __construct($payrexxApiService)
     {
-        $this->payrexxApiService = new PayrexxApiService();
+        $this->payrexxApiService = $payrexxApiService;
         $this->orderService = new OrderService();
         $this->data = $_POST;
     }
@@ -111,7 +113,7 @@ class Dispatcher
                 );
             }
             $this->sendResponse('Webhook processed successfully!');
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             $this->sendResponse('Error: ' . json_encode($e->getMessage()));
         }
     }
