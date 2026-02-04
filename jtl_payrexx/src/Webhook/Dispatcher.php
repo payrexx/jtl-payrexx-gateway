@@ -7,11 +7,9 @@ namespace Plugin\jtl_payrexx\Webhook;
 use Exception;
 use JTL\Checkout\Bestellung;
 use Plugin\jtl_payrexx\Service\OrderService;
+use Plugin\jtl_payrexx\Service\PayrexxApiService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/autoload.php';
-}
 class Dispatcher
 {
     /**
@@ -29,12 +27,9 @@ class Dispatcher
      */
     private $data;
 
-    /**
-     * @param $payrexxApiService
-     */
-    public function __construct($payrexxApiService)
+    public function __construct()
     {
-        $this->payrexxApiService = $payrexxApiService;
+        $this->payrexxApiService = new PayrexxApiService();
         $this->orderService = new OrderService();
         $this->data = $_POST;
     }

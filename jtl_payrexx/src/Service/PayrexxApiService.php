@@ -13,9 +13,11 @@ use Payrexx\PayrexxException;
 use Throwable;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-    require_once __DIR__ . '/../../vendor/autoload.php';
+$autoload = realpath(__DIR__ . '/../../vendor/autoload.php');
+if (is_string($autoload) && is_file($autoload)) {
+    require_once $autoload;
 }
+
 class PayrexxApiService
 {
     private string $instance;
