@@ -1,35 +1,40 @@
 <?php
-
 /**
  * The Page response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
-
 namespace Payrexx\Models\Response;
 
 /**
  * Class Page
- *
  * @package Payrexx\Models\Response
  */
 class Page extends \Payrexx\Models\Request\Page
 {
-    protected int $createdAt = 0;
+    protected $createdAt = 0;
 
-    public function getCreatedDate(): int
+    /**
+     * @return int
+     */
+    public function getCreatedDate()
     {
         return $this->createdAt;
     }
 
-    public function setCreatedDate(int $createdAt): void
+    /**
+     * @param int $createdAt
+     */
+    public function setCreatedDate($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
-    public function setFields(array $fields): void
+    /**
+     * @param array $fields
+     */
+    public function setFields($fields)
     {
         $this->fields = $fields;
     }

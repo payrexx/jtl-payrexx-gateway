@@ -3,59 +3,81 @@
 /**
  * The PaymentProvider request model.
  *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.5.5
+ * @author    Payrexx Development <dev@payrexx.com>
+ * @copyright 2018 Payrexx AG
+ * @since     v1.0
  */
 
 namespace Payrexx\Models\Request;
 
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\PaymentProvider as ResponsePaymentProvider;
-
 /**
  * Class PaymentProvider
- *
  * @package Payrexx\Models\Request
  */
-class PaymentProvider extends Base
+class PaymentProvider extends \Payrexx\Models\Base
 {
-    protected string $name;
-    protected array $paymentMethods;
-    protected array $activePaymentMethods;
+    /** @var string $name */
+    protected $name;
 
-    public function getName(): string
+    /** @var array $paymentMethods */
+    protected $paymentMethods;
+
+    /** @var array $activePaymentMethods */
+    protected $activePaymentMethods;
+
+    /**
+     * @return string
+     */
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    /**
+     * @param string $name
+     */
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function getPaymentMethods(): array
+    /**
+     * @return array
+     */
+    public function getPaymentMethods()
     {
         return $this->paymentMethods;
     }
 
-    public function setPaymentMethods(array $paymentMethods): void
+    /**
+     * @param array $paymentMethods
+     */
+    public function setPaymentMethods($paymentMethods)
     {
         $this->paymentMethods = $paymentMethods;
     }
 
-    public function getActivePaymentMethods(): array
+    /**
+     * @return array
+     */
+    public function getActivePaymentMethods()
     {
         return $this->activePaymentMethods;
     }
 
-    public function setActivePaymentMethods(array $activePaymentMethods): void
+    /**
+     * @param array $activePaymentMethods
+     */
+    public function setActivePaymentMethods($activePaymentMethods)
     {
         $this->activePaymentMethods = $activePaymentMethods;
     }
 
-    public function getResponseModel(): ResponsePaymentProvider
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
     {
-        return new ResponsePaymentProvider();
+        return new \Payrexx\Models\Response\PaymentProvider();
     }
 }

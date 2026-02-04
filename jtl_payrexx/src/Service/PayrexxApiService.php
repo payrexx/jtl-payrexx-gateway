@@ -109,11 +109,11 @@ class PayrexxApiService
         }
 
         if (!empty($language)) {
-            $gateway->setLanguage($language);
+            // $gateway->setLanguage($language);
         }
 
         if (!empty($metaData)) {
-            $payrexx->setHttpHeaders($metaData);
+            // $payrexx->setHttpHeaders($metaData);
         }
 
         try {

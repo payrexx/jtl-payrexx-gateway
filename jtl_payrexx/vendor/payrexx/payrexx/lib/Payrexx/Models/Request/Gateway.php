@@ -1,129 +1,278 @@
 <?php
 
-/**
- * The Gateway request model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.3.0
- */
-
 namespace Payrexx\Models\Request;
-
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\Gateway as ResponseGateway;
 
 /**
  * Gateway request class
  *
- * @package Payrexx\Models\Request
+ * @copyright   Payrexx AG
+ * @author      Payrexx Development Team <info@payrexx.com>
+ * @package     \Payrexx\Models\Request
  */
-class Gateway extends Base
+class Gateway extends \Payrexx\Models\Base
 {
-    /** mandatory */
-    protected int $amount;
 
-    /** optional */
-    protected ?float $vatRate;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     integer
+     */
+    protected $amount;
 
-    /** optional */
-    protected ?string $sku;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     float|null
+     */
+    protected $vatRate;
 
-    /** mandatory */
-    protected string $currency;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $sku;
 
-    /** optional */
-    protected string|array $purpose;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $currency;
 
-    /** optional */
-    protected array $psp;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $purpose;
 
-    /** optional */
-    protected array $pm;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $psp;
 
-    /** optional */
-    protected bool $preAuthorization = false;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $pm;
 
-    /** optional */
-    protected bool $reservation = false;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     bool
+     */
+    protected $preAuthorization = false;
 
-    /** optional */
-    protected string $referenceId;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     bool
+     */
+    protected $reservation = false;
 
-    /** optional */
-    protected array $fields;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $referenceId;
 
-    /** optional */
-    protected string $concardisOrderId;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $fields;
 
-    /** mandatory */
-    protected string $successRedirectUrl;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $concardisOrderId;
 
-    /** mandatory */
-    protected string $failedRedirectUrl;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $successRedirectUrl;
 
-    /** mandatory */
-    protected string $cancelRedirectUrl;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $failedRedirectUrl;
 
-    /** optional */
-    protected bool $skipResultPage;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $cancelRedirectUrl;
 
-    /** optional */
-    protected bool $chargeOnAuthorization;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     boolean
+     */
+    protected $skipResultPage;
 
-    /** optional */
-    protected bool $reserveOnAuthorization;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     boolean
+     */
+    protected $chargeOnAuthorization;
 
-    /** optional: Only for Clearhaus transactions. */
-    protected string $customerStatementDescriptor;
+    /**
+     * optional: Only for Clearhaus transactions.
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $customerStatementDescriptor;
 
-    /** optional: Gateway validity in minutes. */
-    protected int $validity;
+    /**
+     * optional: Gateway validity in minutes.
+     *
+     * @access  protected
+     * @var     int
+     */
+    protected $validity;
 
-    /** optional */
-    protected bool $subscriptionState = false;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     bool
+     */
+    protected $subscriptionState = false;
 
-    /** optional */
-    protected string $subscriptionInterval = '';
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $subscriptionInterval = '';
 
-    /** optional */
-    protected string $subscriptionPeriod = '';
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $subscriptionPeriod = '';
 
-    /** optional */
-    protected string $subscriptionPeriodMinAmount = '';
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $subscriptionPeriodMinAmount = '';
 
-    /** optional */
-    protected string $subscriptionCancellationInterval = '';
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $subscriptionCancellationInterval = '';
 
-    /** optional */
-    protected array $buttonText;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array $buttonText
+     */
+    protected $buttonText;
 
-    /** optional */
-    protected ?string $lookAndFeelProfile;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string $lookAndFeelProfile
+     */
+    protected $lookAndFeelProfile;
 
-    /** optional */
-    protected array $successMessage;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array $successMessage
+     */
+    protected $successMessage;
 
-    /** optional */
-    protected array $basket;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array       $basket
+     */
+    protected $basket;
 
-    /** optional */
-    protected string $qrCodeSessionId;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string      $qrCodeSessionId
+     */
+    protected $qrCodeSessionId;
 
-    /** optional */
-    protected string $returnApp;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string     $returnApp
+     */
+    protected $returnApp;
 
-    /** optional */
-    protected bool $spotlightStatus;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     boolean     $spotlightStatus
+     */
+    protected $spotlightStatus;
 
-    /** optional */
-    protected string $spotlightOrderDetailsUrl;
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     string      $spotlightOrderDetailsUrl
+     */
+    protected $spotlightOrderDetailsUrl;
 
-    protected string $language = '';
-
-    protected bool $isPriceExclusiveVat = false;
-
-    public function getAmount(): int
+    /**
+     * @access  public
+     * @return  int
+     */
+    public function getAmount()
     {
         return $this->amount;
     }
@@ -131,46 +280,72 @@ class Gateway extends Base
     /**
      * Set the payment amount.
      * Make sure the amount is multiplied by 100!
+     *
+     * @access  public
+     * @param   integer $amount
      */
-    public function setAmount(int $amount): void
+    public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
-    public function getVatRate(): ?float
+    /**
+     * @return float|null
+     */
+    public function getVatRate()
     {
         return $this->vatRate;
     }
 
-    public function setVatRate(?float $vatRate): void
+    /**
+     * @param float|null $vatRate
+     */
+    public function setVatRate($vatRate)
     {
         $this->vatRate = $vatRate;
     }
 
-    public function getSku(): ?string
+    /**
+     * @return string
+     */
+    public function getSku()
     {
         return $this->sku;
     }
 
-    public function setSku(?string $sku): void
+    /**
+     * @param string $sku
+     */
+    public function setSku($sku)
     {
         $this->sku = $sku;
     }
 
-    public function getCurrency(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }
 
     /**
      * Set the corresponding payment currency for the amount (use ISO codes).
+     *
+     * @access  public
+     * @param   string  $currency
      */
-    public function setCurrency(string $currency): void
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
     }
 
-    public function getPurpose(): string|array
+    /**
+     * @access  public
+     * @return  array
+     */
+    public function getPurpose()
     {
         return $this->purpose;
     }
@@ -178,13 +353,20 @@ class Gateway extends Base
     /**
      * Set the purpose of this gateway. Will be displayed as transaction purpose in merchant backend.
      * Use language ID as array key. Use key 0 as default purpose. Will be used for each activated frontend language.
+     *
+     * @access  public
+     * @param   array   $purpose
      */
-    public function setPurpose(string|array $purpose): void
+    public function setPurpose($purpose)
     {
         $this->purpose = $purpose;
     }
 
-    public function getPsp(): array
+    /**
+     * @access  public
+     * @return  array
+     */
+    public function getPsp()
     {
         return $this->psp;
     }
@@ -192,54 +374,82 @@ class Gateway extends Base
     /**
      * Set payment service providers to use.
      * A list of available payment service providers
-     * can be found here: https://docs.payrexx.com/developer/general-info/payment-provider
+     * can be found here: http://developers.payrexx.com/docs/miscellaneous
      * All available psp will be used on payment page if none have been defined.
+     *
+     * @access  public
+     * @param   array   $psp
      */
-    public function setPsp(array $psp): void
+    public function setPsp($psp)
     {
         $this->psp = $psp;
     }
 
-    public function getPm(): array
+    /**
+     * @access  public
+     * @return  array
+     */
+    public function getPm()
     {
         return $this->pm;
     }
 
     /**
      * Set payment mean to use.
+     *
+     * @access  public
+     * @param   array   $pm
      */
-    public function setPm(array $pm): void
+    public function setPm($pm)
     {
         $this->pm = $pm;
     }
 
-    public function getPreAuthorization(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getPreAuthorization()
     {
         return $this->preAuthorization;
     }
 
     /**
      *  Whether charge payment manually at a later date (type authorization).
+     *
+     * @access  public
+     * @param   bool    $preAuthorization
      */
-    public function setPreAuthorization(bool $preAuthorization): void
+    public function setPreAuthorization($preAuthorization)
     {
         $this->preAuthorization = $preAuthorization;
     }
 
-    public function getReservation(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getReservation()
     {
         return $this->reservation;
     }
 
     /**
      *  Whether charge payment manually at a later date (type reservation).
+     *
+     * @access  public
+     * @param   bool    $reservation
      */
-    public function setReservation(bool $reservation): void
+    public function setReservation($reservation)
     {
         $this->reservation = $reservation;
     }
 
-    public function getReferenceId(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getReferenceId()
     {
         return $this->referenceId;
     }
@@ -247,132 +457,201 @@ class Gateway extends Base
     /**
      * Set the reference id which you will get in Webhook.
      * This reference id won't be shown to customers.
+     *
+     * @access  public
+     * @param   string  $referenceId
      */
-    public function setReferenceId(string $referenceId): void
+    public function setReferenceId($referenceId)
     {
         $this->referenceId = $referenceId;
     }
 
-    public function getFields(): array
+    /**
+     * @access  public
+     * @return  array
+     */
+    public function getFields()
     {
         return $this->fields;
     }
 
     /**
      * Add a new field of the payment page
+     *
+     * @access  public
+     * @param   string  $type           Type of field
+     *                                  Available types: title, forename, surname, company, street,
+     *                                  postcode, place, country, phone, email, date_of_birth,
+     *                                  custom_field_1, custom_field_2, custom_field_3, custom_field_4, custom_field_5
+     * @param   string  $value          Value of field
+     *                                  For field of type "title" use value "mister" or "miss"
+     *                                  For field of type "country" pass the 2 letter ISO code
+     * @param   array|string   $name    Name of the field (only available for fields of type "custom_field_1-5"
      */
-    public function addField(string $type, ?string $value, array|string $name = []): void
+    public function addField($type, $value, $name = array())
     {
-        $this->fields[$type] = [
+        $this->fields[$type] = array(
             'value' => $value,
             'name' => $name,
-        ];
+        );
     }
 
-    public function getConcardisOrderId(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getConcardisOrderId()
     {
         return $this->concardisOrderId;
     }
 
     /**
      * Set a custom order ID for the Concardis PSPs
+     *
+     * @access  public
+     * @param   string  $concardisOrderId
      */
-    public function setConcardisOrderId(string $concardisOrderId): void
+    public function setConcardisOrderId($concardisOrderId)
     {
         $this->concardisOrderId = $concardisOrderId;
     }
 
-    public function getSuccessRedirectUrl(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getSuccessRedirectUrl()
     {
         return $this->successRedirectUrl;
     }
 
     /**
      * Set the URL to redirect to after a successful payment.
+     *
+     * @access  public
+     * @param   string  $successRedirectUrl
      */
-    public function setSuccessRedirectUrl(string $successRedirectUrl): void
+    public function setSuccessRedirectUrl($successRedirectUrl)
     {
         $this->successRedirectUrl = $successRedirectUrl;
     }
 
-    public function getFailedRedirectUrl(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getFailedRedirectUrl()
     {
         return $this->failedRedirectUrl;
     }
 
     /**
      * Set the url to redirect to after a failed payment.
+     *
+     * @param   string  $failedRedirectUrl
      */
-    public function setFailedRedirectUrl(string $failedRedirectUrl): void
+    public function setFailedRedirectUrl($failedRedirectUrl)
     {
         $this->failedRedirectUrl = $failedRedirectUrl;
     }
 
-    public function getCancelRedirectUrl(): string
+    /**
+     * @access  public
+     * @return  string
+     */
+    public function getCancelRedirectUrl()
     {
         return $this->cancelRedirectUrl;
     }
 
     /**
      * Set the url to redirect to after cancelled payment.
+     *
+     * @param   string  $cancelRedirectUrl
      */
-    public function setCancelRedirectUrl(string $cancelRedirectUrl): void
+    public function setCancelRedirectUrl($cancelRedirectUrl)
     {
         $this->cancelRedirectUrl = $cancelRedirectUrl;
     }
 
-    public function isSkipResultPage(): bool
+    /**
+     * @return bool
+     */
+    public function isSkipResultPage()
     {
         return $this->skipResultPage;
     }
 
-    public function setSkipResultPage(bool $skipResultPage): void
+    /**
+     * @param bool $skipResultPage
+     */
+    public function setSkipResultPage($skipResultPage)
     {
         $this->skipResultPage = $skipResultPage;
     }
 
-    public function isChargeOnAuthorization(): bool
+    /**
+     * @return bool
+     */
+    public function isChargeOnAuthorization()
     {
         return $this->chargeOnAuthorization;
     }
 
-    public function setChargeOnAuthorization(bool $chargeOnAuthorization): void
+    /**
+     * @param bool $chargeOnAuthorization
+     */
+    public function setChargeOnAuthorization($chargeOnAuthorization)
     {
         $this->chargeOnAuthorization = $chargeOnAuthorization;
     }
 
-    public function isReserveOnAuthorization(): bool
-    {
-        return $this->reserveOnAuthorization;
-    }
-
-    public function setReserveOnAuthorization(bool $reserveOnAuthorization): void
-    {
-        $this->reserveOnAuthorization = $reserveOnAuthorization;
-    }
-
-    public function getCustomerStatementDescriptor(): string
+    /**
+     * @return string
+     */
+    public function getCustomerStatementDescriptor()
     {
         return $this->customerStatementDescriptor;
     }
 
+    /**
+     * @param string $customerStatementDescriptor
+     */
     public function setCustomerStatementDescriptor(string $customerStatementDescriptor): void
     {
         $this->customerStatementDescriptor = $customerStatementDescriptor;
     }
 
-    public function getValidity(): int
+    /**
+     * Validity in minutes.
+     * @return int
+     */
+    public function getValidity()
     {
         return $this->validity;
     }
 
-    /** Validity in minutes. */
-    public function setValidity(int $validity): void
+    /**
+     * Validity in minutes.
+     * @param int $validity
+     */
+    public function setValidity($validity)
     {
         $this->validity = $validity;
     }
 
-    public function isSubscriptionState(): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
+    {
+        return new \Payrexx\Models\Response\Gateway();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSubscriptionState()
     {
         return $this->subscriptionState;
     }
@@ -382,13 +661,18 @@ class Gateway extends Base
      * If you set to TRUE, you should provide a
      * subscription interval, period and cancellation interval
      * Note: Subscription and pre-authorization can not be combined.
+     *
+     * @param boolean $subscriptionState
      */
-    public function setSubscriptionState(bool $subscriptionState): void
+    public function setSubscriptionState($subscriptionState)
     {
         $this->subscriptionState = $subscriptionState;
     }
 
-    public function getSubscriptionInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionInterval()
     {
         return $this->subscriptionInterval;
     }
@@ -404,13 +688,18 @@ class Gateway extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionInterval
      */
-    public function setSubscriptionInterval(string $subscriptionInterval): void
+    public function setSubscriptionInterval($subscriptionInterval)
     {
         $this->subscriptionInterval = $subscriptionInterval;
     }
 
-    public function getSubscriptionPeriod(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionPeriod()
     {
         return $this->subscriptionPeriod;
     }
@@ -427,13 +716,18 @@ class Gateway extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionPeriod
      */
-    public function setSubscriptionPeriod(string $subscriptionPeriod): void
+    public function setSubscriptionPeriod($subscriptionPeriod)
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
     }
 
-    public function getSubscriptionCancellationInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionCancellationInterval()
     {
         return $this->subscriptionCancellationInterval;
     }
@@ -451,48 +745,69 @@ class Gateway extends Base
      * It is possible to define XY months or days. Years are not supported here.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionCancellationInterval
      */
-    public function setSubscriptionCancellationInterval(string $subscriptionCancellationInterval): void
+    public function setSubscriptionCancellationInterval($subscriptionCancellationInterval)
     {
         $this->subscriptionCancellationInterval = $subscriptionCancellationInterval;
     }
 
-    public function getButtonText(): array
+    /**
+     * @return array
+     */
+    public function getButtonText()
     {
         return $this->buttonText;
     }
 
     /**
      * Use language ID as array key. Use key 0 as default purpose. Will be used for each activated frontend language.
+     *
+     * @param array $buttonText
      */
-    public function setButtonText(array $buttonText): void
+    public function setButtonText($buttonText)
     {
         $this->buttonText = $buttonText;
     }
 
-    public function getLookAndFeelProfile(): ?string
+    /**
+     * @return string
+     */
+    public function getLookAndFeelProfile()
     {
         return $this->lookAndFeelProfile;
     }
 
-    public function setLookAndFeelProfile(?string $lookAndFeelProfile): void
+    /**
+     * @param string $lookAndFeelProfile
+     */
+    public function setLookAndFeelProfile($lookAndFeelProfile)
     {
         $this->lookAndFeelProfile = $lookAndFeelProfile;
     }
 
-    public function getSuccessMessage(): array
+    /**
+     * @return array
+     */
+    public function getSuccessMessage()
     {
         return $this->successMessage;
     }
 
     /**
      * Use language ID as array key. Use key 0 as default purpose. Will be used for each activated frontend language.
+     *
+     * @param array $successMessage
      */
-    public function setSuccessMessage(array $successMessage): void
+    public function setSuccessMessage($successMessage)
     {
         $this->successMessage = $successMessage;
     }
 
+    /**
+     * @return array
+     */
     public function getBasket(): array
     {
         return $this->basket;
@@ -500,74 +815,83 @@ class Gateway extends Base
 
     /**
      * It is a multidimensional array to parse each product as an array
+     *
+     * @param array $basket         Available product values:
+     *                              name => Can be an array with the key as language ID
+     *                              description => Can be an array with the key as language ID
+     *                              quantity => quantity of the product
+     *                              amount => Product amount
      */
     public function setBasket(array $basket): void
     {
         $this->basket = $basket;
     }
 
+    /**
+     * @return string
+     */
     public function getQrCodeSessionId(): string
     {
         return $this->qrCodeSessionId;
     }
 
+    /**
+     * @param string $qrCodeSessionId
+     * @return void
+     */
     public function setQrCodeSessionId(string $qrCodeSessionId): void
     {
         $this->qrCodeSessionId = $qrCodeSessionId;
     }
 
+    /**
+     * @return string
+     */
     public function getReturnApp(): ?string
     {
         return $this->returnApp;
     }
 
+    /**
+     * @param string $returnApp
+     * @return void
+     */
     public function setReturnApp(string $returnApp): void
     {
         $this->returnApp = $returnApp;
     }
 
+    /**
+     * @return boolean
+     */
     public function getSpotlightStatus(): ?bool
     {
         return $this->spotlightStatus;
     }
 
+    /**
+     * @param boolean $spotlightStatus
+     * @return void
+     */
     public function setSpotlightStatus(bool $spotlightStatus): void
     {
         $this->spotlightStatus = $spotlightStatus;
     }
 
+    /**
+     * @return string
+     */
     public function getSpotlightOrderDetailsUrl(): ?string
     {
         return $this->spotlightOrderDetailsUrl;
     }
 
+    /**
+     * @param string $spotlightOrderDetailsUrl
+     * @return void
+     */
     public function setSpotlightOrderDetailsUrl(string $spotlightOrderDetailsUrl): void
     {
         $this->spotlightOrderDetailsUrl = $spotlightOrderDetailsUrl;
-    }
-
-    public function setLanguage(string $language): void
-    {
-        $this->language = $language;
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
-    }
-
-    public function setIsPriceExclusiveVat(bool $isPriceExclusiveVat): void
-    {
-        $this->isPriceExclusiveVat = $isPriceExclusiveVat;
-    }
-
-    public function getIsPriceExclusiveVat(): bool
-    {
-        return $this->isPriceExclusiveVat;
-    }
-
-    public function getResponseModel(): ResponseGateway
-    {
-        return new ResponseGateway();
     }
 }

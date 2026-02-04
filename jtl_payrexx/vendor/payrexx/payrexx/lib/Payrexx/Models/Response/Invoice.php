@@ -1,10 +1,8 @@
 <?php
-
 /**
  * The invoice response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
 
@@ -12,72 +10,109 @@ namespace Payrexx\Models\Response;
 
 /**
  * Class Invoice
- *
  * @package Payrexx\Models\Response
  */
 class Invoice extends \Payrexx\Models\Request\Invoice
 {
-    protected string $hash = '';
+    /** @var string $hash */
+    protected $hash = '';
 
-    protected string $link = '';
+    /** @var string $link */
+    protected $link = '';
 
-    protected string $status = '';
+    /** @var string $status */
+    protected $status = '';
 
-    protected int $createdAt = 0;
+    /** @var int $createdAt */
+    protected $createdAt = 0;
 
-    protected array $invoices = [];
+    /** @var array $invoices */
+    protected $invoices = [];
 
-    public function getHash(): string
+    /**
+     * @return string
+     */
+    public function getHash()
     {
         return $this->hash;
     }
 
-    public function setHash(string $hash): void
+    /**
+     * @param string $hash
+     */
+    public function setHash($hash)
     {
         $this->hash = $hash;
     }
 
-    public function getLink(): string
+    /**
+     * @return string
+     */
+    public function getLink()
     {
         return $this->link;
     }
 
-    public function setLink(string $link): void
+    /**
+     * @param string $link
+     */
+    public function setLink($link)
     {
         $this->link = $link;
     }
 
-    public function getCreatedAt(): int
+    /**
+     * @return int
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(int $createdAt): void
+    /**
+     * @param int $createdAt
+     */
+    public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
-    public function setFields(array $fields): void
+    /**
+     * @param array $fields
+     */
+    public function setFields($fields)
     {
         $this->fields = $fields;
     }
 
-    public function getStatus(): string
+    /**
+     * @return string
+     */
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
     {
         $this->status = $status;
     }
 
-    public function getInvoices(): array
+    /**
+     * @return array
+     */
+    public function getInvoices()
     {
         return $this->invoices;
     }
 
-    public function setInvoices(array $invoices): void
+    /**
+     * @param array $invoices
+     */
+    public function setInvoices($invoices)
     {
         $this->invoices = $invoices;
     }

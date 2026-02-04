@@ -1,63 +1,67 @@
 <?php
-
 /**
- * The Page request model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * The page request model
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
-
 namespace Payrexx\Models\Request;
-
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\Page as ResponsePage;
 
 /**
  * Class Page
- *
  * @package Payrexx\Models\Request
  */
-class Page extends Base
+class Page extends \Payrexx\Models\Base
 {
-    public const CURRENCY_CHF = 'CHF';
-    public const CURRENCY_EUR = 'EUR';
-    public const CURRENCY_USD = 'USD';
-    public const CURRENCY_GBP = 'GBP';
+    const CURRENCY_CHF = 'CHF';
+    const CURRENCY_EUR = 'EUR';
+    const CURRENCY_USD = 'USD';
+    const CURRENCY_GBP = 'GBP';
 
     // mandatory
-    protected string $title = '';
-    protected string $description = '';
-    protected array $psp = [];
+    protected $title = '';
+    protected $description = '';
+    protected $psp = 0;
 
     // optional
-    protected ?string $name = '';
-    protected string $purpose = '';
-    protected int $amount = 0;
-    protected string $currency = '';
+    protected $name = '';
+    protected $purpose = '';
+    protected $amount = 0;
+    protected $currency = '';
 
-    protected bool $subscriptionState = false;
-    protected string $subscriptionInterval = '';
-    protected string $subscriptionPeriod = '';
-    protected string $subscriptionPeriodMinAmount = '';
-    protected string $subscriptionCancellationInterval = '';
+    protected $subscriptionState = false;
+    protected $subscriptionInterval = '';
+    protected $subscriptionPeriod = '';
+    protected $subscriptionPeriodMinAmount = '';
+    protected $subscriptionCancellationInterval = '';
 
-    protected bool $preAuthorization = false;
-    protected bool $reservation = false;
+    protected $preAuthorization = false;
+    protected $reservation = false;
 
-    protected array $fields = [];
+    protected $fields = array();
 
-    public function getTitle(): string
+    /**
+     * @return string
+     */
+    public function getTitle()
     {
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    /**
+     * Set the payment page headline title
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    public function getDescription(): string
+    /**
+     * @return string
+     */
+    public function getDescription()
     {
         return $this->description;
     }
@@ -65,13 +69,18 @@ class Page extends Base
     /**
      * Set the description text which will be displayed
      * above the payment form
+     *
+     * @param string $description
      */
-    public function setDescription(string $description): void
+    public function setDescription($description)
     {
         $this->description = $description;
     }
 
-    public function getPsp(): array
+    /**
+     * @return int
+     */
+    public function getPsp()
     {
         return $this->psp;
     }
@@ -79,18 +88,19 @@ class Page extends Base
     /**
      * Set the payment service provider to use, a
      * list of available payment service providers (short psp)
-     * can be found here: https://docs.payrexx.com/developer/general-info/payment-provider
+     * can be found here: http://developers.payrexx.com/docs/miscellaneous
+     *
+     * @param int $psp
      */
-    public function setPsp(array|int $psp): void
+    public function setPsp($psp)
     {
-        if (is_int($psp)) {
-           $this->psp = [$psp];
-        } else {
-            $this->psp = $psp;
-        }
+        $this->psp = $psp;
     }
 
-    public function getName(): ?string
+    /**
+     * @return string
+     */
+    public function getName()
     {
         return $this->name;
     }
@@ -98,13 +108,18 @@ class Page extends Base
     /**
      * Set the internal name of the form which will be generated.
      * This name will only be shown to administrator of the Payrexx site.
+     *
+     * @param string $name
      */
-    public function setName(?string $name): void
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function getPurpose(): string
+    /**
+     * @return string
+     */
+    public function getPurpose()
     {
         return $this->purpose;
     }
@@ -112,13 +127,18 @@ class Page extends Base
     /**
      * Set the payment purpose which will be inserted automatically.
      * This field won't be editable anymore for the client if you predefine it.
+     *
+     * @param string $purpose
      */
-    public function setPurpose(string $purpose): void
+    public function setPurpose($purpose)
     {
         $this->purpose = $purpose;
     }
 
-    public function getAmount(): int
+    /**
+     * @return int
+     */
+    public function getAmount()
     {
         return $this->amount;
     }
@@ -126,13 +146,18 @@ class Page extends Base
     /**
      * Set the payment amount. Make sure the amount is multiplied
      * with 100!
+     *
+     * @param int $amount
      */
-    public function setAmount(int $amount): void
+    public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
-    public function getCurrency(): string
+    /**
+     * @return string
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }
@@ -140,13 +165,19 @@ class Page extends Base
     /**
      * Set the corresponding payment currency for the amount.
      * You can use the ISO Code.
+     * A list of available currencies you can find on http://developers.payrexx.com/docs/miscellaneous
+     *
+     * @param string $currency
      */
-    public function setCurrency(string $currency): void
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
     }
 
-    public function isSubscriptionState(): bool
+    /**
+     * @return boolean
+     */
+    public function isSubscriptionState()
     {
         return $this->subscriptionState;
     }
@@ -155,13 +186,18 @@ class Page extends Base
      * Set whether the payment should be a recurring payment (subscription)
      * If you set to TRUE, you should provide a
      * subscription interval, period and cancellation interval
+     *
+     * @param boolean $subscriptionState
      */
-    public function setSubscriptionState(bool $subscriptionState): void
+    public function setSubscriptionState($subscriptionState)
     {
         $this->subscriptionState = $subscriptionState;
     }
 
-    public function getSubscriptionInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionInterval()
     {
         return $this->subscriptionInterval;
     }
@@ -177,13 +213,18 @@ class Page extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionInterval
      */
-    public function setSubscriptionInterval(string $subscriptionInterval): void
+    public function setSubscriptionInterval($subscriptionInterval)
     {
         $this->subscriptionInterval = $subscriptionInterval;
     }
 
-    public function getSubscriptionPeriod(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionPeriod()
     {
         return $this->subscriptionPeriod;
     }
@@ -200,13 +241,18 @@ class Page extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionPeriod
      */
-    public function setSubscriptionPeriod(string $subscriptionPeriod): void
+    public function setSubscriptionPeriod($subscriptionPeriod)
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
     }
 
-    public function getSubscriptionCancellationInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionCancellationInterval()
     {
         return $this->subscriptionCancellationInterval;
     }
@@ -224,35 +270,58 @@ class Page extends Base
      * It is possible to define XY months or days. Years are not supported here.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionCancellationInterval
      */
-    public function setSubscriptionCancellationInterval(string $subscriptionCancellationInterval): void
+    public function setSubscriptionCancellationInterval($subscriptionCancellationInterval)
     {
         $this->subscriptionCancellationInterval = $subscriptionCancellationInterval;
     }
 
-    public function getPreAuthorization(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getPreAuthorization()
     {
         return $this->preAuthorization;
     }
 
-    /** Whether charge payment manually at a later date (type authorization). */
-    public function setPreAuthorization(bool $preAuthorization): void
+    /**
+     *  Whether charge payment manually at a later date (type authorization).
+     *
+     * @access  public
+     * @param   bool    $preAuthorization
+     */
+    public function setPreAuthorization($preAuthorization)
     {
         $this->preAuthorization = $preAuthorization;
     }
 
-    public function getReservation(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getReservation()
     {
         return $this->reservation;
     }
 
-    /** Whether charge payment manually at a later date (type reservation). */
-    public function setReservation(bool $reservation): void
+    /**
+     *  Whether charge payment manually at a later date (type reservation).
+     *
+     * @access  public
+     * @param   bool    $reservation
+     */
+    public function setReservation($reservation)
     {
         $this->reservation = $reservation;
     }
 
-    public function getFields(): array
+    /**
+     * @return array
+     */
+    public function getFields()
     {
         return $this->fields;
     }
@@ -260,19 +329,28 @@ class Page extends Base
     /**
      * Define a new field of the payment page
      *
-     * Reference link: https://developers.payrexx.com/reference/create-a-gateway -> fields
+     * @param string $type the type of field
+     *                     can be: title, forename, surname, company, street, postcode,
+     *                     place, phone, country, email, date_of_birth, terms, custom_field_1,
+     *                     custom_field_2, custom_field_3, custom_field_4, custom_field_5
+     * @param boolean $mandatory TRUE if the field has to be filled out for payment
+     * @param string $defaultValue the default value. This value will be editable for the client.
+     * @param string $name the name of the field, (this is only available for the fields custom_field_\d
      */
-    public function addField(string $type, bool $mandatory, ?string $defaultValue = '', string $name = ''): void
+    public function addField($type, $mandatory, $defaultValue = '', $name = '')
     {
-        $this->fields[$type] = [
+        $this->fields[$type] = array(
             'name' => $name,
             'mandatory' => $mandatory,
             'defaultValue' => $defaultValue,
-        ];
+        );
     }
 
-    public function getResponseModel(): ResponsePage
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
     {
-        return new ResponsePage();
+        return new \Payrexx\Models\Response\Page();
     }
 }

@@ -1,59 +1,67 @@
 <?php
-
 /**
- * The Invoice request model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * The invoice request model
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
-
 namespace Payrexx\Models\Request;
-
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\Invoice as ResponseInvoice;
 
 /**
  * Class Invoice
- *
  * @package Payrexx\Models\Request
  */
-class Invoice extends Base
+class Invoice extends \Payrexx\Models\Base
 {
-    public const CURRENCY_CHF = 'CHF';
-    public const CURRENCY_EUR = 'EUR';
-    public const CURRENCY_USD = 'USD';
-    public const CURRENCY_GBP = 'GBP';
+    const CURRENCY_CHF = 'CHF';
+    const CURRENCY_EUR = 'EUR';
+    const CURRENCY_USD = 'USD';
+    const CURRENCY_GBP = 'GBP';
 
     // mandatory
-    protected string $currency = '';
-    protected int $amount = 0;
-    
-    // Optional
-    protected string $referenceId = '';
-    protected string $title = '';
-    protected string $description = '';
-    protected array $psp = [];
-    protected array $pm;
-    protected string $name = '';
-    protected array|string $purpose = '';
-    protected string $buttonText = '';
-    protected ?float $vatRate = null;
-    protected ?string $sku = '';
-    protected bool $preAuthorization = false;
-    protected bool $reservation = false;
-    protected string $successRedirectUrl;
-    protected string $failedRedirectUrl;
-    protected bool $subscriptionState = false;
-    protected string $subscriptionInterval = '';
-    protected string $subscriptionPeriod = '';
-    protected string $subscriptionPeriodMinAmount = '';
-    protected string $subscriptionCancellationInterval = '';
-    protected array $fields = [];
-    protected ?string $concardisOrderId = '';
-    protected string $expirationDate;
+    protected $referenceId = '';
+    protected $title = '';
+    protected $description = '';
+    protected $psp = 0;
 
-    public function getReferenceId(): string
+
+    /**
+     * optional
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $pm;
+
+    // optional
+    protected $name = '';
+    protected $purpose = '';
+    protected $buttonText = '';
+    protected $amount = 0;
+    protected $vatRate = null;
+    protected $sku = '';
+    protected $currency = '';
+    protected $preAuthorization = false;
+    protected $reservation = false;
+
+    protected $successRedirectUrl;
+    protected $failedRedirectUrl;
+
+    protected $subscriptionState = false;
+    protected $subscriptionInterval = '';
+    protected $subscriptionPeriod = '';
+    protected $subscriptionPeriodMinAmount = '';
+    protected $subscriptionCancellationInterval = '';
+    protected $fields = array();
+    protected $concardisOrderId = '';
+
+    /** @var string $expirationDate */
+    protected $expirationDate;
+
+    /**
+     * @return string
+     */
+    public function getReferenceId()
     {
         return $this->referenceId;
     }
@@ -61,26 +69,36 @@ class Invoice extends Base
     /**
      * Set the reference id which you will get in Webhook,
      * this reference id won't be shown to customer
+     *
+     * @param string $referenceId
      */
-    public function setReferenceId(string $referenceId): void
+    public function setReferenceId($referenceId)
     {
         $this->referenceId = $referenceId;
     }
 
-    public function getTitle(): string
+    /**
+     * @return string
+     */
+    public function getTitle()
     {
         return $this->title;
     }
 
     /**
      * Set the payment page headline title
+     *
+     * @param string $title
      */
-    public function setTitle(string $title): void
+    public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    public function getDescription(): string
+    /**
+     * @return string
+     */
+    public function getDescription()
     {
         return $this->description;
     }
@@ -88,13 +106,18 @@ class Invoice extends Base
     /**
      * Set the description text which will be displayed
      * above the payment form
+     *
+     * @param string $description
      */
-    public function setDescription(string $description): void
+    public function setDescription($description)
     {
         $this->description = $description;
     }
 
-    public function getPsp(): array
+    /**
+     * @return int
+     */
+    public function getPsp()
     {
         return $this->psp;
     }
@@ -102,24 +125,39 @@ class Invoice extends Base
     /**
      * Set the payment service provider to use, a
      * list of available payment service providers (short psp)
-     * can be found here: https://docs.payrexx.com/developer/general-info/payment-provider
+     * can be found here: http://developers.payrexx.com/docs/miscellaneous
+     *
+     * @param int $psp
      */
-    public function setPsp(array $psp): void
+    public function setPsp($psp)
     {
         $this->psp = $psp;
     }
 
-    public function getPm(): array
+    /**
+     * @access  public
+     * @return  array
+     */
+    public function getPm()
     {
         return $this->pm;
     }
 
-    public function setPm(array $pm): void
+    /**
+     * Set payment mean to use.
+     *
+     * @access  public
+     * @param   array   $pm
+     */
+    public function setPm($pm)
     {
         $this->pm = $pm;
     }
 
-    public function getName(): string
+    /**
+     * @return string
+     */
+    public function getName()
     {
         return $this->name;
     }
@@ -127,13 +165,18 @@ class Invoice extends Base
     /**
      * Set the internal name of the form which will be generated.
      * This name will only be shown to administrator of the Payrexx site.
+     *
+     * @param string $name
      */
-    public function setName(string $name): void
+    public function setName($name)
     {
         $this->name = $name;
     }
 
-    public function getPurpose(): string|array
+    /**
+     * @return string
+     */
+    public function getPurpose()
     {
         return $this->purpose;
     }
@@ -141,23 +184,34 @@ class Invoice extends Base
     /**
      * Set the payment purpose which will be inserted automatically.
      * This field won't be editable anymore for the client if you predefine it.
+     *
+     * @param string $purpose
      */
-    public function setPurpose(string|array $purpose): void
+    public function setPurpose($purpose)
     {
         $this->purpose = $purpose;
     }
 
-    public function getButtonText(): string
+    /**
+     * @return string
+     */
+    public function getButtonText()
     {
         return $this->buttonText;
     }
 
-    public function setButtonText(string $buttonText): void
+    /**
+     * @param string $buttonText
+     */
+    public function setButtonText($buttonText)
     {
         $this->buttonText = $buttonText;
     }
 
-    public function getAmount(): int
+    /**
+     * @return int
+     */
+    public function getAmount()
     {
         return $this->amount;
     }
@@ -165,33 +219,50 @@ class Invoice extends Base
     /**
      * Set the payment amount. Make sure the amount is multiplied
      * by 100!
+     *
+     * @param int $amount
      */
-    public function setAmount(int $amount): void
+    public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
-    public function getVatRate(): ?float
+    /**
+     * @return float|null
+     */
+    public function getVatRate()
     {
         return $this->vatRate;
     }
 
-    public function setVatRate(?float $vatRate): void
+    /**
+     * @param float|null $vatRate
+     */
+    public function setVatRate($vatRate)
     {
         $this->vatRate = $vatRate;
     }
 
-    public function getSku(): ?string
+    /**
+     * @return string
+     */
+    public function getSku()
     {
         return $this->sku;
     }
 
-    public function setSku(?string $sku): void
+    /**
+     * @param string $sku
+     */
+    public function setSku($sku)
     {
         $this->sku = $sku;
     }
 
-    public function getCurrency(): string
+    /**
+     * @return string
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }
@@ -199,13 +270,20 @@ class Invoice extends Base
     /**
      * Set the corresponding payment currency for the amount.
      * You can use the ISO Code.
+     * A list of available currencies you can find on http://developers.payrexx.com/docs/miscellaneous
+     *
+     * @param string $currency
      */
-    public function setCurrency(string $currency): void
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
     }
 
-    public function getPreAuthorization(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getPreAuthorization()
     {
         return $this->preAuthorization;
     }
@@ -213,13 +291,20 @@ class Invoice extends Base
     /**
      *  Whether charge payment manually at a later date (type authorization).
      *  Note: Subscription and authorization can not be combined.
+     *
+     * @access  public
+     * @param   bool    $preAuthorization
      */
-    public function setPreAuthorization(bool $preAuthorization): void
+    public function setPreAuthorization($preAuthorization)
     {
         $this->preAuthorization = $preAuthorization;
     }
 
-    public function getReservation(): bool
+    /**
+     * @access  public
+     * @return  bool
+     */
+    public function getReservation()
     {
         return $this->reservation;
     }
@@ -227,33 +312,55 @@ class Invoice extends Base
     /**
      *  Whether charge payment manually at a later date (type reservation).
      *  Note: Subscription and reservation can not be combined.
+     *
+     * @access  public
+     * @param   bool    $reservation
      */
-    public function setReservation(bool $reservation): void
+    public function setReservation($reservation)
     {
         $this->reservation = $reservation;
     }
 
-    public function getSuccessRedirectUrl(): string
+    /**
+     * @return string
+     */
+    public function getSuccessRedirectUrl()
     {
         return $this->successRedirectUrl;
     }
 
-    public function setSuccessRedirectUrl(string $successRedirectUrl): void
+    /**
+     * Set the URL to redirect to after a successful payment
+     *
+     * @param string $successRedirectUrl
+     */
+    public function setSuccessRedirectUrl($successRedirectUrl)
     {
         $this->successRedirectUrl = $successRedirectUrl;
     }
 
-    public function getFailedRedirectUrl(): string
+    /**
+     * @return string
+     */
+    public function getFailedRedirectUrl()
     {
         return $this->failedRedirectUrl;
     }
 
-    public function setFailedRedirectUrl(string $failedRedirectUrl): void
+    /**
+     * Set the url to redirect to after a failed payment
+     *
+     * @param string $failedRedirectUrl
+     */
+    public function setFailedRedirectUrl($failedRedirectUrl)
     {
         $this->failedRedirectUrl = $failedRedirectUrl;
     }
 
-    public function isSubscriptionState(): bool
+    /**
+     * @return boolean
+     */
+    public function isSubscriptionState()
     {
         return $this->subscriptionState;
     }
@@ -263,13 +370,18 @@ class Invoice extends Base
      * If you set to TRUE, you should provide a
      * subscription interval, period and cancellation interval
      * Note: Subscription and pre-authorization can not be combined.
+     *
+     * @param boolean $subscriptionState
      */
-    public function setSubscriptionState(bool $subscriptionState): void
+    public function setSubscriptionState($subscriptionState)
     {
         $this->subscriptionState = $subscriptionState;
     }
 
-    public function getSubscriptionInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionInterval()
     {
         return $this->subscriptionInterval;
     }
@@ -285,13 +397,18 @@ class Invoice extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionInterval
      */
-    public function setSubscriptionInterval(string $subscriptionInterval): void
+    public function setSubscriptionInterval($subscriptionInterval)
     {
         $this->subscriptionInterval = $subscriptionInterval;
     }
 
-    public function getSubscriptionPeriod(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionPeriod()
     {
         return $this->subscriptionPeriod;
     }
@@ -308,13 +425,18 @@ class Invoice extends Base
      * It is possible to define XY years / months or days.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionPeriod
      */
-    public function setSubscriptionPeriod(string $subscriptionPeriod): void
+    public function setSubscriptionPeriod($subscriptionPeriod)
     {
         $this->subscriptionPeriod = $subscriptionPeriod;
     }
 
-    public function getSubscriptionCancellationInterval(): string
+    /**
+     * @return string
+     */
+    public function getSubscriptionCancellationInterval()
     {
         return $this->subscriptionCancellationInterval;
     }
@@ -332,62 +454,84 @@ class Invoice extends Base
      * It is possible to define XY months or days. Years are not supported here.
      *
      * For further information see http://php.net/manual/en/class.dateinterval.php
+     *
+     * @param string $subscriptionCancellationInterval
      */
-    public function setSubscriptionCancellationInterval(string $subscriptionCancellationInterval): void
+    public function setSubscriptionCancellationInterval($subscriptionCancellationInterval)
     {
         $this->subscriptionCancellationInterval = $subscriptionCancellationInterval;
     }
 
-    public function getFields(): array
+    /**
+     * @return array
+     */
+    public function getFields()
     {
         return $this->fields;
     }
 
     /**
      * Define a new field of the payment page
-     *
-     * Reference link: https://developers.payrexx.com/reference/create-a-gateway -> fields
+     * 
+     * @param string $type the type of field
+     *                     can be: title, forename, surname, company, street, postcode,
+     *                     place, phone, country, email, date_of_birth, terms, custom_field_1,
+     *                     custom_field_2, custom_field_3, custom_field_4, custom_field_5
+     * @param boolean $mandatory TRUE if the field has to be filled out for payment
+     * @param string $defaultValue the default value. This value will be editable for the client.
+     *                             for the title of a customer you can set mister / miss
+     *                             for the country field you can pass the 2-letter-ISO code
+     * @param string $name the name of the field, (this is only available for the fields custom_field_\d
      */
-    public function addField(string $type, bool $mandatory, ?string $defaultValue = '', string $name = ''): void
+    public function addField($type, $mandatory, $defaultValue = '', $name = '')
     {
-        $this->fields[$type] = [
+        $this->fields[$type] = array(
             'name' => $name,
             'mandatory' => $mandatory,
             'defaultValue' => $defaultValue,
-        ];
+        );
     }
 
-    public function getConcardisOrderId(): ?string
+    /**
+     * @return string
+     */
+    public function getConcardisOrderId()
     {
         return $this->concardisOrderId;
     }
 
     /**
      * Define an ORDER ID which should be used for the Concardis PSPs
+     * @param string $concardisOrderId
      */
-    public function setConcardisOrderId(?string $concardisOrderId): void
+    public function setConcardisOrderId($concardisOrderId)
     {
         $this->concardisOrderId = $concardisOrderId;
     }
 
     /**
      * Format: Y-m-d
+     * @return string
      */
-    public function getExpirationDate(): string
+    public function getExpirationDate()
     {
         return $this->expirationDate;
     }
 
     /**
      * Format: Y-m-d
+     * @param string $expirationDate
      */
-    public function setExpirationDate(string $expirationDate): void
+    public function setExpirationDate($expirationDate)
     {
         $this->expirationDate = $expirationDate;
     }
 
-    public function getResponseModel(): ResponseInvoice
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
     {
-        return new ResponseInvoice();
+        return new \Payrexx\Models\Response\Invoice();
     }
 }
