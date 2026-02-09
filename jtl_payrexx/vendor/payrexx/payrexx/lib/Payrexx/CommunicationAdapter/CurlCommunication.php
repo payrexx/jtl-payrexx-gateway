@@ -59,7 +59,7 @@ class CurlCommunication extends AbstractCommunication
         if (in_array($method, ['GET', 'DELETE']) && !empty($params)) {
             $curlOpts[CURLOPT_URL] = $apiUrl . $separator . $paramString;
         } else {
-            $curlOpts[CURLOPT_POSTFIELDS] = json_encode($params);
+            $curlOpts[CURLOPT_POSTFIELDS] = $paramString;
             $curlOpts[CURLOPT_URL] = $apiUrl . $separator . 'instance=' . ($params['instance'] ?? '');
         }
 
@@ -94,12 +94,13 @@ class CurlCommunication extends AbstractCommunication
                 }
             }
             $curlOpts[CURLOPT_POSTFIELDS] = $postFields;
+            $curlOpts[CURLOPT_HTTPHEADER][] = 'Content-Type: multipart/form-data';
         }
 
-        if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
-            $curlOpts[CURLOPT_HTTPHEADER][] =
-                'Content-Type: ' . ($hasFile ? 'multipart/form-data' : 'application/json');
-        }
+        // if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+        //     $curlOpts[CURLOPT_HTTPHEADER][] =
+        //         'Content-Type: ' . ($hasFile ? 'multipart/form-data' : 'application/json');
+        // }
 
         $curl = curl_init();
         curl_setopt_array($curl, $curlOpts);
