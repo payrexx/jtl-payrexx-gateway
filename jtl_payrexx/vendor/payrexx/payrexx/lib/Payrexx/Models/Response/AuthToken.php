@@ -1,53 +1,83 @@
 <?php
-
 /**
  * The AuthToken response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.1.0
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
+ * @since     v1.0
  */
-
 namespace Payrexx\Models\Response;
 
 /**
  * Class AuthToken
- *
  * @package Payrexx\Models\Response
  */
-class AuthToken extends \Payrexx\Models\Request\AuthToken
+class AuthToken extends \Payrexx\Models\Request\Invoice
 {
-    protected string $authToken = '';
-    protected ?string $authTokenExpirationDate = null;
-    protected string $link = '';
+    protected $authToken = '';
+    protected $authTokenExpirationDate = null;
+    protected $link = '';
 
-    public function getAuthToken(): string
+    /**
+     * @return string
+     */
+    public function getAuthToken()
     {
         return $this->authToken;
     }
 
-    public function setAuthToken(string $authToken): void
+    /**
+     * @param string $authToken
+     */
+    public function setAuthToken($authToken)
     {
         $this->authToken = $authToken;
     }
 
-    public function getAuthTokenExpirationDate(): ?string
+    /**
+     * @return null
+     */
+    public function getAuthTokenExpirationDate()
     {
         return $this->authTokenExpirationDate;
     }
 
-    public function setAuthTokenExpirationDate(?string $authTokenExpirationDate): void
+    /**
+     * @param null $authTokenExpirationDate
+     */
+    public function setAuthTokenExpirationDate($authTokenExpirationDate)
     {
         $this->authTokenExpirationDate = $authTokenExpirationDate;
     }
 
-    public function getLink(): string
+    /**
+     * @return string
+     */
+    public function getLink()
     {
         return $this->link;
     }
 
-    public function setLink(string $link): void
+    /**
+     * @param string $link
+     */
+    public function setLink($link)
     {
         $this->link = $link;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubscriptionPeriodMinAmount()
+    {
+        return $this->subscriptionPeriodMinAmount;
+    }
+
+    /**
+     * @param string $subscriptionPeriodMinAmount
+     */
+    public function setSubscriptionPeriodMinAmount($subscriptionPeriodMinAmount)
+    {
+        $this->subscriptionPeriodMinAmount = $subscriptionPeriodMinAmount;
     }
 }

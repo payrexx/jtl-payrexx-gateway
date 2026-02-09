@@ -1,40 +1,70 @@
 <?php
 
-/**
- * The QrCode request model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.7.5
- */
-
 namespace Payrexx\Models\Request;
-
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\QrCode as ResponseQrCode;
 
 /**
  * QrCode request class
  *
- * @package Payrexx\Models\Request
+ * @copyright   Payrexx AG
+ * @author      Payrexx Development Team <info@payrexx.com>
+ * @package     \Payrexx\Models\Request
  */
-class QrCode extends Base
+class QrCode extends \Payrexx\Models\Base
 {
-    /** mandatory */
-    protected string $webshopUrl;
+    /**
+     * mandatory
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $webshopUrl;
 
+    /**
+     * @access  protected
+     * @var string
+     */
+    protected $uuid;
+
+    /**
+     * @access  public
+     * @return  string
+     */
     public function getWebshopUrl(): string
     {
         return $this->webshopUrl;
     }
 
+    /**
+     * @access  public
+     * @param   string   $webshopUrl
+     * @return  void
+     */
     public function setWebshopUrl(string $webshopUrl): void
     {
         $this->webshopUrl = $webshopUrl;
     }
 
-    public function getResponseModel(): ResponseQrCode
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
     {
-        return new ResponseQrCode();
+        return new \Payrexx\Models\Response\QrCode();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUuid($uuid): void
+    {
+        $this->uuid = $uuid;
     }
 }

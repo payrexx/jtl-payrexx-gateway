@@ -1,136 +1,154 @@
 <?php
 
-/**
- * The Gateway response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.3.0
- */
-
 namespace Payrexx\Models\Response;
 
 /**
  * Gateway response class
  *
- * @package Payrexx\Models\Response
+ * @copyright   Payrexx AG
+ * @author      Payrexx Development Team <info@payrexx.com>
+ * @package     \Payrexx\Models\Response
  */
 class Gateway extends \Payrexx\Models\Request\Gateway
 {
-    protected string $hash = '';
+    /** @var string */
+    protected $hash;
 
-    protected string $link = '';
+    /** @var string */
+    protected $link;
 
-    protected string $status;
+    /** @var string */
+    protected $status;
 
-    protected int $createdAt;
+    /** @var integer */
+    protected $createdAt;
 
-    protected array $invoices;
+    /** @var array $invoices */
+    protected $invoices;
 
-    protected int $transactionId;
+    /** @var integer */
+    protected $transactionId;
 
-    protected string $appLink;
+    /** @var string */
+    protected $appLink;
 
-    protected int $applicationFee;
-
-    protected int $requestId;
-
-    public function getHash(): string
+    /**
+     * @return string
+     */
+    public function getHash()
     {
         return $this->hash;
     }
 
-    public function setHash(string $hash): void
+    /**
+     * @param string $hash
+     */
+    public function setHash($hash)
     {
         $this->hash = $hash;
     }
 
-    public function getLink(): string
+    /**
+     * @return string
+     */
+    public function getLink()
     {
         return $this->link;
     }
 
-    public function setLink(string $link): void
+    /**
+     * @param string $link
+     */
+    public function setLink($link)
     {
-        $language = $this->getLanguage();
-        if (!empty($language) && strpos($link, "/{$language}/") === false) {
-            $link = str_replace('/?', "/{$language}/?", $link);
-        }
         $this->link = $link;
     }
 
-    public function getStatus(): string
+    /**
+     * @return string
+     */
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
     {
         $this->status = $status;
     }
 
-    public function getCreatedAt(): int
+    /**
+     * @return integer
+     */
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(int $createdAt): void
+    /**
+     * @param integer $createdAt
+     */
+    public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
-    public function setFields(array $fields): void
+    /**
+     * @param array $fields
+     */
+    public function setFields($fields)
     {
         $this->fields = $fields;
     }
 
-    public function getInvoices(): array
+    /**
+     * @return array
+     */
+    public function getInvoices()
     {
         return $this->invoices;
     }
 
-    public function setInvoices(array $invoices): void
+    /**
+     * @param array $invoices
+     */
+    public function setInvoices($invoices)
     {
         $this->invoices = $invoices;
     }
 
+    /**
+     * @return integer|null
+     */
     public function getTransactionId(): ?int
     {
         return $this->transactionId;
     }
 
+    /**
+     * @param integer $transactionId
+     */
     public function setTransactionId(int $transactionId): void
     {
         $this->transactionId = $transactionId;
     }
 
+    /**
+     * @return string|null
+     */
     public function getAppLink(): ?string
     {
         return $this->appLink;
     }
 
+    /**
+     * @param string $appLink
+     */
     public function setAppLink(string $appLink): void
     {
         $this->appLink = $appLink;
-    }
-
-    public function getApplicationFee(): int
-    {
-        return $this->applicationFee;
-    }
-
-    public function setApplicationFee(int $applicationFee): void
-    {
-        $this->applicationFee = $applicationFee;
-    }
-
-    public function getRequestId(): int
-    {
-        return $this->requestId;
-    }
-
-    public function setRequestId(int $requestId): void
-    {
-        $this->requestId = $requestId;
     }
 }

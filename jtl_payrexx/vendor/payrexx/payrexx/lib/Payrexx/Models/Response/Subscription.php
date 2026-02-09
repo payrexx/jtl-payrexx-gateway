@@ -1,108 +1,137 @@
 <?php
-
 /**
  * The subscription response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
-
 namespace Payrexx\Models\Response;
 
 /**
  * Class Subscription
- *
  * @package Payrexx\Models\Response
  */
 class Subscription extends \Payrexx\Models\Request\Subscription
 {
-    protected string $status = '';
-    protected string $pspSubscriptionId = '';
-    protected string $start = '';
-    protected ?string $end = '';
-    protected ?string $validUntil = '';
-    protected int $cancelledDate = 0;
-    protected int $firstCancelDate = 0;
-    protected int $nextPayDate = 0;
+    protected $status = '';
+    protected $pspSubscriptionId = '';
+    protected $start = '';
+    protected $end = '';
+    protected $cancelledDate = 0;
+    protected $firstCancelDate = 0;
+    protected $nextPayDate = 0;
 
-    public function getCancelledDate(): int
+    /**
+     * @return int
+     */
+    public function getCancelledDate()
     {
         return $this->cancelledDate;
     }
 
-    public function setCancelledDate(int $cancelledDate): void
+    /**
+     * @param int $cancelledDate
+     */
+    public function setCancelledDate($cancelledDate)
     {
         $this->cancelledDate = $cancelledDate;
     }
 
-    public function getEnd(): ?string
+    /**
+     * @return string
+     */
+    public function getEnd()
     {
         return $this->end;
     }
 
-    public function setEnd(?string $end): void
+    /**
+     * @param string $end
+     */
+    public function setEnd($end)
     {
         $this->end = $end;
     }
 
-    public function getValidUntil(): ?string
-    {
-        return $this->validUntil;
-    }
-
-    public function setValidUntil(?string $validUntil): void
-    {
-        $this->validUntil = $validUntil;
-    }
-
-    public function getFirstCancelDate(): int
+    /**
+     * @return int
+     */
+    public function getFirstCancelDate()
     {
         return $this->firstCancelDate;
     }
 
-    public function setFirstCancelDate(int $firstCancelDate): void
+    /**
+     * @param int $firstCancelDate
+     */
+    public function setFirstCancelDate($firstCancelDate)
     {
         $this->firstCancelDate = $firstCancelDate;
     }
 
-    public function getNextPayDate(): int
+    /**
+     * @return int
+     */
+    public function getNextPayDate()
     {
         return $this->nextPayDate;
     }
 
-    public function setNextPayDate(int $nextPayDate): void
+    /**
+     * @param int $nextPayDate
+     */
+    public function setNextPayDate($nextPayDate)
     {
         $this->nextPayDate = $nextPayDate;
     }
-
-    public function getPspSubscriptionId(): string
+    
+    /**
+     * @return string
+     */
+    public function getPspSubscriptionId()
     {
         return $this->pspSubscriptionId;
     }
 
-    public function setPspSubscriptionId(string $pspSubscriptionId): void
+    /**
+     * @param string $pspSubscriptionId
+     */
+    public function setPspSubscriptionId($pspSubscriptionId)
     {
         $this->pspSubscriptionId = $pspSubscriptionId;
     }
 
-    public function getStart(): string
+    /**
+     * @return string
+     */
+    public function getStart()
     {
         return $this->start;
     }
 
-    public function setStart(string $start): void
+    /**
+     * @param string $start
+     */
+    public function setStart($start)
     {
         $this->start = $start;
     }
 
-    public function getStatus(): string
+    /**
+     * @return string
+     */
+    public function getStatus()
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
     {
         $this->status = $status;
     }
+    
+
 }

@@ -1,170 +1,187 @@
 <?php
-
 /**
  * The subscription request model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
+ * @author    Ueli Kramer <ueli.kramer@comvation.com>
+ * @copyright 2014 Payrexx AG
  * @since     v1.0
  */
-
 namespace Payrexx\Models\Request;
-
-use Payrexx\Models\Base;
-use Payrexx\Models\Response\Subscription as ResponseSubscription;
 
 /**
  * Class Subscription
- *
  * @package Payrexx\Models\Request
  */
-class Subscription extends Base
+class Subscription extends \Payrexx\Models\Base
 {
-    public const CURRENCY_CHF = 'CHF';
-    public const CURRENCY_EUR = 'EUR';
-    public const CURRENCY_USD = 'USD';
-    public const CURRENCY_GBP = 'GBP';
+    const CURRENCY_CHF = 'CHF';
+    const CURRENCY_EUR = 'EUR';
+    const CURRENCY_USD = 'USD';
+    const CURRENCY_GBP = 'GBP';
 
     // all fields mandatory
-    protected int $userId = 0;
-    protected int $psp = 0;
+    protected $userId = 0;
+    protected $psp = 0;
 
-    protected string $purpose = '';
-    protected int $amount = 0;
-    protected string $currency = '';
+    protected $purpose = '';
+    protected $amount = 0;
+    protected $currency = '';
 
-    protected string $paymentInterval = '';
-    protected string $period = '';
-    protected string $cancellationInterval = '';
+    protected $paymentInterval = '';
+    protected $period = '';
+    protected $cancellationInterval = '';
 
     // optional
-    protected string $referenceId = '';
-    protected string $orderByStartDate = 'ASC';
-    protected int $offset;
-    protected int $limit;
+    protected $referenceId = '';
 
-    public function getUserId(): int
+    /**
+     * @return int
+     */
+    public function getUserId()
     {
         return $this->userId;
     }
 
-    public function setUserId(int $userId): void
+    /**
+     * @param int $userId
+     */
+    public function setUserId($userId)
     {
         $this->userId = $userId;
     }
 
-    public function getPsp(): int
+    /**
+     * @return int
+     */
+    public function getPsp()
     {
         return $this->psp;
     }
 
-    public function setPsp(int $psp): void
+    /**
+     * @param int $psp
+     */
+    public function setPsp($psp)
     {
         $this->psp = $psp;
     }
 
-    public function getPurpose(): string
+    /**
+     * @return string
+     */
+    public function getPurpose()
     {
         return $this->purpose;
     }
 
-    public function setPurpose(string $purpose): void
+    /**
+     * @param string $purpose
+     */
+    public function setPurpose($purpose)
     {
         $this->purpose = $purpose;
     }
 
-    public function getAmount(): int
+    /**
+     * @return int
+     */
+    public function getAmount()
     {
         return $this->amount;
     }
 
-    public function setAmount(int $amount): void
+    /**
+     * @param int $amount
+     */
+    public function setAmount($amount)
     {
         $this->amount = $amount;
     }
 
-    public function getCurrency(): string
+    /**
+     * @return string
+     */
+    public function getCurrency()
     {
         return $this->currency;
     }
 
-    public function setCurrency(string $currency): void
+    /**
+     * @param string $currency
+     */
+    public function setCurrency($currency)
     {
         $this->currency = $currency;
     }
 
-    public function getPaymentInterval(): string
+    /**
+     * @return string
+     */
+    public function getPaymentInterval()
     {
         return $this->paymentInterval;
     }
 
-    public function setPaymentInterval(string $paymentInterval): void
+    /**
+     * @param string $paymentInterval
+     */
+    public function setPaymentInterval($paymentInterval)
     {
         $this->paymentInterval = $paymentInterval;
     }
 
-    public function getPeriod(): string
+    /**
+     * @return string
+     */
+    public function getPeriod()
     {
         return $this->period;
     }
 
-    public function setPeriod(string $period): void
+    /**
+     * @param string $period
+     */
+    public function setPeriod($period)
     {
         $this->period = $period;
     }
 
-    public function getCancellationInterval(): string
+    /**
+     * @return string
+     */
+    public function getCancellationInterval()
     {
         return $this->cancellationInterval;
     }
 
-    public function setCancellationInterval(string $cancellationInterval): void
+    /**
+     * @param string $cancellationInterval
+     */
+    public function setCancellationInterval($cancellationInterval)
     {
         $this->cancellationInterval = $cancellationInterval;
     }
 
-    public function getReferenceId(): string
+    /**
+     * @return string
+     */
+    public function getReferenceId()
     {
         return $this->referenceId;
     }
 
-    public function setReferenceId(string $referenceId): void
+    /**
+     * @param string $referenceId
+     */
+    public function setReferenceId($referenceId)
     {
         $this->referenceId = $referenceId;
     }
 
-    public function getOrderByStartDate(): string
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponseModel()
     {
-        return $this->orderByStartDate;
-    }
-
-    public function setOrderByStartDate(string $orderByStartDate): void
-    {
-        $this->orderByStartDate = $orderByStartDate;
-    }
-
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
-
-    public function setOffset(int $offset): void
-    {
-        $this->offset = $offset;
-    }
-
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    public function getResponseModel(): ResponseSubscription
-    {
-        return new ResponseSubscription();
+        return new \Payrexx\Models\Response\Subscription();
     }
 }

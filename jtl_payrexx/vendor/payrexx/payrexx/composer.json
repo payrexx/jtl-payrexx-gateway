@@ -20,26 +20,12 @@
         }
     },
     "require": {
-        "php": "^8.0"
+        "php": "^7.4 || ^8.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "^2.1",
-        "guzzlehttp/guzzle": "^7.0",
-        "pestphp/pest": "^3.8"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
+        "phpstan/phpstan": "^1.9"
     },
     "scripts": {
-        "phpstan": "phpstan analyse lib/ --level=5",
-        "test": "./vendor/bin/pest ."
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-        
+        "phpstan": "phpstan analyse lib/"
     }
 }

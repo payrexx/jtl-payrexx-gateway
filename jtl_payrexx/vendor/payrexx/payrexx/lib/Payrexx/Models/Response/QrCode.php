@@ -1,53 +1,64 @@
 <?php
 
-/**
- * The QrCode response model
- *
- * @author    Payrexx Development <info@payrexx.com>
- * @copyright Payrexx AG
- * @since     v1.7.5
- */
-
 namespace Payrexx\Models\Response;
 
-/**
- * QrCode response class
- *
- * @package Payrexx\Models\Response
- */
 class QrCode extends \Payrexx\Models\Request\QrCode
 {
-    protected string $qrCode;
+    /** @var string */
+    protected $qrCode;
 
-    protected string $png;
+    /** @var string */
+    protected $uuid;
 
-    protected string $svg;
+    /** @var string */
+    protected $png;
 
-    public function setPng(string $png): void
+    /** @var string */
+    protected $svg;
+
+    /**
+     * @param string $png
+     */
+    public function setPng($png): void
     {
         $this->png = $png;
     }
 
-    public function getPng(): string
+    /**
+     * @return string
+     */
+    public function getPng()
     {
         return $this->png;
     }
 
-    public function setSvg(string $svg): void
+    /**
+     * @param string $svg
+     */
+    public function setSvg($svg): void
     {
         $this->svg = $svg;
     }
 
-    public function getSvg(): string
+    /**
+     * @return string
+     */
+    public function getSvg()
     {
         return $this->svg;
     }
 
+    /**
+     * @return string
+     */
     public function getQrCode(): string
     {
         return $this->qrCode;
     }
 
+    /**
+     * @param string $qrCode
+     */
     public function setQrCode(string $qrCode): void
     {
         $this->qrCode = $qrCode;

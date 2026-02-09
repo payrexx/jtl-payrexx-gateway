@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb
+class ComposerStaticInite714e8a0783c3ccab5f4b9b4346f7d6f
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -34,11 +34,9 @@ class ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Payrexx\\CommunicationAdapter\\AbstractCommunication' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/CommunicationAdapter/AbstractCommunication.php',
         'Payrexx\\CommunicationAdapter\\CurlCommunication' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/CommunicationAdapter/CurlCommunication.php',
-        'Payrexx\\CommunicationAdapter\\GuzzleCommunication' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/CommunicationAdapter/GuzzleCommunication.php',
         'Payrexx\\Communicator' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Communicator.php',
         'Payrexx\\Models\\Base' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Base.php',
         'Payrexx\\Models\\Request\\AuthToken' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/AuthToken.php',
-        'Payrexx\\Models\\Request\\Bill' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Bill.php',
         'Payrexx\\Models\\Request\\Design' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Design.php',
         'Payrexx\\Models\\Request\\Gateway' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Gateway.php',
         'Payrexx\\Models\\Request\\Invoice' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Invoice.php',
@@ -52,7 +50,6 @@ class ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb
         'Payrexx\\Models\\Request\\Subscription' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Subscription.php',
         'Payrexx\\Models\\Request\\Transaction' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Request/Transaction.php',
         'Payrexx\\Models\\Response\\AuthToken' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Response/AuthToken.php',
-        'Payrexx\\Models\\Response\\Bill' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Response/Bill.php',
         'Payrexx\\Models\\Response\\Design' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Response/Design.php',
         'Payrexx\\Models\\Response\\Gateway' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Response/Gateway.php',
         'Payrexx\\Models\\Response\\Invoice' => __DIR__ . '/..' . '/payrexx/payrexx/lib/Payrexx/Models/Response/Invoice.php',
@@ -77,10 +74,10 @@ class ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0ca5ee8b19a7f51c8345f99de2d1efdb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite714e8a0783c3ccab5f4b9b4346f7d6f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite714e8a0783c3ccab5f4b9b4346f7d6f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite714e8a0783c3ccab5f4b9b4346f7d6f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInite714e8a0783c3ccab5f4b9b4346f7d6f::$classMap;
 
         }, null, ClassLoader::class);
     }
