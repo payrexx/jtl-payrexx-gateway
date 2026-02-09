@@ -3,7 +3,7 @@
         'name' => 'payrexx_gateway/jtl_payrexx',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '54b0fe7edb66174aa58d708561e122ebdf063d92',
+        'reference' => '2cee20e577bf9e07f53249ebc541f7e388998691',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'payrexx_gateway/jtl_payrexx' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '54b0fe7edb66174aa58d708561e122ebdf063d92',
+            'reference' => '2cee20e577bf9e07f53249ebc541f7e388998691',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

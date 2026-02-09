@@ -23,7 +23,7 @@
             },
             "time": "2025-04-09T09:44:22+00:00",
             "type": "library",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Payrexx": "lib/"
