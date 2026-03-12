@@ -3,17 +3,22 @@
 /**
  * Transaction request model
  *
- * @copyright   Payrexx AG
- * @author      Payrexx Development Team <info@payrexx.com>
+ * @author    Payrexx Development <info@payrexx.com>
+ * @copyright Payrexx AG
+ * @since     v1.5.0
  */
+
 namespace Payrexx\Models\Request;
+
+use Payrexx\Models\Base;
+use Payrexx\Models\Response\Transaction as ResponseTransaction;
 
 /**
  * Transaction class
  *
  * @package Payrexx\Models\Request
  */
-class Transaction extends \Payrexx\Models\Base
+class Transaction extends Base
 {
     /** @var int $amount */
     protected $amount;
@@ -27,6 +32,8 @@ class Transaction extends \Payrexx\Models\Base
     protected $fields;
     /** @var string $referenceId */
     protected $referenceId;
+    /** @var string $payoutDescriptor */
+    protected $payoutDescriptor;
     /** @var string $recipient */
     protected $recipient;
     protected $filterDatetimeUtcGreaterThan;
@@ -85,36 +92,21 @@ class Transaction extends \Payrexx\Models\Base
         $this->purpose = $purpose;
     }
 
-    /**
-     * @return float|null
-     */
     public function getVatRate(): ?float
     {
         return $this->vatRate;
     }
 
-    /**
-     * @param float $vatRate
-     */
     public function setVatRate(float $vatRate): void
     {
         $this->vatRate = $vatRate;
     }
 
-    /**
-     * @return array
-     */
     public function getFields(): array
     {
         return $this->fields ?? [];
     }
 
-    /**
-     * @param string $type
-     * @param string $value
-     * @param array $name
-     * @return void
-     */
     public function addField(string $type, string $value, array $name = []): void
     {
         $this->fields[$type] = [
@@ -142,6 +134,22 @@ class Transaction extends \Payrexx\Models\Base
     /**
      * @return string
      */
+    public function getPayoutDescriptor()
+    {
+        return $this->payoutDescriptor;
+    }
+
+    /**
+     * @param string $payoutDescriptor
+     */
+    public function setPayoutDescriptor($payoutDescriptor)
+    {
+        $this->payoutDescriptor = $payoutDescriptor;
+    }
+
+    /**
+     * @return string
+     */
     public function getRecipient()
     {
         return $this->recipient;
@@ -163,9 +171,6 @@ class Transaction extends \Payrexx\Models\Base
         return $this->filterDatetimeUtcGreaterThan;
     }
 
-    /**
-     * @param \DateTime $filterDatetimeUtcGreaterThan
-     */
     public function setFilterDatetimeUtcGreaterThan(\DateTime $filterDatetimeUtcGreaterThan): void
     {
         $this->filterDatetimeUtcGreaterThan = $filterDatetimeUtcGreaterThan->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
@@ -203,17 +208,11 @@ class Transaction extends \Payrexx\Models\Base
         $this->filterMyTransactionsOnly = $filterMyTransactionsOnly;
     }
 
-    /**
-     * @return string|null
-     */
     public function getOrderByTime(): ?string
     {
         return $this->orderByTime;
     }
 
-    /**
-     * @param string $orderByTime
-     */
     public function setOrderByTime(string $orderByTime): void
     {
         $this->orderByTime = $orderByTime;
@@ -227,9 +226,6 @@ class Transaction extends \Payrexx\Models\Base
         return $this->offset;
     }
 
-    /**
-     * @param int $offset
-     */
     public function setOffset(int $offset): void
     {
         $this->offset = $offset;
@@ -243,9 +239,6 @@ class Transaction extends \Payrexx\Models\Base
         return $this->limit;
     }
 
-    /**
-     * @param int $limit
-     */
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
@@ -254,8 +247,8 @@ class Transaction extends \Payrexx\Models\Base
     /**
      * {@inheritdoc}
      */
-    public function getResponseModel()
+    public function getResponseModel(): ResponseTransaction
     {
-        return new \Payrexx\Models\Response\Transaction();
+        return new ResponseTransaction();
     }
 }
