@@ -4,27 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e714e8a0783c3ccab5f4b9b4346f7d6f",
+    "content-hash": "593d32edb0fee7ca28fa7a440364df93",
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v1.8.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "30bd92fa3d56586a06705477fafdba7b7bf3a0bd"
+                "reference": "6d249753a2b0aaf4b82ea73614c1ad0498d216be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/30bd92fa3d56586a06705477fafdba7b7bf3a0bd",
-                "reference": "30bd92fa3d56586a06705477fafdba7b7bf3a0bd",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/6d249753a2b0aaf4b82ea73614c1ad0498d216be",
+                "reference": "6d249753a2b0aaf4b82ea73614c1ad0498d216be",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.9"
+                "guzzlehttp/guzzle": "^7.0",
+                "pestphp/pest": "^3.8",
+                "phpstan/phpstan": "^2.1"
             },
             "type": "library",
             "autoload": {
@@ -50,9 +52,9 @@
             ],
             "support": {
                 "issues": "https://github.com/payrexx/payrexx-php/issues",
-                "source": "https://github.com/payrexx/payrexx-php/tree/v1.8.11"
+                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.12"
             },
-            "time": "2025-04-09T09:44:22+00:00"
+            "time": "2026-03-12T10:14:17+00:00"
         }
     ],
     "packages-dev": [],
