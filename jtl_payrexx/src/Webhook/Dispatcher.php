@@ -113,7 +113,8 @@ class Dispatcher
                     $transaction->getStatus(),
                     $transaction->getUuid(),
                     $transaction->getInvoice()['currencyAlpha3'],
-                    (int) $transaction->getInvoice()['totalAmount']
+                    (int) $transaction->getInvoice()['totalAmount'],
+                    $this->payrexxApiService->getConfirmedAmount($gateway)
                 );
             } else {
                 LoggerUtil::addLog(

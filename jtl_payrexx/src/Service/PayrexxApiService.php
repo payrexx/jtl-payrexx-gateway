@@ -204,6 +204,19 @@ class PayrexxApiService
         return false;
     }
 
+    public function getConfirmedAmount(ResponseGateway $gateway): int
+    {
+        $amount = 0;
+        foreach ($gateway->getInvoices() ?? [] as $invoice) {
+            foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
+                if (($gatewayTransaction['status'] ?? '') === ResponseTransaction::CONFIRMED) {
+                    $amount += (int) ($gatewayTransaction['amount'] ?? 0);
+                }
+            }
+        }
+        return $amount;
+    }
+
     public function deletePayrexxGateway(int $gatewayId): void
     {
         if (!$gateway = $this->getPayrexxGateway($gatewayId)) {
