@@ -7,6 +7,7 @@ use JTL\Plugin\Helper as PluginHelper;
 use Payrexx\Models\Request\Gateway;
 use Payrexx\Models\Request\SignatureCheck;
 use Payrexx\Models\Request\Transaction;
+use Payrexx\Models\Response\Gateway as ResponseGateway;
 use Payrexx\Models\Response\Transaction as ResponseTransaction;
 use Payrexx\Payrexx;
 use Payrexx\PayrexxException;
@@ -137,7 +138,7 @@ class PayrexxApiService
         }
     }
 
-    public function getPayrexxGateway(int $gatewayId): ?Gateway
+    public function getPayrexxGateway(int $gatewayId): ?ResponseGateway
     {
         $payrexx = $this->getInterface();
         $gateway = new Gateway();
@@ -186,6 +187,21 @@ class PayrexxApiService
         }
 
         return $this->getPayrexxTransaction(end($transactions)['id']);
+    }
+
+    /**
+     * The transaction response carries no gateway id, so the gateway is asked for its transactions instead.
+     */
+    public function isTransactionOfGateway(ResponseGateway $gateway, int $transactionId): bool
+    {
+        foreach ($gateway->getInvoices() ?? [] as $invoice) {
+            foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
+                if ((int) ($gatewayTransaction['id'] ?? 0) === $transactionId) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public function deletePayrexxGateway(int $gatewayId): void

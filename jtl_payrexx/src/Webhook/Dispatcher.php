@@ -6,6 +6,7 @@ namespace Plugin\jtl_payrexx\Webhook;
 
 use Exception;
 use JTL\Checkout\Bestellung;
+use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
@@ -47,28 +48,14 @@ class Dispatcher
                 $this->sendResponse('Webhook data incomplete');
             }
             LoggerUtil::addLog("Payrexx:processWebhookResponse() started", $this->data);
-            // reference id refers order id or order hash
-            $referenceId = $this->data['transaction']['invoice']['referenceId'] ?? '';
-            $gatewayId = $this->data['transaction']['invoice']['paymentRequestId'] ?? '';
-
-            if (empty($referenceId)) {
+            if (empty($this->data['transaction']['id'])) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            LoggerUtil::addLog(
-                "Payrexx:processWebhookResponse(), process getOrderGatewayId(): " . $referenceId,
-                $this->data
-            );
-            $verify = $this->orderService->getOrderGatewayId($referenceId, (int) $gatewayId);
-            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
-            if (!$verify) {
-                $this->sendResponse('Verification failed');
-            }
-
             if (!isset($this->data['transaction']['status'])) {
                 $this->sendResponse('Missing transaction status');
             }
             LoggerUtil::addLog(
-                "Payrexx:processWebhookResponse(), process getPayrexxTransaction(): " . $referenceId,
+                "Payrexx:processWebhookResponse(), process getPayrexxTransaction()",
                 $this->data
             );
             $transaction = $this->payrexxApiService->getPayrexxTransaction(
@@ -81,6 +68,31 @@ class Dispatcher
             }
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
+            }
+
+            // Webhook is unsigned: the order comes from the fetched transaction, and the transaction must belong
+            // to a gateway stored for that order. The posted gateway id is only the key to look that gateway up.
+            $referenceId = $this->getReferenceIdByTransaction($transaction);
+            $gatewayId = (int) ($this->data['transaction']['invoice']['paymentRequestId'] ?? 0);
+            if (empty($referenceId)) {
+                $this->sendResponse('Webhook data incomplete');
+            }
+            LoggerUtil::addLog(
+                "Payrexx:processWebhookResponse(), process getOrderGatewayId(): " . $referenceId,
+                $this->data
+            );
+            $verify = $this->orderService->getOrderGatewayId($referenceId, $gatewayId);
+            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
+            $gateway = $verify ? $this->payrexxApiService->getPayrexxGateway($gatewayId) : null;
+            if (
+                !$gateway
+                || !$this->payrexxApiService->isTransactionOfGateway($gateway, (int) $transaction->getId())
+            ) {
+                LoggerUtil::addLog(
+                    'Payrexx:processWebhookResponse(), transaction ' . $transaction->getId()
+                        . ' does not belong to a gateway of order ' . $referenceId
+                );
+                $this->sendResponse('Verification failed');
             }
             $order = null;
             LoggerUtil::addLog(
@@ -116,6 +128,19 @@ class Dispatcher
         } catch (Exception $e) {
             $this->sendResponse('Error: ' . json_encode($e->getMessage()));
         }
+    }
+
+    /**
+     * The gateway sets the order number or hash as referenceId. The API returns it at the top level and in the
+     * invoice, depending on the transaction type.
+     */
+    private function getReferenceIdByTransaction(Transaction $transaction): string
+    {
+        $referenceId = (string) $transaction->getReferenceId();
+        if ($referenceId === '') {
+            $referenceId = (string) ($transaction->getInvoice()['referenceId'] ?? '');
+        }
+        return $referenceId;
     }
 
     /**
