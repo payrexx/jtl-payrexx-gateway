@@ -119,8 +119,12 @@ class OrderService
      */
     private function getOrderTotal(Bestellung $order): int
     {
-        $currencyFactor = (float) ($order->fWaehrungsFaktor ?: 1);
-        return (int) round(round((float) $order->fGesamtsumme * $currencyFactor, 2) * 100);
+        $currencyFactor = (float) $order->fWaehrungsFaktor;
+        if (empty($currencyFactor)) {
+            $currencyFactor = 1.0;
+        }
+        $orderTotal = (int) round(round((float) $order->fGesamtsumme * $currencyFactor, 2) * 100);
+        return $orderTotal;
     }
 
     private function transitionAllowed(int $currentStatus, int $newStatus): bool
