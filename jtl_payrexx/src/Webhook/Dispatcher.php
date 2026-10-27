@@ -70,8 +70,8 @@ class Dispatcher
                 $this->sendResponse('Fraudulent transaction status');
             }
 
-            // Webhook is unsigned: the order comes from the fetched transaction, and the transaction must belong
-            // to a gateway stored for that order. The posted gateway id is only the key to look that gateway up.
+            // The order comes from the fetched transaction, and the transaction must belong to a gateway stored
+            // for that order. The posted gateway id is only the key to look that gateway up.
             $referenceId = $this->getReferenceIdByTransaction($transaction);
             $gatewayId = (int) ($this->data['transaction']['invoice']['paymentRequestId'] ?? 0);
             if (empty($referenceId)) {
