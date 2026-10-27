@@ -220,15 +220,15 @@ class Base extends Method
                 )
             )
         ) {
+            $gatewayId = (int) $_SESSION['payrexxOrder']['gatewayId'];
             $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
-                (int) $_SESSION['payrexxOrder']['gatewayId'],
+                $gatewayId,
                 $order->cBestellNr
             );
-            $transaction = $this->payrexxApiService->getTransactionByGatewayId(
-                (int) $_SESSION['payrexxOrder']['gatewayId']
-            );
-            if (!$transaction) {
+            $transaction = $this->payrexxApiService->getTransactionByGatewayId($gatewayId);
+            $gateway = $this->payrexxApiService->getPayrexxGateway($gatewayId);
+            if (!$transaction || !$gateway) {
                 return;
             }
             LoggerUtil::addLog(
@@ -239,7 +239,8 @@ class Base extends Method
                 $transaction->getStatus(),
                 $transaction->getUuid(),
                 $transaction->getInvoice()['currencyAlpha3'],
-                (int) $transaction->getInvoice()['totalAmount']
+                (int) $transaction->getInvoice()['totalAmount'],
+                $this->payrexxApiService->getConfirmedAmount($gateway)
             );
         }
     }

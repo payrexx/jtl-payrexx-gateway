@@ -6,6 +6,7 @@ namespace Plugin\jtl_payrexx\Webhook;
 
 use Exception;
 use JTL\Checkout\Bestellung;
+use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
@@ -47,28 +48,14 @@ class Dispatcher
                 $this->sendResponse('Webhook data incomplete');
             }
             LoggerUtil::addLog("Payrexx:processWebhookResponse() started", $this->data);
-            // reference id refers order id or order hash
-            $referenceId = $this->data['transaction']['invoice']['referenceId'] ?? '';
-            $gatewayId = $this->data['transaction']['invoice']['paymentRequestId'] ?? '';
-
-            if (empty($referenceId)) {
+            if (empty($this->data['transaction']['id'])) {
                 $this->sendResponse('Webhook data incomplete');
             }
-            LoggerUtil::addLog(
-                "Payrexx:processWebhookResponse(), process getOrderGatewayId(): " . $referenceId,
-                $this->data
-            );
-            $verify = $this->orderService->getOrderGatewayId($referenceId, (int) $gatewayId);
-            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
-            if (!$verify) {
-                $this->sendResponse('Verification failed');
-            }
-
             if (!isset($this->data['transaction']['status'])) {
                 $this->sendResponse('Missing transaction status');
             }
             LoggerUtil::addLog(
-                "Payrexx:processWebhookResponse(), process getPayrexxTransaction(): " . $referenceId,
+                "Payrexx:processWebhookResponse(), process getPayrexxTransaction()",
                 $this->data
             );
             $transaction = $this->payrexxApiService->getPayrexxTransaction(
@@ -81,6 +68,36 @@ class Dispatcher
             }
             if ($transaction->getStatus() !== $this->data['transaction']['status']) {
                 $this->sendResponse('Fraudulent transaction status');
+            }
+
+            // The order comes from the fetched transaction, and the transaction must belong to a gateway stored
+            // for that order. The posted gateway id is only the key to look that gateway up.
+            $referenceId = $this->getReferenceIdByTransaction($transaction);
+            $gatewayId = (int) ($this->data['transaction']['invoice']['paymentRequestId'] ?? 0);
+            if (empty($referenceId)) {
+                $this->sendResponse('Webhook data incomplete');
+            }
+            LoggerUtil::addLog(
+                "Payrexx:processWebhookResponse(), process getOrderGatewayId(): " . $referenceId,
+                $this->data
+            );
+            $verify = $this->orderService->getOrderGatewayId($referenceId, $gatewayId);
+            LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
+            if (!$verify) {
+                $this->sendResponse('Verification failed');
+            }
+            // Payrexx only retries failed webhooks, so a gateway that cannot be fetched must not end with a 200
+            $gateway = $this->payrexxApiService->getPayrexxGateway($gatewayId);
+            if (!$gateway) {
+                LoggerUtil::addLog('Payrexx:processWebhookResponse(), gateway not found: ' . $gatewayId);
+                $this->sendResponse('Gateway not found', [], 500);
+            }
+            if (!$this->payrexxApiService->isTransactionOfGateway($gateway, (int) $transaction->getId())) {
+                LoggerUtil::addLog(
+                    'Payrexx:processWebhookResponse(), transaction ' . $transaction->getId()
+                        . ' does not belong to a gateway of order ' . $referenceId
+                );
+                $this->sendResponse('Verification failed');
             }
             $order = null;
             LoggerUtil::addLog(
@@ -101,7 +118,8 @@ class Dispatcher
                     $transaction->getStatus(),
                     $transaction->getUuid(),
                     $transaction->getInvoice()['currencyAlpha3'],
-                    (int) $transaction->getInvoice()['totalAmount']
+                    (int) $transaction->getInvoice()['totalAmount'],
+                    $this->payrexxApiService->getConfirmedAmount($gateway)
                 );
             } else {
                 LoggerUtil::addLog(
@@ -119,6 +137,19 @@ class Dispatcher
     }
 
     /**
+     * The gateway sets the order number or hash as referenceId. The API returns it at the top level and in the
+     * invoice, depending on the transaction type.
+     */
+    private function getReferenceIdByTransaction(Transaction $transaction): string
+    {
+        $referenceId = (string) $transaction->getReferenceId();
+        if ($referenceId === '') {
+            $referenceId = (string) ($transaction->getInvoice()['referenceId'] ?? '');
+        }
+        return $referenceId;
+    }
+
+    /**
      * Returns webhook response.
      *
      * @param string $message success or error message.
@@ -131,8 +162,8 @@ class Dispatcher
         if (!empty($data)) {
             $response['data'] = $data;
         }
-        echo json_encode($response);
         http_response_code($responseCode);
+        echo json_encode($response);
         die;
     }
 }

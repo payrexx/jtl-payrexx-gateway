@@ -48,7 +48,8 @@ class OrderService
         string $status,
         string $uuid = '',
         string $currency = '',
-        int $amount = 0
+        int $amount = 0,
+        int $confirmedAmount = 0
     ): void {
         $orderNewStatus = '';
         switch ($status) {
@@ -57,7 +58,20 @@ class OrderService
                 $comment = 'Awaiting payment';
                 break;
             case Transaction::CONFIRMED:
-                $orderNewStatus = \BESTELLUNG_STATUS_BEZAHLT;
+                // The cart can change after its gateway was created and a bank transfer can be paid in parts,
+                // so only the sum of all confirmed transactions of the gateway settles the order
+                $orderTotal = $this->getOrderTotal($order);
+                if ($confirmedAmount < $orderTotal) {
+                    LoggerUtil::addLog(
+                        'Payrexx::handleTransactionStatus(): confirmed amount does not cover order '
+                            . $order->cBestellNr,
+                        [
+                            'confirmedAmount' => $confirmedAmount,
+                            'orderTotal' => $orderTotal,
+                        ]
+                    );
+                    return;
+                }
                 $this->addIncommingPayment($order, $uuid, $currency, $amount);
                 return;
             case Transaction::REFUNDED:
@@ -98,6 +112,19 @@ class OrderService
             return;
         }
         $this->updateOrderStatus($order, $order->cStatus, $orderNewStatus, $comment);
+    }
+
+    /**
+     * Total in the order currency and minor units, calculated like the gateway amount
+     */
+    private function getOrderTotal(Bestellung $order): int
+    {
+        $currencyFactor = (float) $order->fWaehrungsFaktor;
+        if (empty($currencyFactor)) {
+            $currencyFactor = 1.0;
+        }
+        $orderTotal = (int) round(round((float) $order->fGesamtsumme * $currencyFactor, 2) * 100);
+        return $orderTotal;
     }
 
     private function transitionAllowed(int $currentStatus, int $newStatus): bool
