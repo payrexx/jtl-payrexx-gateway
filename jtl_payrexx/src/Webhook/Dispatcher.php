@@ -83,11 +83,16 @@ class Dispatcher
             );
             $verify = $this->orderService->getOrderGatewayId($referenceId, $gatewayId);
             LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderGatewayId() finished");
-            $gateway = $verify ? $this->payrexxApiService->getPayrexxGateway($gatewayId) : null;
-            if (
-                !$gateway
-                || !$this->payrexxApiService->isTransactionOfGateway($gateway, (int) $transaction->getId())
-            ) {
+            if (!$verify) {
+                $this->sendResponse('Verification failed');
+            }
+            // Payrexx only retries failed webhooks, so a gateway that cannot be fetched must not end with a 200
+            $gateway = $this->payrexxApiService->getPayrexxGateway($gatewayId);
+            if (!$gateway) {
+                LoggerUtil::addLog('Payrexx:processWebhookResponse(), gateway not found: ' . $gatewayId);
+                $this->sendResponse('Gateway not found', [], 500);
+            }
+            if (!$this->payrexxApiService->isTransactionOfGateway($gateway, (int) $transaction->getId())) {
                 LoggerUtil::addLog(
                     'Payrexx:processWebhookResponse(), transaction ' . $transaction->getId()
                         . ' does not belong to a gateway of order ' . $referenceId
@@ -157,8 +162,8 @@ class Dispatcher
         if (!empty($data)) {
             $response['data'] = $data;
         }
-        echo json_encode($response);
         http_response_code($responseCode);
+        echo json_encode($response);
         die;
     }
 }
