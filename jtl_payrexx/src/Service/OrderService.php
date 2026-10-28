@@ -245,13 +245,15 @@ class OrderService
             'Payrexx::addIncommingPayment(): process started: ' . $order->cBestellNr,
             $logData
         );
+        // The order can have further incoming payments (e.g. vouchers), so look for this transaction only
         $incommingPayment = Shop::Container()->getDB()->selectSingleRow(
             'tzahlungseingang',
             'kBestellung',
-            $order->kBestellung
+            $order->kBestellung,
+            'cHinweis',
+            $uuid
         );
-        // check the record for incomming payment for current order
-        if (!empty($incommingPayment->kZahlungseingang) && $incommingPayment->cHinweis == $uuid) {
+        if (!empty($incommingPayment->kZahlungseingang)) {
             return;
         }
         $paymentMethod = new Method($moduleId);
