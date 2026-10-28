@@ -87,7 +87,7 @@ class Base extends Method
         $successUrl = $this->getReturnURL($order);
         $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
         $incomingPayments = $this->orderService->getIncomingPayments($order);
-        $basketItems = BasketUtil::getBasketDetails($order);
+        $basketItems = BasketUtil::getBasketDetails($order, $incomingPayments);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
 
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
