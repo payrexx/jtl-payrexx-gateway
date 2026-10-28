@@ -123,8 +123,41 @@ class OrderService
         if (empty($currencyFactor)) {
             $currencyFactor = 1.0;
         }
-        $orderTotal = (int) round(round((float) $order->fGesamtsumme * $currencyFactor, 2) * 100);
+        $paidAmount = $this->sumIncomingPayments($this->getIncomingPayments($order));
+        $openAmount = (float) $order->fGesamtsumme * $currencyFactor - $paidAmount;
+        $orderTotal = (int) round(round($openAmount, 2) * 100);
         return $orderTotal;
+    }
+
+    /**
+     * Payments by other providers, e.g. a JTL-Vouchers gift voucher, that reduce the amount to pay with Payrexx.
+     * Payments booked by this payment method itself and payments in another currency are left out.
+     */
+    public function getIncomingPayments(Bestellung $order): array
+    {
+        if (empty($order->kBestellung)) {
+            return [];
+        }
+        $incomingPayments = Shop::Container()->getDB()->queryPrepared(
+            'SELECT `ze`.`cZahlungsanbieter`, `ze`.`fBetrag`
+                FROM `tzahlungseingang` AS `ze`
+                JOIN `tbestellung` AS `b` ON `b`.`kBestellung` = `ze`.`kBestellung`
+                JOIN `twaehrung` AS `w` ON `w`.`kWaehrung` = `b`.`kWaehrung`
+                WHERE `ze`.`kBestellung` = :orderId
+                    AND `ze`.`cISO` = `w`.`cISO`
+                    AND `ze`.`cZahlungsanbieter` <> `b`.`cZahlungsartName`',
+            [
+                ':orderId' => (int) $order->kBestellung,
+            ],
+            ReturnType::ARRAY_OF_OBJECTS
+        );
+        return $incomingPayments;
+    }
+
+    public function sumIncomingPayments(array $incomingPayments): float
+    {
+        $amount = array_sum(array_map(fn ($payment) => (float) $payment->fBetrag, $incomingPayments));
+        return $amount;
     }
 
     private function transitionAllowed(int $currentStatus, int $newStatus): bool
