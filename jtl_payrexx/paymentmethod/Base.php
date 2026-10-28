@@ -86,11 +86,14 @@ class Base extends Method
         $orderHash = $this->generateHash($order);
         $successUrl = $this->getReturnURL($order);
         $cancelUrl =  $this->getNotificationURL($orderHash) . '&cancelled';
-        $basketItems = BasketUtil::getBasketDetails($order);
+        $incomingPayments = $this->orderService->getIncomingPayments($order);
+        $basketItems = BasketUtil::getBasketDetails($order, $incomingPayments);
         $basketAmount = BasketUtil::getBasketAmount($basketItems);
 
         $currencyFactor = Frontend::getCurrency()->getConversionFactor();
-        $convertedPrice = $order->fGesamtsumme * $currencyFactor;
+        // Part of the order can already be paid by another provider, e.g. a JTL-Vouchers gift voucher
+        $convertedPrice = $order->fGesamtsumme * $currencyFactor
+            - $this->orderService->sumIncomingPayments($incomingPayments);
         $totalAmount = (float)number_format($convertedPrice, 2, '.', '');
         $currency = $order->Waehrung->cISO;
 
