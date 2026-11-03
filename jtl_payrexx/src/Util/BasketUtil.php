@@ -12,9 +12,10 @@ class BasketUtil
 
     /**
      * @param Bestellung $order
+     * @param array $incomingPayments
      * @return array
      */
-    public static function getBasketDetails(Bestellung $order): array
+    public static function getBasketDetails(Bestellung $order, array $incomingPayments = []): array
     {
         $products = $order->Positionen;
         $basketItems = [];
@@ -108,6 +109,15 @@ class BasketUtil
                 'name' => self::getPurposeLangText('Customer Credit'),
                 'quantity' => 1,
                 'amount' => $gutscheinPrice * 100,
+            ];
+        }
+        foreach ($incomingPayments as $incomingPayment) {
+            $paidAmount = number_format(-1 * $incomingPayment->fBetrag, 2, '.', '');
+            $basketItems[] = [
+                // JTL can store the provider name HTML encoded, see CartHelper::calculatePayment()
+                'name' => html_entity_decode($incomingPayment->cZahlungsanbieter),
+                'quantity' => 1,
+                'amount' => $paidAmount * 100,
             ];
         }
         return $basketItems;
