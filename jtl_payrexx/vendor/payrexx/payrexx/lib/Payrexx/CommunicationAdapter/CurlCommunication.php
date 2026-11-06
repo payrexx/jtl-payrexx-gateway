@@ -46,6 +46,10 @@ class CurlCommunication extends AbstractCommunication
             CURLOPT_USERAGENT => 'payrexx-php/' . Payrexx::CLIENT_VERSION,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_CAINFO => dirname(__DIR__) . '/certs/ca.pem',
+            // Bound the request so a slow API fails as a normal cURL error instead of
+            // hanging until PHP's max_execution_time kills the process mid-request.
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_TIMEOUT => 20,
         ];
 
         $instance = $params['instance'] ?? '';
@@ -66,7 +70,7 @@ class CurlCommunication extends AbstractCommunication
         if (in_array($method, ['GET', 'DELETE']) && !empty($params)) {
             $curlOpts[CURLOPT_URL] = $apiUrl . $separator . $paramString;
         } else {
-            $curlOpts[CURLOPT_POSTFIELDS] = $paramString;
+            $curlOpts[CURLOPT_POSTFIELDS] = json_encode($params);
             $curlOpts[CURLOPT_URL] = $apiUrl . $separator . 'instance=' . $instance;
         }
 
@@ -105,7 +109,7 @@ class CurlCommunication extends AbstractCommunication
 
         if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
             $curlOpts[CURLOPT_HTTPHEADER][] =
-                'Content-Type: ' . ($hasFile ? 'multipart/form-data' : 'application/x-www-form-urlencoded');
+                'Content-Type: ' . ($hasFile ? 'multipart/form-data' : 'application/json');
         }
 
         $curl = curl_init();
@@ -117,7 +121,8 @@ class CurlCommunication extends AbstractCommunication
         if ($responseBody === false) {
             $responseBody = [
                 'status' => 'error',
-                'message' => $this->curlError($curl)
+                'message' => $this->curlErrorMessage($curl),
+                'code' => $this->curlError($curl),
             ];
         }
         curl_close($curl);
@@ -145,5 +150,10 @@ class CurlCommunication extends AbstractCommunication
     protected function curlError(CurlHandle $curl): int
     {
         return curl_errno($curl);
+    }
+
+    protected function curlErrorMessage(CurlHandle $curl): string
+    {
+        return curl_error($curl);
     }
 }
