@@ -34,7 +34,7 @@ class BasketUtil
                     $basketItems[] = [
                         'name' => self::getPurposeLangText('Shipping'),
                         'quantity' => 1,
-                        'amount' => $shippingPrice * 100,
+                        'amount' => (int) round($shippingPrice * 100),
                         'vatRate' => $vatRate,
                     ];
                     break;
@@ -85,7 +85,7 @@ class BasketUtil
                             'name' => $name,
                             'description' => $productData->Artikel->cKurzBeschreibung,
                             'quantity' => $productData->nAnzahl,
-                            'amount' => $priceTotal * 100,
+                            'amount' => (int) round($priceTotal * 100),
                             'sku' => $productData->cArtNr,
                             'vatRate' => $vatRate,
                         ];
@@ -95,7 +95,7 @@ class BasketUtil
                         $basketItems[] = [
                             'name' => self::getPurposeLangText('Discount'),
                             'quantity' => 1,
-                            'amount' => $priceTotal * 100,
+                            'amount' => (int) round($priceTotal * 100),
                             'vatRate' => $vatRate,
                         ];
                     }
@@ -108,7 +108,7 @@ class BasketUtil
             $basketItems[] = [
                 'name' => self::getPurposeLangText('Customer Credit'),
                 'quantity' => 1,
-                'amount' => $gutscheinPrice * 100,
+                'amount' => (int) round($gutscheinPrice * 100),
             ];
         }
         foreach ($incomingPayments as $incomingPayment) {
@@ -117,7 +117,7 @@ class BasketUtil
                 // JTL can store the provider name HTML encoded, see CartHelper::calculatePayment()
                 'name' => html_entity_decode($incomingPayment->cZahlungsanbieter),
                 'quantity' => 1,
-                'amount' => $paidAmount * 100,
+                'amount' => (int) round($paidAmount * 100),
             ];
         }
         return $basketItems;
