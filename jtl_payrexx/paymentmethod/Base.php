@@ -16,6 +16,7 @@ use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
+use Plugin\jtl_payrexx\Service\WebhookOrderService;
 use Plugin\jtl_payrexx\Util\BasketUtil;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
@@ -37,6 +38,8 @@ class Base extends Method
 
     private PayrexxApiService $payrexxApiService;
 
+    private WebhookOrderService $webhookOrderService;
+
     private $supportedLang = ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'];
 
     /**
@@ -48,6 +51,7 @@ class Base extends Method
         parent::__construct($moduleID);
         $this->orderService = new OrderService();
         $this->payrexxApiService = new PayrexxApiService();
+        $this->webhookOrderService = new WebhookOrderService($this->orderService);
     }
 
     public function init(int $nAgainCheckout = 0): self
@@ -159,6 +163,8 @@ class Base extends Method
                 $order->kBestellung ?? null,
                 $gateway->getId(),
                 $order->cBestellNr ?? $orderHash,
+                // The webhook creates the order from this payment session if the shopper does not return
+                $order->kBestellung ? null : ltrim($orderHash, '_'),
             );
             $_SESSION['payrexxOrder'] = [
                 'gatewayId' => $gateway->getId(),
@@ -179,6 +185,7 @@ class Base extends Method
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
         if (isset($args['payed'])) {
+            $this->redirectIfWebhookCreatedOrder($hash, $args);
             $orderNumber = $args['orderNo'] ?? '';
             if (!empty($orderNumber)) {
                 $order->cBestellNr = $orderNumber;
@@ -223,6 +230,8 @@ class Base extends Method
                 )
             )
         ) {
+            // The webhook can book the same payment at the same time
+            $this->lockPaymentSession(ltrim($hash, '_'));
             $gatewayId = (int) $_SESSION['payrexxOrder']['gatewayId'];
             $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
@@ -261,6 +270,43 @@ class Base extends Method
     public function canPayAgain(): bool
     {
         return false;
+    }
+
+    /**
+     * The webhook can have created the order of the payment session already. The lock stays until the end of the
+     * request, so that the shop creates the order under it otherwise.
+     */
+    private function redirectIfWebhookCreatedOrder(string $paymentId, array $args): void
+    {
+        $this->lockPaymentSession($paymentId);
+        $paymentSession = $this->webhookOrderService->getPaymentSession($paymentId);
+        $orderId = (int) ($paymentSession->kBestellung ?? 0);
+        if ($orderId > 0) {
+            $order = new Bestellung($orderId);
+            $order->fuelleBestellung(false);
+        } else {
+            // The webhook can have saved the order and failed before it updated the payment session
+            // Only the order number reserved in this payment session, never one from the URL alone
+            $orderNumber = (string) ($_SESSION['payrexxOrder']['orderNo'] ?? '');
+            $order = $orderNumber !== '' && $orderNumber === (string) ($args['orderNo'] ?? '')
+                ? $this->webhookOrderService->getOrderByNumber($orderNumber)
+                : null;
+            if ($order === null) {
+                return;
+            }
+        }
+        LoggerUtil::addLog('Payrexx::finalizeOrder(), order already created by the webhook: ' . $order->kBestellung);
+        Frontend::getInstance()->cleanUp();
+        $this->handleNotification($order, '_' . $paymentId, $args);
+        \header('Location: ' . $this->getReturnURL($order));
+        exit();
+    }
+
+    private function lockPaymentSession(string $paymentId): void
+    {
+        if (!$this->webhookOrderService->lockPaymentSession($paymentId)) {
+            LoggerUtil::addLog('Payrexx: payment session lock not acquired');
+        }
     }
 
     /**
