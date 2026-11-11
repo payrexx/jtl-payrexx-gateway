@@ -30,6 +30,8 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
  */
 class Base extends Method
 {
+    private const PAYMENT_PROCESSING_MAX_ATTEMPTS = 10;
+
     private PluginInterface $plugin;
 
     private string $pm;
@@ -230,14 +232,21 @@ class Base extends Method
                 )
             )
         ) {
-            // The webhook can book the same payment at the same time
-            $this->lockPaymentSession(ltrim($hash, '_'));
             $gatewayId = (int) $_SESSION['payrexxOrder']['gatewayId'];
+            // Linked also if the booking is skipped, so that later webhooks of the gateway find the order
             $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
                 $gatewayId,
                 $order->cBestellNr
             );
+            // The webhook books the same payment under this lock. The request holding it books the payment, so
+            // booking without it could book it twice and the order stays open until the webhook has booked it.
+            if (!$this->webhookOrderService->lockBooking($gatewayId)) {
+                LoggerUtil::addLog(
+                    'Payrexx::handleNotification(), payment is booked by another request: ' . $order->cBestellNr
+                );
+                return;
+            }
             $transaction = $this->payrexxApiService->getTransactionByGatewayId($gatewayId);
             $gateway = $this->payrexxApiService->getPayrexxGateway($gatewayId);
             if (!$transaction || !$gateway) {
@@ -278,7 +287,11 @@ class Base extends Method
      */
     private function redirectIfWebhookCreatedOrder(string $paymentId, array $args): void
     {
-        $this->lockPaymentSession($paymentId);
+        if (!$this->webhookOrderService->lockPaymentSession($paymentId)) {
+            // The webhook can still be creating the order, so the shop must not create it a second time
+            LoggerUtil::addLog('Payrexx::finalizeOrder(), payment session is locked: ' . $paymentId);
+            $this->showPaymentProcessing();
+        }
         $paymentSession = $this->webhookOrderService->getPaymentSession($paymentId);
         $orderId = (int) ($paymentSession->kBestellung ?? 0);
         if ($orderId > 0) {
@@ -302,11 +315,36 @@ class Base extends Method
         exit();
     }
 
-    private function lockPaymentSession(string $paymentId): void
+    /**
+     * Reloads the notification until the lock is free. Every attempt waits for the lock, so it is no tight loop,
+     * and the reloads stop after a few attempts, e.g. if the database cannot lock at all.
+     */
+    private function showPaymentProcessing(): void
     {
-        if (!$this->webhookOrderService->lockPaymentSession($paymentId)) {
-            LoggerUtil::addLog('Payrexx: payment session lock not acquired');
+        $langCode = $_SESSION['currentLanguage']->iso ?? 'eng';
+        $message = $this->plugin->getLocalization()->getTranslation(
+            'jtl_payrexx_payment_processing',
+            $langCode
+        ) ?: 'Your payment is being processed. This page reloads automatically.';
+        $message = htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $query = $_GET;
+        $attempt = (int) ($query['payrexxAttempt'] ?? 0) + 1;
+        $refresh = '';
+        if ($attempt <= self::PAYMENT_PROCESSING_MAX_ATTEMPTS) {
+            $query['payrexxAttempt'] = $attempt;
+            // Built from the shop URL, so the reload never leaves the shop
+            $url = htmlspecialchars(
+                Shop::getURL() . '/includes/modules/notify.php?' . http_build_query($query),
+                ENT_QUOTES | ENT_SUBSTITUTE,
+                'UTF-8'
+            );
+            $refresh = '<meta http-equiv="refresh" content="3;url=' . $url . '">';
         }
+        \header('Content-Type: text/html; charset=utf-8');
+        \header('Cache-Control: no-store');
+        echo '<!DOCTYPE html><html><head><meta charset="utf-8">' . $refresh
+            . '<title>' . $message . '</title></head><body><p>' . $message . '</p></body></html>';
+        exit();
     }
 
     /**

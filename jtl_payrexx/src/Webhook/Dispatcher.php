@@ -117,10 +117,8 @@ class Dispatcher
                 );
             }
             if ($order !== null && $order->kBestellung) {
-                // The shopper's return books the same payment under this lock. Gateways of orders created before
-                // the payment have no payment session.
-                $lockKey = $this->orderService->getPaymentSessionId($gatewayId, $referenceId) ?: 'gw_' . $gatewayId;
-                if (!$webhookOrderService->lockPaymentSession($lockKey)) {
+                // The shopper's return books the same payment under this lock
+                if (!$webhookOrderService->lockBooking($gatewayId)) {
                     LoggerUtil::addLog('Payrexx:processWebhookResponse(), payment is locked: ' . $referenceId);
                     $this->sendResponse('Payment is processed by another request', [], 500);
                 }

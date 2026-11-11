@@ -98,6 +98,21 @@ class OrderService
                             'orderCurrency' => $orderCurrency,
                         ]
                     );
+                    // The merchant has to book the confirmed payment manually, once per transaction
+                    if (strpos((string) $order->cKommentar, $uuid) === false) {
+                        $this->updateOrderComment(
+                            $order,
+                            sprintf(
+                                'Confirmed payment not booked, transaction currency %s does not match order '
+                                    . 'currency %s (%s, %s %s)',
+                                $currency,
+                                $orderCurrency !== '' ? $orderCurrency : 'unknown',
+                                $uuid,
+                                number_format($amount / 100, 2, '.', ''),
+                                $currency
+                            )
+                        );
+                    }
                     return;
                 }
                 // The cart can change after its gateway was created and a bank transfer can be paid in parts,

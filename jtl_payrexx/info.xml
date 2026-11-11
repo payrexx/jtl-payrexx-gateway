@@ -817,6 +817,13 @@
                 <VariableLocalized iso="ENG">
                     <![CDATA[Your payment has been canceled. Please select your preferred payment method to continue.]]></VariableLocalized>
             </Variable>
+            <Variable>
+                <Name>jtl_payrexx_payment_processing</Name>
+                <VariableLocalized iso="GER">
+                    <![CDATA[Ihre Zahlung wird verarbeitet. Diese Seite wird automatisch neu geladen.]]></VariableLocalized>
+                <VariableLocalized iso="ENG">
+                    <![CDATA[Your payment is being processed. This page reloads automatically.]]></VariableLocalized>
+            </Variable>
         </Locales>
     </Install>
 </jtlshopplugin>

@@ -208,6 +208,16 @@ class WebhookOrderService
         return true;
     }
 
+    /**
+     * Webhook and shopper return book the payment of a gateway under this lock, also for orders created before the
+     * payment, whose notification hash differs from the payment session. Every request takes the locks in the same
+     * order to avoid deadlocks: shopper's session, payment session lock (order creation only), booking lock.
+     */
+    public function lockBooking(int $gatewayId): bool
+    {
+        return $this->lockPaymentSession('gw_' . $gatewayId);
+    }
+
     public function getPaymentSession(string $paymentId): ?stdClass
     {
         return Shop::Container()->getDB()->select('tzahlungsession', 'cZahlungsID', $paymentId);
