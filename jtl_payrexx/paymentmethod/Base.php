@@ -16,6 +16,7 @@ use JTL\Shop;
 use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
 use Plugin\jtl_payrexx\Service\PayrexxApiService;
+use Plugin\jtl_payrexx\Service\WebhookOrderService;
 use Plugin\jtl_payrexx\Util\BasketUtil;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
@@ -29,6 +30,8 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
  */
 class Base extends Method
 {
+    private const PAYMENT_PROCESSING_MAX_ATTEMPTS = 10;
+
     private PluginInterface $plugin;
 
     private string $pm;
@@ -36,6 +39,8 @@ class Base extends Method
     private OrderService $orderService;
 
     private PayrexxApiService $payrexxApiService;
+
+    private WebhookOrderService $webhookOrderService;
 
     private $supportedLang = ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr'];
 
@@ -48,6 +53,7 @@ class Base extends Method
         parent::__construct($moduleID);
         $this->orderService = new OrderService();
         $this->payrexxApiService = new PayrexxApiService();
+        $this->webhookOrderService = new WebhookOrderService($this->orderService);
     }
 
     public function init(int $nAgainCheckout = 0): self
@@ -159,6 +165,8 @@ class Base extends Method
                 $order->kBestellung ?? null,
                 $gateway->getId(),
                 $order->cBestellNr ?? $orderHash,
+                // The webhook creates the order from this payment session if the shopper does not return
+                $order->kBestellung ? null : ltrim($orderHash, '_'),
             );
             $_SESSION['payrexxOrder'] = [
                 'gatewayId' => $gateway->getId(),
@@ -179,6 +187,7 @@ class Base extends Method
     public function finalizeOrder(Bestellung $order, string $hash, array $args): bool
     {
         if (isset($args['payed'])) {
+            $this->redirectIfWebhookCreatedOrder($hash, $args);
             $orderNumber = $args['orderNo'] ?? '';
             if (!empty($orderNumber)) {
                 $order->cBestellNr = $orderNumber;
@@ -224,11 +233,20 @@ class Base extends Method
             )
         ) {
             $gatewayId = (int) $_SESSION['payrexxOrder']['gatewayId'];
+            // Linked also if the booking is skipped, so that later webhooks of the gateway find the order
             $this->orderService->setPaymentGatewayId(
                 $order->kBestellung,
                 $gatewayId,
                 $order->cBestellNr
             );
+            // The webhook books the same payment under this lock. The request holding it books the payment, so
+            // booking without it could book it twice and the order stays open until the webhook has booked it.
+            if (!$this->webhookOrderService->lockBooking($gatewayId)) {
+                LoggerUtil::addLog(
+                    'Payrexx::handleNotification(), payment is booked by another request: ' . $order->cBestellNr
+                );
+                return;
+            }
             $transaction = $this->payrexxApiService->getTransactionByGatewayId($gatewayId);
             $gateway = $this->payrexxApiService->getPayrexxGateway($gatewayId);
             if (!$transaction || !$gateway) {
@@ -261,6 +279,72 @@ class Base extends Method
     public function canPayAgain(): bool
     {
         return false;
+    }
+
+    /**
+     * The webhook can have created the order of the payment session already. The lock stays until the end of the
+     * request, so that the shop creates the order under it otherwise.
+     */
+    private function redirectIfWebhookCreatedOrder(string $paymentId, array $args): void
+    {
+        if (!$this->webhookOrderService->lockPaymentSession($paymentId)) {
+            // The webhook can still be creating the order, so the shop must not create it a second time
+            LoggerUtil::addLog('Payrexx::finalizeOrder(), payment session is locked: ' . $paymentId);
+            $this->showPaymentProcessing();
+        }
+        $paymentSession = $this->webhookOrderService->getPaymentSession($paymentId);
+        $orderId = (int) ($paymentSession->kBestellung ?? 0);
+        if ($orderId > 0) {
+            $order = new Bestellung($orderId);
+            $order->fuelleBestellung(false);
+        } else {
+            // The webhook can have saved the order and failed before it updated the payment session
+            // Only the order number reserved in this payment session, never one from the URL alone
+            $orderNumber = (string) ($_SESSION['payrexxOrder']['orderNo'] ?? '');
+            $order = $orderNumber !== '' && $orderNumber === (string) ($args['orderNo'] ?? '')
+                ? $this->webhookOrderService->getOrderByNumber($orderNumber)
+                : null;
+            if ($order === null) {
+                return;
+            }
+        }
+        LoggerUtil::addLog('Payrexx::finalizeOrder(), order already created by the webhook: ' . $order->kBestellung);
+        Frontend::getInstance()->cleanUp();
+        $this->handleNotification($order, '_' . $paymentId, $args);
+        \header('Location: ' . $this->getReturnURL($order));
+        exit();
+    }
+
+    /**
+     * Reloads the notification until the lock is free. Every attempt waits for the lock, so it is no tight loop,
+     * and the reloads stop after a few attempts, e.g. if the database cannot lock at all.
+     */
+    private function showPaymentProcessing(): void
+    {
+        $langCode = $_SESSION['currentLanguage']->iso ?? 'eng';
+        $message = $this->plugin->getLocalization()->getTranslation(
+            'jtl_payrexx_payment_processing',
+            $langCode
+        ) ?: 'Your payment is being processed. This page reloads automatically.';
+        $message = htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $query = $_GET;
+        $attempt = (int) ($query['payrexxAttempt'] ?? 0) + 1;
+        $refresh = '';
+        if ($attempt <= self::PAYMENT_PROCESSING_MAX_ATTEMPTS) {
+            $query['payrexxAttempt'] = $attempt;
+            // Built from the shop URL, so the reload never leaves the shop
+            $url = htmlspecialchars(
+                Shop::getURL() . '/includes/modules/notify.php?' . http_build_query($query),
+                ENT_QUOTES | ENT_SUBSTITUTE,
+                'UTF-8'
+            );
+            $refresh = '<meta http-equiv="refresh" content="3;url=' . $url . '">';
+        }
+        \header('Content-Type: text/html; charset=utf-8');
+        \header('Cache-Control: no-store');
+        echo '<!DOCTYPE html><html><head><meta charset="utf-8">' . $refresh
+            . '<title>' . $message . '</title></head><body><p>' . $message . '</p></body></html>';
+        exit();
     }
 
     /**

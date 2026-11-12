@@ -13,8 +13,12 @@ use stdClass;
 
 class OrderService
 {
-    public function setPaymentGatewayId(?int $orderId, int $gatewayId, ?string $orderHash): void
-    {
+    public function setPaymentGatewayId(
+        ?int $orderId,
+        int $gatewayId,
+        ?string $orderHash,
+        ?string $paymentSessionId = null
+    ): void {
         $payrexxPayment = new stdClass();
         $payrexxPayment->gateway_id = $gatewayId;
         $payrexxPayment->created_at = date('Y-m-d H:i:s');
@@ -24,8 +28,33 @@ class OrderService
         if ($orderHash) {
             $payrexxPayment->order_hash = $orderHash;
         }
+        if ($paymentSessionId) {
+            $payrexxPayment->payment_session_id = $paymentSessionId;
+        }
 
         Shop::Container()->getDB()->insert('plugin_jtl_payrexx_payments', $payrexxPayment);
+    }
+
+    /**
+     * The payment session (tzahlungsession.cZahlungsID) of a gateway created before the order
+     */
+    public function getPaymentSessionId(int $gatewayId, string $referenceId): string
+    {
+        $result = Shop::Container()->getDB()->queryPrepared(
+            'SELECT `payment_session_id`
+                FROM `plugin_jtl_payrexx_payments`
+                WHERE `gateway_id` = :gatewayId
+                    AND `order_hash` = :referenceId
+                    AND `payment_session_id` IS NOT NULL
+                ORDER BY `id` DESC
+                LIMIT 1',
+            [
+                ':gatewayId' => $gatewayId,
+                ':referenceId' => $referenceId,
+            ],
+            ReturnType::SINGLE_OBJECT
+        );
+        return is_object($result) ? (string) $result->payment_session_id : '';
     }
 
     public function getOrderGatewayId(string|int $orderId, int $gatewayId): int
@@ -58,6 +87,34 @@ class OrderService
                 $comment = 'Awaiting payment';
                 break;
             case Transaction::CONFIRMED:
+                // The amounts are only comparable in the order currency
+                $orderCurrency = $this->getOrderCurrency($order);
+                if ($currency !== '' && strcasecmp($currency, $orderCurrency) !== 0) {
+                    LoggerUtil::addLog(
+                        'Payrexx::handleTransactionStatus(): transaction currency does not match order '
+                            . $order->cBestellNr,
+                        [
+                            'currency' => $currency,
+                            'orderCurrency' => $orderCurrency,
+                        ]
+                    );
+                    // The merchant has to book the confirmed payment manually, once per transaction
+                    if (strpos((string) $order->cKommentar, $uuid) === false) {
+                        $this->updateOrderComment(
+                            $order,
+                            sprintf(
+                                'Confirmed payment not booked, transaction currency %s does not match order '
+                                    . 'currency %s (%s, %s %s)',
+                                $currency,
+                                $orderCurrency !== '' ? $orderCurrency : 'unknown',
+                                $uuid,
+                                number_format($amount / 100, 2, '.', ''),
+                                $currency
+                            )
+                        );
+                    }
+                    return;
+                }
                 // The cart can change after its gateway was created and a bank transfer can be paid in parts,
                 // so only the sum of all confirmed transactions of the gateway settles the order
                 $orderTotal = $this->getOrderTotal($order);
@@ -127,6 +184,15 @@ class OrderService
         $openAmount = (float) $order->fGesamtsumme * $currencyFactor - $paidAmount;
         $orderTotal = (int) round(round($openAmount, 2) * 100);
         return $orderTotal;
+    }
+
+    /**
+     * ISO code of the order currency, also for orders that are not filled
+     */
+    private function getOrderCurrency(Bestellung $order): string
+    {
+        $currency = Shop::Container()->getDB()->select('twaehrung', 'kWaehrung', (int) $order->kWaehrung);
+        return (string) ($currency->cISO ?? '');
     }
 
     /**

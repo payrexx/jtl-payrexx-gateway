@@ -8,6 +8,7 @@ use Exception;
 use JTL\Checkout\Bestellung;
 use Payrexx\Models\Response\Transaction;
 use Plugin\jtl_payrexx\Service\OrderService;
+use Plugin\jtl_payrexx\Service\WebhookOrderService;
 use Plugin\jtl_payrexx\Util\LoggerUtil;
 
 class Dispatcher
@@ -105,10 +106,22 @@ class Dispatcher
             );
             $orderInfo = $this->orderService->getOrderInfoByReference($referenceId);
             LoggerUtil::addLog("Payrexx:processWebhookResponse(), process getOrderInfoByReference() finished");
+            $webhookOrderService = new WebhookOrderService($this->orderService);
             if ($orderInfo !== null) {
                 $order = new Bestellung((int)$orderInfo->order_id);
+            } elseif ($transaction->getStatus() === Transaction::CONFIRMED) {
+                // The shopper's session expires, so the order cannot wait for the return to the success page
+                $order = $webhookOrderService->createOrderFromPaymentSession(
+                    $gateway,
+                    $referenceId
+                );
             }
             if ($order !== null && $order->kBestellung) {
+                // The shopper's return books the same payment under this lock
+                if (!$webhookOrderService->lockBooking($gatewayId)) {
+                    LoggerUtil::addLog('Payrexx:processWebhookResponse(), payment is locked: ' . $referenceId);
+                    $this->sendResponse('Payment is processed by another request', [], 500);
+                }
                 LoggerUtil::addLog(
                     "Payrexx:processWebhookResponse(), Process handleTransactionStatus(): " .  $order->cBestellNr,
                     $this->data
@@ -126,13 +139,19 @@ class Dispatcher
                     "Payrexx:processWebhookResponse(), Webhook received before creating order: " . $referenceId,
                     $this->data
                 );
-                $this->sendResponse('Webhook received before order creation,
-                 Order will be created on the success page. Order Number is ' . $referenceId
+                // Payrexx only retries failed webhooks and the order is created when the shopper returns
+                $responseCode = $transaction->getStatus() === Transaction::CONFIRMED ? 500 : 200;
+                $this->sendResponse(
+                    'Webhook received before order creation, Order will be created on the success page. '
+                        . 'Order Number is ' . $referenceId,
+                    [],
+                    $responseCode
                 );
             }
             $this->sendResponse('Webhook processed successfully!');
         } catch (Exception $e) {
-            $this->sendResponse('Error: ' . json_encode($e->getMessage()));
+            // The order can exist already, so Payrexx must retry booking the payment
+            $this->sendResponse('Error: ' . json_encode($e->getMessage()), [], 500);
         }
     }
 
@@ -162,6 +181,8 @@ class Dispatcher
         if (!empty($data)) {
             $response['data'] = $data;
         }
+        // Webhook responses never need cookies, least of all the restored session of a shopper
+        header_remove('Set-Cookie');
         http_response_code($responseCode);
         echo json_encode($response);
         die;
